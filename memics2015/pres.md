@@ -80,41 +80,107 @@ date: 24th October 2015
 
 \end{latex}
 
-## Explicit-State Model Checking
+## Memory Models
+
+*   the order of reads and writes in code need not match the order of their execution
+    *   compiler optimizations
+    *   optimizations on CPU, cache hierarchy
+
+. . .
+
+*   it is hard to reason about memory models
+*   parallelism is hard even under **sequential consistency**
+    *   reads and writes are immediate and cannot be reordered
+    *   not realistic, expensive to enforce
+
+. . .
+
+*   newer revisions of C/C++ have support for specifying atomic variables with
+    memory access ordering
+    *   same for Java, LLVM bitcode,…
+
+. . .
+
+*   verifiers often assume sequential consistency
+    *   so does DIVINE
+
+## Weak Memory Models {.fragile}
+
+What is the semantics of concurrent accesses to shared memory (in C++11)?
 
 \begin{latex}
-    explores all relevant outcomes of program\only<2->{:}
-    \pause
-    \begin{itemize}
-        \item starts from an initial state
-        \only<3->{\item looks at possible actions that can be taken in each state}
-    \end{itemize}
+\only<2,5-6>{\texttt{\textbf{int} x = 0, y = 0;}}
+\only<3,7>{\texttt{\textbf{volatile int} x = 0, y = 0;}}
+\only<4,8>{\texttt{\textbf{std::atomic< int >} x = 0, y = 0;}}
 
-    \bigskip
-    \begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=3em,initial text=, ->]
-        \tikzstyle{every state} = [ellipse, minimum size = 1.5em]
-        \path[use as bounding box] (-5.2,0.3) rectangle (5.2,-3.2);
+\begin{lstlisting}
+void thread1() { x = 1; y = 2; }
+void thread2() {
+    while ( y == 0 ) { }
+    cout << "y = " << y << endl;
+    cout << "x = " << x << endl;
+}
+\end{lstlisting}
 
-        \node[state] (init) {\texttt{x = 0; y = 0}};
-        \node<3->[state, below left = of init] (l) {\texttt{x = 1; y = 0}};
-        \node<3->[state, below right = of init] (r) {\texttt{x = 0; y = 1}};
-        \node<4->[state, below right = of l] (c) {\texttt{x = 1; y = 1}};
+\only<2>{
+\begin{itemize}
+    \item no guarantees
+    \item \texttt{thread2} can read \texttt{y} only once
+    \item undefined behaviour
+\end{itemize}
+}
+\only<3>{
+\begin{itemize}
+\item no atomicity guarantees
+\item variables must be read from memory on every access
+\item undefined behaviour
+\end{itemize}
+}
+\only<4>{
+\begin{itemize}
+\item atomicity guaranteed
+\item variables must be atomically read from memory on every access
+\end{itemize}
+}
 
-        \path<3-> (init) edge node[above left] {\texttt{x := 1}} (l)
-                         edge node {\texttt{y := 1}} (r);
-        \path<4-> (l) edge node[below left] {\texttt{y := 1}} (c);
-        \path<4-> (r) edge node {\texttt{x := 1}} (c);
-    \end{tikzpicture}
+\only<5->{
+\begin{itemize}
+    \item can the output be \texttt{y = 2} and \texttt{x = 0}?
 
-    \onslide<5->{
-    \begin{itemize}
-        \item builds state space
-        \only<6>{\item graph exploration}
-    \end{itemize}
-    }
+    \only<6>{\item yes, both CPU and compiler can reorder instuctions}
+    \only<7>{\item yes, CPU can reorder instuctions}
+    \only<8>{\item no, the order of atomic loads and stores is guarteed to
+    match order in source code}
+\end{itemize}
+}
 \end{latex}
 
-## Weak memory models {.fragile}
+## Weak Memory Models
+
+*   many different models in different architectures
+    *   details often unknown
+    *   details can vary between CPU of same architecture
+
+. . .
+
+*   theoretical memory models
+
+*   Total Store Order (TSO)
+    *   similar to memory model used by x86_64
+    *   the order of execution of stores is guaranteed to match their order in
+        machine code
+        *   compiler might still reorder stores
+    *   independent loads can be reordered
+
+. . .
+
+*   Partial Store Order (PSO)
+    *   weaker than TSO
+    *   independent stores can be reordered too
+    *   enables more optimizations
+    *   hard to reason about
+
+## Weak Memory Models {.fragile}
 
 \begin{latex}
 \begin{lstlisting}[belowskip=0pt]
@@ -140,7 +206,7 @@ void thread1() {
 \end{minipage}
 \end{latex}
 
-TSO lze simulovat pomocí store bufferů:
+Total Store Order can be simulate using store buffers:
 
 \begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
                    , semithick
@@ -190,7 +256,7 @@ TSO lze simulovat pomocí store bufferů:
 
 \end{tikzpicture}
 
-## Weak memory models as transformation
+## Weak Memory Models as Transformation
 
 \begin{latex}
     \center
@@ -254,6 +320,62 @@ TSO lze simulovat pomocí store bufferů:
     \only<6>{model is now verified with given relaxed memory model}
 \end{latex}
 
-## LART LLVM-to-LLVM transformations
+## TSO Under-Approximation
 
+*   TSO can be simulated with unbounded store buffer
+*   this can easily make state space infinite
+
+. . .
+
+*   can be under-approximated with bounded store buffer
+    *   if a bug is found, it can occur on TSO (or more relaxed) hardware
+    *   if bug is not found, there is no guarantee
+
+    . . .
+
+    *   integrates well with explicit state model checker like DIVINE
+
+## Why LLVM-to-LLVM Transformation?
+
+*   memory model support could be integrated in verifier
+    *   complicates verifier
+    *   impractical if more memory models are to be supported
+
+. . .
+
+*   can be implemented in program-to-be-verified
+    *   manual implementation is tedious
+    *   automatic transformation is hard to do (especially for C++)
+
+. . .
+
+*   transformation of LLVM
+    *   LLVM is assembly-like language
+    *   abstracts away from machine registers, caches…
+    *   significantly simpler than high-level programming languages
+    *   API for transformations
+
+    . . .
+
+    *   ecosystem of code generators for many languages
+    *   analysis tools other than DIVINE can use this transformation
+
+## The Transformation
+
+memory manipulating instructions need to be replaced to enable TSO simulation
+
+*   add store buffer for each thread
+*   `store` instruction saved data to store buffer
+*   `load` instruction first looks up in local store buffer, then in memory
+*   `fence` (memory barrier) instructions flushes store buffer
+*   atomic instructions (`atomicrmw`, `cmpxchg`) flush store buffer and perform
+    given action
+
+. . .
+
+*   memory manipulations functions (`memcpy`, `memmove`, `memset`) needs to be
+    replaced
+*   partial loads/stores need to be handled
+
+## 
 
