@@ -27,7 +27,7 @@ date: 24th October 2015
 
 *   verification of assertion/memory safety, LTL specification
 
-*   verification of largely unmodified codes
+*   verification of largely unmodified code
 
 ## Introduction
 
@@ -81,7 +81,6 @@ date: 24th October 2015
     \only<3>{the program is compiled into LLVM bitcode}
     \only<4>{\divine{} explores all relevant interleavings}
     \only<5>{verification results}
-
 \end{latex}
 
 ## Explicit-State Model Checking
@@ -189,7 +188,7 @@ void thread2() {
 
     \only<6>{\item yes, both CPU and compiler can reorder instuctions}
     \only<7>{\item yes, CPU can reorder instuctions}
-    \only<8>{\item no, the order of atomic loads and stores is guarteed to
+    \only<8>{\item no, the order of atomic loads and stores is guaranteed to
     match order in source code}
 \end{itemize}
 }
@@ -332,7 +331,7 @@ Total Store Order can be simulate using store buffers:
         \node<5->[state, onslide={<5> line width = 3pt}] (lart) at (3.75, -3) {\begin{minipage}{8em}\center
               \textbf{LART}
 
-              LLVM-to-LLVM transormation
+              LLVM-to-LLVM transformation
             \end{minipage}
         };
 
@@ -376,7 +375,7 @@ Total Store Order can be simulate using store buffers:
 
     . . .
 
-    *   integrates well with explicit state model checker like DIVINE
+    *   integrates well with explicit-state model checker like DIVINE
 
 ## Why LLVM-to-LLVM Transformation?
 
@@ -405,7 +404,7 @@ Total Store Order can be simulate using store buffers:
 
 ## The Transformation
 
-memory manipulating instructions need to be replaced to enable TSO simulation
+memory-manipulating instructions need to be replaced to enable TSO simulation
 
 *   add store buffer for each thread
 *   `store` instruction saved data to store buffer
@@ -416,7 +415,7 @@ memory manipulating instructions need to be replaced to enable TSO simulation
 
 . . .
 
-*   memory manipulations functions (`memcpy`, `memmove`, `memset`) needs to be
+*   memory-manipulating functions (`memcpy`, `memmove`, `memset`) needs to be
     replaced
 *   partial loads/stores need to be handled
 
@@ -467,7 +466,7 @@ void thread1() {
 \end{minipage}
 \end{latex}
 
-*   $\varphi$ does no hold on a run where flush is delayed infinitely
+*   $\varphi$ does not hold on a run where flush is delayed infinitely
 
 . . .
 
@@ -481,15 +480,15 @@ void thread1() {
 
 store buffer can be flushed when the memory it writes to is already invalid
 
-*   write to freed dynamic memory
-*   write to stack frame of function after it returns
+*   writes to freed dynamic memory
+*   writes to stack frame of function after it returns
 
 . . .
 
-*   for the first case, we can replace `free` such that it evicts freed
+*   for the first case, we can replace `free` so that it evicts freed
     memory addresses from store buffers
 
-. . . 
+. . .
 
 *   for stack memory, cleanup needs to be added at the end of every function
     which uses stack memory
@@ -506,7 +505,7 @@ store buffer can be flushed when the memory it writes to is already invalid
 
 *   DIVINE employs $\tau+$ and heap symmetry reductions
     *   $\tau+$ hides actions which are not observable, such as loads and
-        stores to thread local memory
+        stores to thread-local memory
     *   this enables verification of real-world code
 
 . . .
@@ -516,7 +515,7 @@ store buffer can be flushed when the memory it writes to is already invalid
 
 . . .
 
-*   thread local memory need not be stored in store buffer
+*   thread-local memory does not need to be stored in store buffer
     *   this information can be obtained from DIVINE and store buffer
         bypassed
 
@@ -546,8 +545,8 @@ store buffer can be flushed when the memory it writes to is already invalid
 
 *   fully automatic instrumentation of LLVM bitcode with Total Store Order
     approximation
-*   enables TSO verification in DIVINE, or other verifiers assuming Sequential
-    Consistency
+*   enables TSO verification in DIVINE, or other verifiers which assume
+    Sequential Consistency
 *   verification of assertion safety and LTL properties
 *   we were able to verify some interesting properties with this
     transformation, despite the state space growth
@@ -558,7 +557,7 @@ store buffer can be flushed when the memory it writes to is already invalid
 
 *   enable memory safety verification with TSO
 *   implementation of other weak memory models, such as Partial Store Order
-*   state space reduction
+*   better state space reductions
 
 . . .
 
