@@ -366,7 +366,7 @@ memory manipulating instructions need to be replaced to enable TSO simulation
 
 *   add store buffer for each thread
 *   `store` instruction saved data to store buffer
-*   `load` instruction first looks up in local store buffer, then in memory
+*   `load` instruction first looks up data in local store buffer, then in memory
 *   `fence` (memory barrier) instructions flushes store buffer
 *   atomic instructions (`atomicrmw`, `cmpxchg`) flush store buffer and perform
     given action
@@ -377,5 +377,145 @@ memory manipulating instructions need to be replaced to enable TSO simulation
     replaced
 *   partial loads/stores need to be handled
 
-## 
+## Store Buffer Flushing
+
+store buffer needs to be flushed nondeterministically
+
+. . .
+
+*   dedicated flushing thread
+*   interleaving ensures all possible outcomes are checked
+
+. . .
+
+*   works well for safety properties
+    *   every counterexample is finite
+
+. . .
+
+*   for LTL infinitely delayed flush is a problem
+
+## Infinite Delay Problem {.fragile}
+
+$\varphi = FG( \lnot w_0 \land \lnot w_1 )$
+
+\begin{latex}
+\begin{lstlisting}[belowskip=0pt]
+bool x = false, y = false;
+\end{lstlisting}
+\begin{minipage}[t]{0.45\textwidth}
+\begin{lstlisting}[numbers=left, aboveskip=0pt]
+void thread0() {
+  y = true;
+  while (!x) { AP(w0); }
+  for (;;) { /*work*/ }
+}
+\end{lstlisting}
+\end{minipage}%
+\hfill%
+\begin{minipage}[t]{0.45\textwidth}
+\begin{lstlisting}[numbers=left, aboveskip=0pt]
+void thread1() {
+  x = true;
+  while (!y) { AP(w1); }
+  for (;;) { /*work*/ }
+}
+\end{lstlisting}
+\end{minipage}
+\end{latex}
+
+*   $\varphi$ does no hold on a run where flush is delayed infinitely
+
+. . .
+
+**Solution**
+
+*   for each program thread, we add dedicated flushing thread which flushes
+    its store buffer
+*   weak fairness used to avoid infinite flush delay
+
+## Writes To Invalidated Memory
+
+store buffer can be flushed when the memory it writes to is already invalid
+
+*   write to freed dynamic memory
+*   write to stack frame of function after it returns
+
+. . .
+
+*   for the first case, we can replace `free` such that it evicts freed
+    memory addresses from store buffers
+
+. . . 
+
+*   for stack memory, cleanup needs to be added at the end of every function
+    which uses stack memory
+    *   exception handlers need to be added
+
+. . .
+
+*   currently not implemented
+    *   DIVINE cannot verify memory safety with TSO
+
+## State Space Reductions
+
+*   DIVINE employs $\tau+$ and heap symmetry reductions
+    *   $\tau+$ hides actions which are not observable, such as loads and
+        stores to thread local memory
+    *   this enables verification of real-world code
+
+. . .
+
+*   with TSO simulation every load and store is visible
+    *   this makes reduction inefficient
+
+. . .
+
+*   but thread local memory need not be stored in store buffer
+    *   this information can be obtained from DIVINE and store buffer
+        bypassed
+
+## Experimental Results
+
+\begin{latex}
+\makebox[\textwidth][c]{
+\small
+\begin{tabular}{|c|c|c|c|c|c|c|} \hline
+    model & buffer & assertion  & \# of  & reduced & memory & time \\
+          & size   & found & states  & \# of states  & [GB]   & [s] \\ \hline
+    \texttt{simple\_sc} & N/A & no & 205 & N/A & 0.16 & 1 \\
+    \texttt{simple\_mtso} & 1 & \textbf{yes} & 6.89\,k & N/A & 0.17 & 3 \\
+    \texttt{simple\_stso} & 1 & \textbf{yes} & 10.7\,k & 10.7\,k & 0.17 & 6 \\
+    \texttt{simple\_tso} & 1 & \textbf{yes} & 24.7\,M & 537.2\,k & 3.18 & 20318 \\ \hline
+    \texttt{peterson\_sc} & N/A & no & 1.68\,k & N/A & 0.16 & 1 \\
+    \texttt{peterson\_tso} & 0 & no & 55.9\,k & N/A & 0.17 & 38 \\
+    \texttt{peterson\_tso} & 2 & \textbf{yes} & 2.86\,M & 95.7\,k & 0.79 & 990 \\
+    \texttt{peterson\_tso} & 3 & \textbf{yes} & 4.70\,M & 129.9\,k & 1.21 & 1610 \\ \hline
+    \texttt{fifo\_sc} & 0  & no & 6951 & N/A & 0.73 & 20 \\
+    \texttt{fifo\_tso} & 1 & no & -- & 44\,M & -- & -- \\ \hline
+\end{tabular}
+}
+\end{latex}
+
+## Conclusion
+
+*   fully automatic instrumentation of LLVM bitcode with Total Store Order
+    approximation
+*   enables TSO verification in DIVINE, or other verifiers assuming Sequential
+    Consistency
+*   verification of assertion safety and LTL properties
+*   we were able to verify some interesting properties with this
+    transformation, despite the state space growth
+
+. . .
+
+**Future Work**
+
+*   enable memory safety verification with TSO
+*   implementation of other weak memory models, such as Partial Store Order
+*   state space reduction
+
+. . .
+
+\hfill{}Thank You!
 
