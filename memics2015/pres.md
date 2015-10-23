@@ -16,16 +16,14 @@ date: 24th October 2015
 
 \divine{} model checker:
 
-*   verification of C & C++ parallel programs
+*   automated detection of bugs in parallel C++ programs
+
+*   verification of assertion/memory safety, LTL specification
 
 *   using LLVM bitcode
     *   kind of an assembler produced by compilers, such as `clang`
 
-*   parallelism using `pthreads` or C++ standard threads
-
-*   supports large portions of C & C++ standard library
-
-*   verification of assertion/memory safety, LTL specification
+*   supports large portions of C++ standard library
 
 *   verification of largely unmodified code
 
@@ -76,11 +74,13 @@ date: 24th October 2015
     \end{tikzpicture}
 
     \bigskip
+    \makebox[\textwidth][c]{
     \only<1>{model checking programs with \divine}
     \only<2>{programmer gives inputs: source code and specification}
     \only<3>{the program is compiled into LLVM bitcode}
     \only<4>{\divine{} explores all relevant interleavings}
     \only<5>{verification results}
+    }
 \end{latex}
 
 ## Explicit-State Model Checking
@@ -145,7 +145,7 @@ date: 24th October 2015
 
 ## Weak Memory Models {.fragile}
 
-What is the semantics of concurrent access to shared memory (in C++11)?
+**C++11 semantics of concurrent access to shared memory**
 
 \begin{minipage}[t][14em]{\textwidth}
 \only<1-2,5-6>{\texttt{\textbf{int} x = 0, y = 0;}}
@@ -218,7 +218,6 @@ void thread2() {
     *   weaker than TSO
     *   independent stores can be reordered too
     *   enables more optimizations
-    *   harder to reason about
 
 ## Weak Memory Models {.fragile}
 
@@ -410,31 +409,10 @@ memory-manipulating instructions need to be replaced to enable TSO simulation
 *   `store` instructions save data to the store buffer
 *   `load` instructions first look up data in the local store buffer, then in memory
 *   `fence` (memory barrier) instructions flush the store buffer
-*   atomic instructions (`atomicrmw`, `cmpxchg`) flush store buffer and perform
-    the given action
+*   atomic instructions and memory-manipulating functions such as `memcpy` needs to be handled
 
-. . .
+*   buffers are flushed nondeterministically
 
-*   memory-manipulating functions (`memcpy`, `memmove`, `memset`) need to be
-    replaced
-*   partial loads/stores need to be handled
-
-## Store Buffer Flushing
-
-store buffers need to be flushed nondeterministically
-
-. . .
-
-*   dedicated flushing thread
-*   interleaving ensures all possible outcomes are checked
-
-. . .
-
-*   works well for safety properties
-
-. . .
-
-*   for LTL, infinitely delayed flush is a problem
 
 ## Infinite Delay Problem {.fragile}
 
