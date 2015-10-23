@@ -1,10 +1,11 @@
 ---
 title: Weak Memory Models as LLVM-to-LLVM Transformations
+titleshort: Weak Memory Models
 author:
     - \textbf{Vladimír Štill}
     - Petr Ročkai
     - Jiří Barnat
-authors-short: Vladimír Štill…
+authorshort: Vladimír Štill et al.
 header-includes:
     - \usepackage{divine}
 lang: english
@@ -13,17 +14,20 @@ date: 24th October 2015
 
 ## Introduction
 
-\divine{} does
+\divine{} model checker:
 
 *   verification of C & C++ parallel programs
 
 *   using LLVM bitcode
+    *   kind of an assembler produced by compilers, such as `clang`
 
 *   parallelism using `pthreads` or C++ standard threads
 
 *   supports large portions of C & C++ standard library
 
 *   verification of assertion/memory safety, LTL specification
+
+*   verification of largely unmodified codes
 
 ## Introduction
 
@@ -80,6 +84,42 @@ date: 24th October 2015
 
 \end{latex}
 
+## Explicit-State Model Checking
+
+\begin{minipage}[t][18em]{\textwidth}
+    explores all relevant outcomes of program:
+    \pause
+    \begin{itemize}
+        \item starts from an initial state
+        \only<3->{\item looks at possible actions that can be taken in each state}
+    \end{itemize}
+
+    \bigskip
+    \begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=3em,initial text=, ->]
+        \tikzstyle{every state} = [ellipse, minimum size = 1.5em]
+        \path[use as bounding box] (-5.2,0.3) rectangle (5.2,-3.2);
+
+        \node[state] (init) {\texttt{x = 0; y = 0}};
+        \node<3->[state, below left = of init] (l) {\texttt{x = 1; y = 0}};
+        \node<3->[state, below right = of init] (r) {\texttt{x = 0; y = 1}};
+        \node<4->[state, below right = of l] (c) {\texttt{x = 1; y = 1}};
+
+        \path<3-> (init) edge node[above left] {\texttt{x := 1}} (l)
+                         edge node {\texttt{y := 1}} (r);
+        \path<4-> (l) edge node[below left] {\texttt{y := 1}} (c);
+        \path<4-> (r) edge node {\texttt{x := 1}} (c);
+    \end{tikzpicture}
+
+    \onslide<5->{
+    \begin{itemize}
+        \item builds state space
+        \only<6>{\item graph exploration}
+    \end{itemize}
+    }
+\end{minipage}
+
+# Demo
+
 ## Memory Models
 
 *   the order of reads and writes in code need not match the order of their execution
@@ -89,7 +129,7 @@ date: 24th October 2015
 . . .
 
 *   it is hard to reason about memory models
-*   parallelism is hard even under **sequential consistency**
+*   parallelism is hard even under **Sequential Consistency**
     *   reads and writes are immediate and cannot be reordered
     *   not realistic, expensive to enforce
 
@@ -108,8 +148,8 @@ date: 24th October 2015
 
 What is the semantics of concurrent accesses to shared memory (in C++11)?
 
-\begin{latex}
-\only<2,5-6>{\texttt{\textbf{int} x = 0, y = 0;}}
+\begin{minipage}[t][14em]{\textwidth}
+\only<1-2,5-6>{\texttt{\textbf{int} x = 0, y = 0;}}
 \only<3,7>{\texttt{\textbf{volatile int} x = 0, y = 0;}}
 \only<4,8>{\texttt{\textbf{std::atomic< int >} x = 0, y = 0;}}
 
@@ -153,17 +193,18 @@ void thread2() {
     match order in source code}
 \end{itemize}
 }
-\end{latex}
+\end{minipage}
 
 ## Weak Memory Models
 
-*   many different models in different architectures
-    *   details often unknown
-    *   details can vary between CPU of same architecture
+**many different models in different architectures**
+
+*   details often unknown
+*   details can vary between CPUs of same architecture
 
 . . .
 
-*   theoretical memory models
+**theoretical memory models**
 
 *   Total Store Order (TSO)
     *   similar to memory model used by x86_64
@@ -178,7 +219,7 @@ void thread2() {
     *   weaker than TSO
     *   independent stores can be reordered too
     *   enables more optimizations
-    *   hard to reason about
+    *   harder to reason about
 
 ## Weak Memory Models {.fragile}
 
@@ -312,12 +353,14 @@ Total Store Order can be simulate using store buffers:
     \end{tikzpicture}
 
     \bigskip
+    \makebox[\textwidth][c]{
     \only<1>{model checking programs with \divine}
     \only<2>{input program does not specify memory model exactly}
     \only<3>{LLVM roughly copies C++11 memory model}
     \only<4>{DIVINE assumes sequential consistency}
     \only<5>{LART instruments LLVM bitcode with relaxed memory model}
     \only<6>{model is now verified with given relaxed memory model}
+    }
 \end{latex}
 
 ## TSO Under-Approximation
@@ -455,7 +498,9 @@ store buffer can be flushed when the memory it writes to is already invalid
 . . .
 
 *   currently not implemented
-    *   DIVINE cannot verify memory safety with TSO
+    *   DIVINE cannot verify memory safety with TSO currently
+
+# Demo
 
 ## State Space Reductions
 
@@ -471,7 +516,7 @@ store buffer can be flushed when the memory it writes to is already invalid
 
 . . .
 
-*   but thread local memory need not be stored in store buffer
+*   thread local memory need not be stored in store buffer
     *   this information can be obtained from DIVINE and store buffer
         bypassed
 

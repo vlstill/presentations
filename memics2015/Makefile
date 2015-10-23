@@ -7,5 +7,5 @@ all : mds
 mds :	$(ALL_MD:.md=.pdf)
 
 %.pdf : %.md
-	env TEXINPUTS="../styles/paradiseBeamer/:.:" pandoc --slide-level=2 -V documentclass=paradise-slide -s $< -t beamer -f markdown+raw_tex -o $@
+	env TEXINPUTS="../styles/paradiseBeamer/:.:" pandoc --slide-level=2 -V documentclass=paradise-slide -s $< -t beamer -f markdown+raw_tex -o $@ --template=../styles/paradiseBeamer/template.tex
 
