@@ -86,7 +86,7 @@ date: 24th October 2015
 ## Explicit-State Model Checking
 
 \begin{minipage}[t][18em]{\textwidth}
-    explores all relevant outcomes of program:
+    explores all relevant outcomes of a program:
     \pause
     \begin{itemize}
         \item starts from an initial state
@@ -121,9 +121,9 @@ date: 24th October 2015
 
 ## Memory Models
 
-*   the order of reads and writes in code need not match the order of their execution
+*   the order of reads and writes in the code does not need to match the order of their execution
     *   compiler optimizations
-    *   optimizations on CPU, cache hierarchy
+    *   optimizations on the CPU, cache hierarchy
 
 . . .
 
@@ -145,7 +145,7 @@ date: 24th October 2015
 
 ## Weak Memory Models {.fragile}
 
-What is the semantics of concurrent accesses to shared memory (in C++11)?
+What is the semantics of concurrent access to shared memory (in C++11)?
 
 \begin{minipage}[t][14em]{\textwidth}
 \only<1-2,5-6>{\texttt{\textbf{int} x = 0, y = 0;}}
@@ -186,27 +186,27 @@ void thread2() {
 \begin{itemize}
     \item can the output be \texttt{y = 2} and \texttt{x = 0}?
 
-    \only<6>{\item yes, both CPU and compiler can reorder instuctions}
-    \only<7>{\item yes, CPU can reorder instuctions}
+    \only<6>{\item yes, both the CPU and the compiler can reorder instructions}
+    \only<7>{\item yes, the CPU can reorder instructions}
     \only<8>{\item no, the order of atomic loads and stores is guaranteed to
-    match order in source code}
+    match the order in the source code}
 \end{itemize}
 }
 \end{minipage}
 
 ## Weak Memory Models
 
-**many different models in different architectures**
+**many different models on different architectures**
 
-*   details often unknown
-*   details can vary between CPUs of same architecture
+*   details are often not public
+*   details can vary between CPUs of the same architecture
 
 . . .
 
 **theoretical memory models**
 
 *   Total Store Order (TSO)
-    *   similar to memory model used by x86_64
+    *   similar to the memory model used by x86_64
     *   the order of execution of stores is guaranteed to match their order in
         machine code
         *   compiler might still reorder stores
@@ -246,7 +246,7 @@ void thread1() {
 \end{minipage}
 \end{latex}
 
-Total Store Order can be simulate using store buffers:
+Total Store Order can be simulated using store buffers:
 
 \begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
                    , semithick
@@ -354,23 +354,23 @@ Total Store Order can be simulate using store buffers:
     \bigskip
     \makebox[\textwidth][c]{
     \only<1>{model checking programs with \divine}
-    \only<2>{input program does not specify memory model exactly}
-    \only<3>{LLVM roughly copies C++11 memory model}
+    \only<2>{input program does not specify the memory model exactly}
+    \only<3>{LLVM roughly copies the C++11 memory model}
     \only<4>{DIVINE assumes sequential consistency}
-    \only<5>{LART instruments LLVM bitcode with relaxed memory model}
-    \only<6>{model is now verified with given relaxed memory model}
+    \only<5>{LART instruments LLVM bitcode based on a relaxed memory model}
+    \only<6>{the model is now verified assuming the relaxed memory model}
     }
 \end{latex}
 
 ## TSO Under-Approximation
 
-*   TSO can be simulated with unbounded store buffer
-*   this can easily make state space infinite
+*   TSO can be simulated using an unbounded store buffer
+*   this can easily make the state space infinite
 
 . . .
 
-*   can be under-approximated with bounded store buffer
-    *   if a bug is found, it can occur on TSO (or more relaxed) hardware
+*   can be under-approximated using a bounded store buffer
+    *   if a bug is found, it can occur on TSO hardware
     *   if bug is not found, there is no guarantee
 
     . . .
@@ -379,49 +379,49 @@ Total Store Order can be simulate using store buffers:
 
 ## Why LLVM-to-LLVM Transformation?
 
-*   memory model support could be integrated in verifier
-    *   complicates verifier
+*   memory model support could be integrated in the verifier
+    *   complicates the verifier
     *   impractical if more memory models are to be supported
 
 . . .
 
-*   can be implemented in program-to-be-verified
+*   can be implemented in the program to be verified
     *   manual implementation is tedious
     *   automatic transformation is hard to do (especially for C++)
 
 . . .
 
 *   transformation of LLVM
-    *   LLVM is assembly-like language
-    *   abstracts away from machine registers, caches…
+    *   LLVM is an assembly-like language
+    *   abstracts away from machine registers, caches, …
     *   significantly simpler than high-level programming languages
     *   API for transformations
 
     . . .
 
-    *   ecosystem of code generators for many languages
+    *   an ecosystem of code generators for many languages
     *   analysis tools other than DIVINE can use this transformation
 
 ## The Transformation
 
 memory-manipulating instructions need to be replaced to enable TSO simulation
 
-*   add store buffer for each thread
-*   `store` instruction saved data to store buffer
-*   `load` instruction first looks up data in local store buffer, then in memory
-*   `fence` (memory barrier) instructions flushes store buffer
+*   add a store buffer for each thread
+*   `store` instructions save data to the store buffer
+*   `load` instructions first look up data in the local store buffer, then in memory
+*   `fence` (memory barrier) instructions flush the store buffer
 *   atomic instructions (`atomicrmw`, `cmpxchg`) flush store buffer and perform
-    given action
+    the given action
 
 . . .
 
-*   memory-manipulating functions (`memcpy`, `memmove`, `memset`) needs to be
+*   memory-manipulating functions (`memcpy`, `memmove`, `memset`) need to be
     replaced
 *   partial loads/stores need to be handled
 
 ## Store Buffer Flushing
 
-store buffer needs to be flushed nondeterministically
+store buffers need to be flushed nondeterministically
 
 . . .
 
@@ -431,11 +431,10 @@ store buffer needs to be flushed nondeterministically
 . . .
 
 *   works well for safety properties
-    *   every counterexample is finite
 
 . . .
 
-*   for LTL infinitely delayed flush is a problem
+*   for LTL, infinitely delayed flush is a problem
 
 ## Infinite Delay Problem {.fragile}
 
@@ -466,22 +465,21 @@ void thread1() {
 \end{minipage}
 \end{latex}
 
-*   $\varphi$ does not hold on a run where flush is delayed infinitely
+*   $\varphi$ does not hold on a run where `flush` is delayed infinitely
 
 . . .
 
 **Solution**
 
-*   for each program thread, we add dedicated flushing thread which flushes
-    its store buffer
-*   weak fairness used to avoid infinite flush delay
+*   for each program thread, we add a dedicated flushing thread
+*   we use weak fairness to avoid infinite delays
 
 ## Writes To Invalidated Memory
 
-store buffer can be flushed when the memory it writes to is already invalid
+store buffers associated with invalid memory locations can be flushed
 
 *   writes to freed dynamic memory
-*   writes to stack frame of function after it returns
+*   writes to stack frames of finished functions
 
 . . .
 
@@ -510,14 +508,12 @@ store buffer can be flushed when the memory it writes to is already invalid
 
 . . .
 
-*   with TSO simulation every load and store is visible
+*   with TSO simulation, every load and store is visible
     *   this makes reduction inefficient
 
 . . .
 
-*   thread-local memory does not need to be stored in store buffer
-    *   this information can be obtained from DIVINE and store buffer
-        bypassed
+*   thread-local memory does not need to be stored in a store buffer
 
 ## Experimental Results
 
@@ -545,7 +541,7 @@ store buffer can be flushed when the memory it writes to is already invalid
 
 *   fully automatic instrumentation of LLVM bitcode with Total Store Order
     approximation
-*   enables TSO verification in DIVINE, or other verifiers which assume
+*   enables TSO verification in DIVINE or other verifiers which assume
     Sequential Consistency
 *   verification of assertion safety and LTL properties
 *   we were able to verify some interesting properties with this
