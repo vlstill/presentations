@@ -245,7 +245,7 @@ void thread1() {
 \end{minipage}
 \end{latex}
 
-Total Store Order can be simulated using store buffers:
+\textbf{Total Store Order can be simulated using store buffers:}
 
 \begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
                    , semithick
