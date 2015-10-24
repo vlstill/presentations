@@ -14,7 +14,7 @@ date: 24th October 2015
 
 ## Introduction
 
-\divine{} model checker:
+**\divine{} model checker**
 
 *   automated detection of bugs in parallel C++ programs
 
@@ -86,7 +86,7 @@ date: 24th October 2015
 ## Explicit-State Model Checking
 
 \begin{minipage}[t][18em]{\textwidth}
-    explores all relevant outcomes of a program:
+    \textbf{explores all relevant outcomes of a program}
     \pause
     \begin{itemize}
         \item starts from an initial state
