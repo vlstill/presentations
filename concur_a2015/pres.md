@@ -79,9 +79,9 @@ LLVM Abstraction and Refinement Tool
 . . .
 
 *   currently implements:
+    *   transformations for SV-COMP
     *   weak memory models transformation (from MEMICS 2015)
     *   several simple parallel-safe optimizations
-    *   transformations for SV-COMP
 
 # SV-COMP
 
@@ -101,11 +101,8 @@ DIVINE is an explicit state model checker
 however, in concurrency category of SV-COMP:
 
 *   little or no nondeterminism
-*   most programs all reasonably small
-
-. . .
-
-and DIVINE is quite fast and memory efficient!
+*   most programs are reasonably small
+*   DIVINE is quite fast and memory efficient!
 
 ## How to Verify SV-COMP Models with DIVINE?
 
@@ -221,9 +218,9 @@ void thread1() {
 }
 \end{lstlisting}
 \end{minipage}
-\end{latex}
+\end{latex} \pause
 
-\textbf{Total Store Order can be simulated using store buffers:}
+**Total Store Order can be simulated using store buffers:**
 
 \begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
                    , semithick
@@ -248,28 +245,28 @@ void thread1() {
   \draw [-] (2,-4) -- (2,-5);
   \draw [-] (4,-4) -- (4,-5);
 
-  \node<2-> () [anchor=west] at (-10,-4.5)  {\texttt{0x08}};
-  \node<2-> () [anchor=west] at (-8,-4.5)  {\texttt{1}};
-  \node<2-> () [anchor=west] at (-6,-4.5)  {\texttt{32}};
+  \node<3-> () [anchor=west] at (-10,-4.5)  {\texttt{0x08}};
+  \node<3-> () [anchor=west] at (-8,-4.5)  {\texttt{1}};
+  \node<3-> () [anchor=west] at (-6,-4.5)  {\texttt{32}};
 
-  \node<4-> () [anchor=west] at (0,-4.5)  {\texttt{0x04}};
-  \node<4-> () [anchor=west] at (2,-4.5)  {\texttt{1}};
-  \node<4-> () [anchor=west] at (4,-4.5)  {\texttt{32}};
+  \node<5-> () [anchor=west] at (0,-4.5)  {\texttt{0x04}};
+  \node<5-> () [anchor=west] at (2,-4.5)  {\texttt{1}};
+  \node<5-> () [anchor=west] at (4,-4.5)  {\texttt{32}};
 
   \node () [] at (-4, 0.5) {thread 0};
   \draw [->] (-4,0) -- (-4,-2);
-  \node () [anchor=west, onslide={<2> font=\bf, color=red}] at (-3.5, -0.5) {\texttt{store y 1;}};
-  \node () [anchor=west, onslide={<3> font=\bf, color=red}] at (-3.5, -1.5) {\texttt{load x;}};
+  \node () [anchor=west, onslide={<3> font=\bf, color=red}] at (-3.5, -0.5) {\texttt{store y 1;}};
+  \node () [anchor=west, onslide={<4> font=\bf, color=red}] at (-3.5, -1.5) {\texttt{load x;}};
 
   \node () [] at (2, 0.5) {thread 1};
   \draw [->] (2,0) -- (2,-2);
-  \node () [anchor=west, onslide={<4> font=\bf, color=red}] at (2.5, -0.5) {\texttt{store x 1;}};
-  \node () [anchor=west, onslide={<5> font=\bf, color=red}] at (2.5, -1.5) {\texttt{load y;}};
+  \node () [anchor=west, onslide={<5> font=\bf, color=red}] at (2.5, -0.5) {\texttt{store x 1;}};
+  \node () [anchor=west, onslide={<6> font=\bf, color=red}] at (2.5, -1.5) {\texttt{load y;}};
 
-  \draw<2-> [->, dashed] (-0.5,-0.5) to[in=0, out=0] (-4,-4.5);
-  \draw<3-> [->, dashed] (-9,-2) to[in=0, out=-90, out looseness=0.7] (-1.3,-1.5);
-  \draw<4-> [->, dashed] (5.5,-0.5) to[in=0, out=0] (6,-4.5);
-  \draw<5-> [->, dashed] (-7,-2) to[in=0, out=-90, out looseness=0.5] (4.7,-1.5);
+  \draw<3-> [->, dashed] (-0.5,-0.5) to[in=0, out=0] (-4,-4.5);
+  \draw<4-> [->, dashed] (-9,-2) to[in=0, out=-90, out looseness=0.7] (-1.3,-1.5);
+  \draw<5-> [->, dashed] (5.5,-0.5) to[in=0, out=0] (6,-4.5);
+  \draw<6-> [->, dashed] (-7,-2) to[in=0, out=-90, out looseness=0.5] (4.7,-1.5);
 
 \end{tikzpicture}
 
@@ -295,7 +292,7 @@ void thread1() {
 
 [^mi]: `llvm.memcpy`, `llvm.memmove`, `llvm.memset`
 
-## Improvements Over MEMICS Version
+## Improvements over the MEMICS Version
 
 *   store buffer can be bypassed for load of thread-local memory location
     *   the thread-locality is recognized dynamically by DIVINE
@@ -305,18 +302,27 @@ void thread1() {
     *   saves runtime check and entering atomic section (which can cause state
         to be produced)
 
-*   also other optimizations (later) help
+*   memory safety can be verified
+    *   entries for memory location which cease to exist are evicted from store
+        buffer
 
-## Improvements Over MEMICS Version
+## Improvements over the MEMICS Version
 
-| model        | MEMICS  | $+$ load private       | $+$ local | SC
-|--------------|---------|------------------------|-----------|----
-| `fifo-1`     | $44$ M  | $5.6$ M ($7.9\times$)  |           | $7$ K
-| `fifo-2`     | $338$ M | $51$ M ($6.6\times$)   | | $7$ K
-| `fifo-3`     | $672$ M | $51$ M ($13\times$)    | | $7$ K
-| `simple-1`   | $538$ K | $19$ K ($28\times$)    | | 251
-| `peterson-2` | $103$ K | $40$ K ($2.6\times$)   | | $1.4$ K
-| `pt_mutex-2` | $1.6$ M | $12$ K ($135\times$)   |  | 98
+number of states for various models with TSO transformation
+
+| Model        | MEMICS  | $+$ load private       | $+$ local             | SC
+|--------------|---------|------------------------|-----------------------|----
+| `fifo-1`     | $44$ M  | $5.6$ M ($7.9\times$)  | $1.2$ M ($4.6\times$) | $7$ K
+| `fifo-2`     | $338$ M | $51$ M ($6.6\times$)   | $11$ M ($4.6\times$)  | $7$ K
+| `fifo-3`     | $672$ M | $51$ M ($13\times$)    | $11$ M ($4.6\times$)  | $7$ K
+| `simple-1`   | $538$ K | $19$ K ($28\times$)    | $11$ K ($1.7\times$)  | 251
+| `peterson-2` | $103$ K | $40$ K ($2.6\times$)   | $24$ K ($1.6\times$)  | $1.4$ K
+| `pt_mutex-2` | $1.6$ M | $12$ K ($135\times$)   | $7.5$ K ($1.6\times$) | 98
+
+*   load private = loads to memory not visible by other thread bypass store
+    buffer
+*   local = manipulations with locals to which address is never taken are not
+    transformed
 
 # Parallel Safe Optimizations
 
@@ -345,7 +351,7 @@ Can the assertion be triggered?
 LLVM s `-O0`:
 
 ```{.llvm}
-define i8* @foo(i8* %_) #0 {
+define i8* @foo(i8* %_) {
 entry:
   %_.addr = alloca i8*
   store i8* %_, i8** %_.addr
@@ -365,10 +371,10 @@ entry:
 LLVM s `-O2`:
 
 ```{.llvm}
-define noalias i8* @foo(i8* nocapture readnone %_) #0 {
+define noalias i8* @foo(i8* %_) {
 entry:
-  store i32 1, i32* @x, align 4, !tbaa !1
-  tail call void @__divine_assert(i32 1) #2
+  store i32 1, i32* @x
+  tail call void @__divine_assert(i32 1)
   ret i8* null
 }
 ```
@@ -382,9 +388,9 @@ entry:
 
 *   standard compiler optimizations do not preserve parallel behavior of the
     program
-    *   they also do not preserve readability of debugging information
-    *   variables can be promoted to registers, function inlining, code
-        movement, cycle invariant code motion
+    *   also do not preserve readability of debugging information
+    *   variables promotion, function inlining, code movement, cycle invariant
+        code motion
 
 *   optimizations can increase state space size
 
@@ -392,7 +398,7 @@ entry:
     verification tool
     *   both for usability of results and readability of counterexamples
 
-*   but optimizations can help verifier to run faster, with less memory
+*   but some optimizations can help verifier to run faster, with less memory
 
 . . .
 
@@ -439,11 +445,11 @@ entry:
 
 **Silent loads/stores**
 
-*   DIVINE's notion of `load`/`store` visibility based on pointer tracking
+*   DIVINE's notion of `load`/`store` visibility is based on pointer tracking
 *   a value might be reachable by pointers from more then one thread, but might
     be accessed only by one
 *   mark `load`/`store` as silent to avoid visibility checking
-*   could also improve generation speed
+*   could also improve verification speed
 *   requires good pointer analysis
 
 **Slicing**
