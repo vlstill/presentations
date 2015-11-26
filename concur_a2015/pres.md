@@ -74,7 +74,7 @@ LLVM Abstraction and Refinement Tool
 . . .
 
 *   generic platform for LLVM-to-LLVM transformations
-*   uses LLVM C++ API to run transformation and optimization passes
+*   uses LLVM's C++ API to run transformation and optimization passes
 
 . . .
 
@@ -98,7 +98,7 @@ DIVINE is an explicit state model checker
 
 . . .
 
-however, in concurrency category of SV-COMP:
+in concurrency category of SV-COMP:
 
 *   little or no nondeterminism
 *   most programs are reasonably small
@@ -306,18 +306,42 @@ void thread1() {
     *   entries for memory location which cease to exist are evicted from store
         buffer
 
+## Memory Safety with TSO
+
+problem: store buffer can be flushed after memory becomes invalid
+
+*   flush of value of local variable after function exists
+    *   \text{\only<2>\bf remove entry from store buffer before function exit}
+*   flush of value of dynamic memory after `free`
+    *   remove entry from store buffer in `free`
+
+## Local Variable Cleanup
+
+**remove entry from store buffer before function exit**
+
+*   easy for C, just add cleanup before `return`
+
+. . .
+
+*   much harder in C++: **exceptions**
+    *   function can be exited due to exception propagation
+    *   cleanups are similar to C++ destructors
+    *   need to stop the excetpion propagation, do cleanup, resume exception
+
+
 ## Improvements over the MEMICS Version
 
 number of states for various models with TSO transformation
 
-| Model        | MEMICS  | $+$ load private       | $+$ local             | SC
-|--------------|---------|------------------------|-----------------------|----
-| `fifo-1`     | $44$ M  | $5.6$ M ($7.9\times$)  | $1.2$ M ($4.6\times$) | $7$ K
-| `fifo-2`     | $338$ M | $51$ M ($6.6\times$)   | $11$ M ($4.6\times$)  | $7$ K
-| `fifo-3`     | $672$ M | $51$ M ($13\times$)    | $11$ M ($4.6\times$)  | $7$ K
-| `simple-1`   | $538$ K | $19$ K ($28\times$)    | $11$ K ($1.7\times$)  | 251
-| `peterson-2` | $103$ K | $40$ K ($2.6\times$)   | $24$ K ($1.6\times$)  | $1.4$ K
-| `pt_mutex-2` | $1.6$ M | $12$ K ($135\times$)   | $7.5$ K ($1.6\times$) | 98
+\begin{tabular}{l|llll} \hline
+Model                & MEMICS  & $+$ load private       & $+$ local             & SC \\ \hline
+\texttt{fifo-1}      & $44$ M  & $5.6$ M ($7.9\times$)  & $1.2$ M ($4.6\times$) & $7$ K \\
+\texttt{fifo-2}      & $338$ M & $51$ M ($6.6\times$)   & $11$ M ($4.6\times$)  & $7$ K \\
+\texttt{fifo-3}      & $672$ M & $51$ M ($13\times$)    & $11$ M ($4.6\times$)  & $7$ K \\
+\texttt{simple-1}    & $538$ K & $19$ K ($28\times$)    & $11$ K ($1.7\times$)  & 251 \\
+\texttt{peterson-2}  & $103$ K & $40$ K ($2.6\times$)   & $24$ K ($1.6\times$)  & $1.4$ K \\
+\texttt{pt\_mutex-2} & $1.6$ M & $12$ K ($135\times$)   & $7.5$ K ($1.6\times$) & 98 \\ \hline
+\end{tabular}
 
 *   load private = loads to memory not visible by other thread bypass store
     buffer
@@ -386,13 +410,34 @@ entry:
 
 ## Parallel Safe Optimizations
 
-*   standard compiler optimizations do not preserve parallel behavior of the
-    program
-    *   also do not preserve readability of debugging information
-    *   variables promotion, function inlining, code movement, cycle invariant
-        code motion
+standard compiler optimizations do not preserve parallel behavior of the
+program
 
-*   optimizations can increase state space size
+*   also do not preserve readability of debugging information
+*   variables promotion, function inlining, code movement, cycle invariant
+    code motion
+
+## Parallel Safe Optimizations
+
+optimizations can increase state space size
+
+*   often by adding registers
+
+    *   loops
+    ```cpp
+    while (x != 0) { /* ... */ }
+    ```
+    can get transformed into
+    ```cpp
+    if (x != 0) { do { /* ... */ } while (x != 0); }
+    ```
+
+    *   inlining
+    *   variable promotion
+
+*   states which used to be same are now distinguishable
+
+## Parallel Safe Optimizations
 
 *   it is desirable to verify code with the optimizations intended by user of
     verification tool
@@ -400,21 +445,13 @@ entry:
 
 *   but some optimizations can help verifier to run faster, with less memory
 
-. . .
+## Parallel Safe Optimizations
 
 *   design optimizations which cannot change verified properties
-    *   safety, non-stuttering LTL
+    *   safety, stutter-invariant LTL
 *   can tightly cooperate with DIVINE
 
-## Examples of Parallel Safe Optimizations
-
-**Branch Elimination**
-
-*   if branch destination has only one predecessor and branch is not
-    conditional, or condition is constant expression, branch can be eliminated
-*   clang actually emits LLVM with such branches in debug mode
-
-## Examples of Parallel Safe Optimizations
+## Example of Parallel Safe Optimization
 
 **Constant Alloca Elimintation**
 
