@@ -130,8 +130,7 @@ in concurrency category of SV-COMP:
 
 5.  **try to eliminate or constrain nondeterministic choices**
     *   bools are OK
-    *   nondeterministic pointers can be either `NULL` or `1` (which is also not
-        a valid pointer)
+    *   nondeterministic pointers can be either `NULL` or `1`
         *   we found no models in SV-COMP concurrency category where this causes bad answer
     *   for other types try to constrain the choice
         *   two common patterns recognised: cast to `bool` and modulo constant value
@@ -141,8 +140,8 @@ in concurrency category of SV-COMP:
 
 6.  **disable `malloc` failure**
     *   in DIVINE every call to `malloc` can return `NULL` (nondeterminism)
-    *   SV-COMP, however, works in idealized world where there is infinite
-        amound of memory…
+    *   SV-COMP, however, seems to work in an idealized world where there is
+        infinite amound of memory…
 
 ## How to Verify SV-COMP Models with DIVINE?
 
@@ -297,14 +296,18 @@ void thread1() {
 *   store buffer can be bypassed for load of thread-local memory location
     *   the thread-locality is recognized dynamically by DIVINE
 
+. . .
+
 *   manipulations with local variables whose address is never taken are not
     transformed
     *   saves runtime check and entering atomic section (which can cause state
         to be produced)
 
+. . .
+
 *   memory safety can be verified
-    *   entries for memory location which cease to exist are evicted from store
-        buffer
+    *   entries for memory location which cease to exist are evicted from the
+        store buffer
 
 ## Memory Safety with TSO
 
@@ -445,7 +448,7 @@ optimizations can increase state space size
 
 *   but some optimizations can help verifier to run faster, with less memory
 
-## Parallel Safe Optimizations
+. . .
 
 *   design optimizations which cannot change verified properties
     *   safety, stutter-invariant LTL
