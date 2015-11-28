@@ -6,7 +6,7 @@ author:
 header-includes:
     - \usepackage{divine}
 lang: english
-date: 20th November 2015
+date: 27th November 2015
 ...
 
 ## Introduction
