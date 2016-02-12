@@ -184,7 +184,7 @@ modifikace interpretru
 . . .
 
 *   transformace je parametrizovatelná
-    *   jaké garance paměťový model dává (reálné paměťové modely dávají větší garance než LLVM)
+    *   jaké garance paměťový model dává (reálné paměťové modely dávají často větší garance než LLVM)
     *   jak velký má být store buffer
 
 ## Princip transformace
@@ -229,6 +229,9 @@ Jméno  & SC & \multicolumn{3}{c|}{TSO} & \multicolumn{3}{c|}{TSO: nárůst} \\
 \texttt{hs-2-1-0} & \si{890973} & \si{250390514} & -- & -- & \speedup{250390514}{890973} & -- & -- \\ \hline % 251\,M & & \\ \hline
 \end{tabularx}
 
+\renewcommand{\thefootnote}{\dag}
+\footnotetext{DIVINE nalezl v modelu chybu}
+
 ## Vyhodnocení: LLVM memory model (velikost stavového prostoru)
 
 \begin{tabularx}{\textwidth}{|l|C|CCC|CCC|} \hline
@@ -241,6 +244,9 @@ Jméno  & SC & \multicolumn{3}{c|}{LLVM} & \multicolumn{3}{c|}{LLVM: nárůst} \
 \texttt{fifo-bug} &\si{1611}\dg & \si{12131}\dg & \si{14142}\dg & \si{21098}\dg & \speedup{12131}{1611} & \speedup{14142}{1611} & \speedup{21098}{1611} \\
 \texttt{hs-2-1-0} & \si{890973} & \si{251249798} & -- & -- & \speedup{251249798}{890973} & -- & -- \\ \hline
 \end{tabularx}
+
+\renewcommand{\thefootnote}{\dag}
+\footnotetext{DIVINE nalezl v modelu chybu}
 
 ## Vyhodnocení: další experimenty (po odevzdání)
 
@@ -265,6 +271,9 @@ Jméno  & SC & \multicolumn{3}{c|}{LLVM} & \multicolumn{3}{c|}{LLVM: nárůst} \
     vector & 162\,k & 8.15\,M & 8.95\,M & 10.3\,M & 10.6\,M & 333\,M & --\\
     \hline
 \end{tabularx}
+
+\renewcommand{\thefootnote}{\dag}
+\footnotetext{DIVINE nalezl v modelu chybu}
 
 # Optimalizace pro verifikaci
 
@@ -305,3 +314,47 @@ Plány do budoucna
 \bigskip
 \hfill{}Děkuji za pozornost
 
+
+# Dotazy
+
+## Dotaz vedoucího
+
+Bylo by možné zvýšit míru redukce stavového prostoru dosahovaného
+transformacemi, za předpokladu, že se verifikace programu zaměří na
+jeden vybraný konkrétní problém, řekněme třeba detekci deadlocku?
+
+*   ano, některé metody použitelné pro redukce (například slicing) mohou
+    fungovat lépe při omezené množině verifikovaných vlastností
+*   například slicing vzhledem k assertion safety
+*   pro detekci deadlocku je však třeba zachovat implementaci synchronizace,
+    která může být těžko odlišitelná od zbytku kódu
+
+## Dotazy oponenta
+
+V obrázku 4.5 je napsáno, že řádek `foo( ptr );` je maskován, pokud byla
+maskována funkce volající `doSomething`. Z textu jsem však nabyl dojmu, že tento
+řádek není maskován za žádných okolností. Jak to tedy je?
+
+```{.cpp .numberLines}
+void doSomething( int *ptr, int val ) {
+    divine::InterruptMask mask;
+    *ptr += val;
+    // release the mask only if 'mask' object owns it:
+    mask.release();
+    // masked only if caller of doSomething was masked:
+    foo( ptr );
+}
+```
+
+\begin{latex}
+\only<1>{Pokud není \texttt{doSomething} voláno pod maskou, pak objekt \texttt{mask} na řádku 2 vlastní masku, ta je na řádku 5 uvolněna.}
+\only<2>{Pokud je \texttt{doSomething} voláno pod maskou, pak \texttt{mask} objekt nemá na tuto masku žádný vliv a tedy řádek 7 je pod (vnější) maskou.}
+\end{latex}
+
+## Dotazy oponenta
+
+Proč se liší první číselné sloupce v tabulkách 5.5 a 5.6?
+
+*   v tabulce 5.5 představuje první sloupec neoptimalizovanou transformaci přidání memory modelů, avšak $\tau+$ redukce je v nové variantě
+*   v tabulce 5.6 představuje první sloupec starou verzi $\tau+$ redukce, avšak transformace je optimalizovaná
+*   poslední sloupec v obou tabulkách obsahuje výsledky se stejnými optimalizacemi
