@@ -140,9 +140,59 @@ zápis do paměti není na moderních CPU okamžitě viditelný ostatním proces
 *   reálná CPU se chovají neintuitivně
 
 \begin{latex}
-\makebox[\textwidth][c]{
-    \textit{[obrázek]}
-}
+    \makebox[\textwidth][c]{
+    \begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
+                       , semithick
+                       , scale=0.65
+                       ]
+
+      \useasboundingbox (-10,1) (7.3,-6);
+
+      \draw [-] (-10,0) -- (-6,0) -- (-6,-2) -- (-10,-2) -- (-10,0);
+      \draw [-] (-10,-1) -- (-6,-1);
+      \draw [-] (-8,0) -- (-8,-2);
+      \node () [anchor=west] at (-10,0.5) {paměť};
+      \node () [anchor=west] at (-10,-0.5)  {\texttt{@x}};
+      \node () [anchor=west] at (-8,-0.5)  {\texttt{@y}};
+      \node () [anchor=west] at (-10,-1.5)  {\texttt{0}};
+      \node () [anchor=west] at (-8,-1.5)  {\texttt{0}};
+
+      \node () [anchor=center] at (-2,-5.5) {store buffer vlákna 0};
+      \node () [anchor=center] at (4,-5.5) {store buffer vlákna 1};
+
+      \draw [-] (-4,-4) rectangle (0,-5);
+      \draw [-] (2,-4) rectangle (6,-5);
+      \draw [-] (-2,-4) -- (-2,-5);
+      \draw [-] (4,-4) -- (4,-5);
+
+      \node<2-> () [anchor=west] at (-4,-4.5)  {\texttt{@y}};
+      \node<2-> () [anchor=west] at (-2,-4.5)  {\texttt{1}};
+
+      \node<4-> () [anchor=west] at (2,-4.5)  {\texttt{@a}};
+      \node<4-> () [anchor=west] at (4,-4.5)  {\texttt{1}};
+
+      \node () [] at (-4, 0.5) {vlákno 0};
+      \draw [->] (-4,0) -- (-4,-2.5);
+      \node () [anchor=west, onslide={<2> font=\bf, color=red}] at (-3.5, -0.5) {\texttt{store @y 1;}};
+      \node () [anchor=west, onslide={<3> font=\bf, color=red}] at (-3.5, -1.5) {\texttt{load @x;}};
+
+      \node () [] at (2, 0.5) {vlákno 1};
+      \draw [->] (2,0) -- (2,-2.5);
+      \node () [anchor=west, onslide={<4> font=\bf, color=red}] at (2.5, -0.5) {\texttt{store @x 1;}};
+      \node () [anchor=west, onslide={<5> font=\bf, color=red}] at (2.5, -1.5) {\texttt{load @y;}};
+
+      \draw<2-> [->, dashed] (0.3,-0.5) to[in=0, out=0] (0,-4.5);
+      \draw<3-> [->, dashed] (-9,-2) to[in=0, out=-90, out looseness=0.7] (-0.7,-1.5);
+      \draw<4-> [->, dashed] (6.3,-0.5) to[in=0, out=0] (6,-4.5);
+      \draw<5-> [->, dashed] (-7,-2) to[in=0, out=-90, out looseness=0.5] (5.3,-1.5);
+
+      \draw<2> [->] (-4,-0.7) to (-3.4,-0.7);
+      \draw<3> [->] (-4,-1.7) to (-3.4,-1.7);
+
+      \draw<4> [->] (2,-0.7) to (2.6,-0.7);
+      \draw<5> [->] (2,-1.7) to (2.6,-1.7);
+  \end{tikzpicture}
+  }
 \end{latex}
 
 ## Verifikace paměťových modelů
@@ -326,8 +376,8 @@ jeden vybraný konkrétní problém, řekněme třeba detekci deadlocku?
 *   ano, některé metody použitelné pro redukce (například slicing) mohou
     fungovat lépe při omezené množině verifikovaných vlastností
 *   například slicing vzhledem k assertion safety
-*   pro detekci deadlocku je však třeba zachovat implementaci synchronizace,
-    která může být těžko odlišitelná od zbytku kódu
+*   pro detekci deadlocku je však třeba zachovat implementaci synchronizace a
+    kaódu, který k ní vede
 
 ## Dotazy oponenta
 
