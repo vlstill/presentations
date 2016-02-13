@@ -139,6 +139,8 @@ zápis do paměti není na moderních CPU okamžitě viditelný ostatním proces
 *   okamžitá viditelnost odpovídá *sekvenční konzistenci* (*Sequential Consistency*, SC)
 *   reálná CPU se chovají neintuitivně
 
+. . .
+
 \begin{latex}
     \makebox[\textwidth][c]{
     \begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
@@ -165,70 +167,91 @@ zápis do paměti není na moderních CPU okamžitě viditelný ostatním proces
       \draw [-] (-2,-4) -- (-2,-5);
       \draw [-] (4,-4) -- (4,-5);
 
-      \node<2-> () [anchor=west] at (-4,-4.5)  {\texttt{@y}};
-      \node<2-> () [anchor=west] at (-2,-4.5)  {\texttt{1}};
+      \node<3-> () [anchor=west] at (-4,-4.5)  {\texttt{@y}};
+      \node<3-> () [anchor=west] at (-2,-4.5)  {\texttt{1}};
 
-      \node<4-> () [anchor=west] at (2,-4.5)  {\texttt{@a}};
-      \node<4-> () [anchor=west] at (4,-4.5)  {\texttt{1}};
+      \node<5-> () [anchor=west] at (2,-4.5)  {\texttt{@a}};
+      \node<5-> () [anchor=west] at (4,-4.5)  {\texttt{1}};
 
       \node () [] at (-4, 0.5) {vlákno 0};
       \draw [->] (-4,0) -- (-4,-2.5);
-      \node () [anchor=west, onslide={<2> font=\bf, color=red}] at (-3.5, -0.5) {\texttt{store @y 1;}};
-      \node () [anchor=west, onslide={<3> font=\bf, color=red}] at (-3.5, -1.5) {\texttt{load @x;}};
+      \node () [anchor=west, onslide={<3> font=\bf, color=red}] at (-3.5, -0.5) {\texttt{store @y 1;}};
+      \node () [anchor=west, onslide={<4> font=\bf, color=red}] at (-3.5, -1.5) {\texttt{load @x;}};
 
       \node () [] at (2, 0.5) {vlákno 1};
       \draw [->] (2,0) -- (2,-2.5);
-      \node () [anchor=west, onslide={<4> font=\bf, color=red}] at (2.5, -0.5) {\texttt{store @x 1;}};
-      \node () [anchor=west, onslide={<5> font=\bf, color=red}] at (2.5, -1.5) {\texttt{load @y;}};
+      \node () [anchor=west, onslide={<5> font=\bf, color=red}] at (2.5, -0.5) {\texttt{store @x 1;}};
+      \node () [anchor=west, onslide={<6> font=\bf, color=red}] at (2.5, -1.5) {\texttt{load @y;}};
 
-      \draw<2-> [->, dashed] (0.3,-0.5) to[in=0, out=0] (0,-4.5);
-      \draw<3-> [->, dashed] (-9,-2) to[in=0, out=-90, out looseness=0.7] (-0.7,-1.5);
-      \draw<4-> [->, dashed] (6.3,-0.5) to[in=0, out=0] (6,-4.5);
-      \draw<5-> [->, dashed] (-7,-2) to[in=0, out=-90, out looseness=0.5] (5.3,-1.5);
+      \draw<3-> [->, dashed] (0.3,-0.5) to[in=0, out=0] (0,-4.5);
+      \draw<4-> [->, dashed] (-9,-2) to[in=0, out=-90, out looseness=0.7] (-0.7,-1.5);
+      \draw<5-> [->, dashed] (6.3,-0.5) to[in=0, out=0] (6,-4.5);
+      \draw<6-> [->, dashed] (-7,-2) to[in=0, out=-90, out looseness=0.5] (5.3,-1.5);
 
-      \draw<2> [->] (-4,-0.7) to (-3.4,-0.7);
-      \draw<3> [->] (-4,-1.7) to (-3.4,-1.7);
+      \draw<-2> [->] (-4,-0.3) to (-3.4,-0.3);
+      \draw<3> [->] (-4,-0.7) to (-3.4,-0.7);
+      \draw<4> [->] (-4,-1.7) to (-3.4,-1.7);
 
-      \draw<4> [->] (2,-0.7) to (2.6,-0.7);
-      \draw<5> [->] (2,-1.7) to (2.6,-1.7);
+      \draw<-4> [->] (2,-0.3) to (2.6,-0.3);
+      \draw<5> [->] (2,-0.7) to (2.6,-0.7);
+      \draw<6> [->] (2,-1.7) to (2.6,-1.7);
   \end{tikzpicture}
   }
 \end{latex}
 
 ## Verifikace paměťových modelů
 
-*   běžně verifikační nástroje podporují jen sekvenční konzistenci
+*   verifikační nástroje často podporují jen sekvenční konzistenci
 *   stejně tak DIVINE
 
 . . .
 
-**Dva možné přístupy k rozšíření funkcionality**
+**dva možné přístupy k rozšíření funkcionality**
 
-\begSplit
+\begin{latex}
+    \begin{minipage}[t]{0.47\textwidth}
 
-modifikace interpretru
+    \begin{block}{modifikace interpretru}
 
-*   specifické pro DIVINE
-*   vyžaduje zásah do složitého interpretru LLVM
-*   velmi náročné na ladění při vývoji
-*   nevyžaduje nic navíc od uživatele, jen zapnout při verifikaci modelu
+    \begin{itemize}
+    \tightlist
+    \item
+      specifické pro DIVINE
+    \item
+      vyžaduje zásah do složitého interpretru LLVM
+    \item
+      velmi náročné na ladění při vývoji
+    \item
+      nevyžaduje nic navíc od uživatele, jen zapnout při verifikaci modelu
+    \end{itemize}
+    \vfill
+    \end{block}
 
-\Split[\pause]
+    \end{minipage}\hspace*{0.04\textwidth}\pause\begin{minipage}[t]{0.47\textwidth}
 
-**modifikace vstupního programu**
+    \begin{block}{\textbf{modifikace vstupního programu}}
 
-*   na úrovni C++, nebo **LLVM**
-*   na úrovni LLVM výrazně jednodušší
-*   lze modifikovat pro jiné nástroje než DIVINE
-*   nevyžaduje modifikaci programu uživatelem, jen zapnout při překladu modelu
-
-\endSplit
+    \begin{itemize}
+    \tightlist
+    \item
+      na úrovni C++, nebo \textbf{LLVM}
+    \item
+      na úrovni LLVM výrazně jednodušší
+    \item
+      lze modifikovat pro jiné nástroje než DIVINE
+    \item
+      nevyžaduje modifikaci programu uživatelem, jen zapnout při překladu
+    \end{itemize}
+    \vfill
+    \end{block}
+    \end{minipage}
+\end{latex}
 
 ## LLVM transformace pro paměťové modely
 
-*   přidává podporu paměťového modelu LLVM
+*   přidává podporu LLVM paměťového modelu do programu
 *   téměř úplné pokrytí paměťového modelu C++11
-*   paměťový model obsahuje atomické instrukce (compare-and-swap, read-modify-write)
+*   paměťový model definuje atomické instrukce (compare-and-swap, read-modify-write)
 *   simulace pomocí store bufferů rozšířených o informace o instrukci
 
 . . .
@@ -251,10 +274,10 @@ modifikace interpretru
 
 . . .
 
-*   nutno zabránit opožděnému zápisu do uvolněné paměti
-    *   vylití store bufferu po uvolnění paměti/skončení funkce
+*   nutno zabránit opožděnému zápisu po uvolnění paměti
+    *   vylitím store bufferu po uvolnění paměti/skončení funkce
     *   dané lokace odstraněny ze store bufferu
-    *   vyžaduje viditelné výjimky
+    *   vyžaduje *viditelné* výjimky
 
 ## Optimalizace velikosti stavového prostoru
 
@@ -344,6 +367,19 @@ Jméno  & SC & \multicolumn{3}{c|}{LLVM} & \multicolumn{3}{c|}{LLVM: nárůst} \
 
 ## Optimalizace: vyhodnocení
 
+\begin{tabularx}{\textwidth}{|>{\tt\,}l<{\,}|CCC|CCC|} \hline
+    \multicolumn{1}{|c|}{\sf Jméno} & \multicolumn{3}{c|}{Čas} & \multicolumn{3}{c|}{Paměť} \\
+    & původní & opt. & zrychl. & původní & opt. & úspora \\ \hline
+    fifo & \si{791} & \si{791} & \speedup{791}{791} & \dmem{388724} & \dmem{338960} & \speedup{388724}{338960} \\
+    fifo-tso-3 & \si{48787} & \si{42098} & \speedup{48787}{42098} & \dmem{703484} & \dmem{522304} & \speedup{703484}{522304} \\
+    elevator2 & \si{17720078} & \si{11482370} & \speedup{17720078}{11482370} & \dmem{1296532} & \dmem{1328844} & \speedup{1296532}{1328844} \\
+    hs-2-1-0 & \si{890973} & \si{874778} & \speedup{890973}{874778} & \dmem{659780} & \dmem{345060} & \speedup{659780}{345060} \\
+    hs-2-1-0-tso-1 & \si{250390514} & \si{184001777} & \speedup{250390514}{184001777} & \dmem{32274396} & \dmem{19012388} & \speedup{32274396}{19012388} \\
+    hs-2-2-2 & \si{2328550} & \si{2292383} & \speedup{2328550}{2292383} & \dmem{1266776} & \dmem{873252} & \speedup{1266776}{873252} \\ \hline
+\end{tabularx}
+
+opt. = odstranění konstantních lokálních proměnných + detekce konstantních globálních proměnných
+
 ## Závěr
 
 Shrnutí
@@ -357,7 +393,7 @@ Shrnutí
 Plány do budoucna
 
 *   další snahy o redukci stavového prostoru při použití memory modelu
-*   vyžití dalších analýz
+*   vyžití dalších analýz k redukci stavového prostoru
 
 . . .
 
@@ -373,11 +409,10 @@ Bylo by možné zvýšit míru redukce stavového prostoru dosahovaného
 transformacemi, za předpokladu, že se verifikace programu zaměří na
 jeden vybraný konkrétní problém, řekněme třeba detekci deadlocku?
 
-*   ano, některé metody použitelné pro redukce (například slicing) mohou
-    fungovat lépe při omezené množině verifikovaných vlastností
-*   například slicing vzhledem k assertion safety
+*   ano, některé metody, například slicing, mohou fungovat lépe při omezené
+    množině verifikovaných vlastností
 *   pro detekci deadlocku je však třeba zachovat implementaci synchronizace a
-    kaódu, který k ní vede
+    kódu, který k ní vede
 
 ## Dotazy oponenta
 
@@ -397,7 +432,7 @@ void doSomething( int *ptr, int val ) {
 ```
 
 \begin{latex}
-\only<1>{Pokud není \texttt{doSomething} voláno pod maskou, pak objekt \texttt{mask} na řádku 2 vlastní masku, ta je na řádku 5 uvolněna.}
+\only<1>{Pokud není \texttt{doSomething} voláno pod maskou, pak objekt \texttt{mask} na řádku 2 vlastní masku a ta je na řádku 5 uvolněna.}
 \only<2>{Pokud je \texttt{doSomething} voláno pod maskou, pak \texttt{mask} objekt nemá na tuto masku žádný vliv a tedy řádek 7 je pod (vnější) maskou.}
 \end{latex}
 
