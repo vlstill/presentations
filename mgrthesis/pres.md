@@ -1,6 +1,6 @@
 ---
 title: LLVM Transformations for Model Checking
-subtitle: Master's Thesis
+subtitle: Magisterská práce
 author:
     - Vladimír Štill
 header-includes:
@@ -8,7 +8,7 @@ header-includes:
     - \input{tlua}
 
 lang: czech
-date: 15th February 2016
+date: 15\. února 2016
 aspectratio: 169
 ...
 
@@ -60,7 +60,8 @@ Cíl: verifikace paralelních C a C++ programů.
 
 ## Transformace LLVM
 
-*   LLVM -- mezijazyk používaný při překladu + knihovny pro jeho manipulaci
+*   LLVM IR: mezijazyk používaný při překladu
+*   LLVM: IR + knihovny pro manipulaci s IR, generování assembleru,…
 *   snadná analýza, transformace
 
 . . .
@@ -127,7 +128,7 @@ LART: nástroj pro analýzu a transformaci LLVM
     *   spouštění kódu na konci funkcí
     *   potřebné pro mnohé další transformace
     *   výjimka může způsobit ukončení funkce v místě volání jiné funkce
-    *   $\rightarrow$ zajištění *vyditelnosti výjimek* ve funkci
+    *   $\rightarrow$ zajištění *viditelnosti výjimek* ve funkci
 
 # Relaxované paměťové modely
 
@@ -150,14 +151,19 @@ zápis do paměti není na moderních CPU okamžitě viditelný ostatním proces
 
       \useasboundingbox (-10,1) (7.3,-6);
 
-      \draw [-] (-10,0) -- (-6,0) -- (-6,-2) -- (-10,-2) -- (-10,0);
-      \draw [-] (-10,-1) -- (-6,-1);
-      \draw [-] (-8,0) -- (-8,-2);
+      \draw [-] (-10,0) rectangle (-7,-6);
+      \draw [-] (-10,-1) -- (-7,-1)
+                (-10,-2) -- (-7,-2)
+                (-10,-3) -- (-7,-3)
+                (-10,-4) -- (-7,-4)
+                (-10,-5) -- (-7,-5);
+      \draw [-] (-9,0) -- (-9,-6);
       \node () [anchor=west] at (-10,0.5) {paměť};
-      \node () [anchor=west] at (-10,-0.5)  {\texttt{@x}};
-      \node () [anchor=west] at (-8,-0.5)  {\texttt{@y}};
-      \node () [anchor=west] at (-10,-1.5)  {\texttt{0}};
-      \node () [anchor=west] at (-8,-1.5)  {\texttt{0}};
+      \node () [anchor=west] at (-10,-2.5)  {\texttt{@x}};
+      \node () [anchor=west] at (-9,-2.5)  {\texttt{0}};
+
+      \node () [anchor=west] at (-10,-3.5)  {\texttt{@y}};
+      \node () [anchor=west] at (-9,-3.5)  {\texttt{0}};
 
       \node () [anchor=center] at (-2,-5.5) {store buffer vlákna 0};
       \node () [anchor=center] at (4,-5.5) {store buffer vlákna 1};
@@ -170,31 +176,34 @@ zápis do paměti není na moderních CPU okamžitě viditelný ostatním proces
       \node<3-> () [anchor=west] at (-4,-4.5)  {\texttt{@y}};
       \node<3-> () [anchor=west] at (-2,-4.5)  {\texttt{1}};
 
-      \node<5-> () [anchor=west] at (2,-4.5)  {\texttt{@a}};
+      \node<5-> () [anchor=west] at (2,-4.5)  {\texttt{@x}};
       \node<5-> () [anchor=west] at (4,-4.5)  {\texttt{1}};
 
       \node () [] at (-4, 0.5) {vlákno 0};
-      \draw [->] (-4,0) -- (-4,-2.5);
+      \draw [->] (-4,0) -- (-4,-2.3);
       \node () [anchor=west, onslide={<3> font=\bf, color=red}] at (-3.5, -0.5) {\texttt{store @y 1;}};
       \node () [anchor=west, onslide={<4> font=\bf, color=red}] at (-3.5, -1.5) {\texttt{load @x;}};
 
       \node () [] at (2, 0.5) {vlákno 1};
-      \draw [->] (2,0) -- (2,-2.5);
+      \draw [->] (2,0) -- (2,-3.3);
       \node () [anchor=west, onslide={<5> font=\bf, color=red}] at (2.5, -0.5) {\texttt{store @x 1;}};
       \node () [anchor=west, onslide={<6> font=\bf, color=red}] at (2.5, -1.5) {\texttt{load @y;}};
+      \node () [anchor=west, onslide={<7> font=\bf, color=red}] at (2.5, -2.5) {\texttt{load @x;}};
 
       \draw<3-> [->, dashed] (0.3,-0.5) to[in=0, out=0] (0,-4.5);
-      \draw<4-> [->, dashed] (-9,-2) to[in=0, out=-90, out looseness=0.7] (-0.7,-1.5);
+      \draw<4-> [->, dashed] (-7,-2.5) to[in=0, out=0, out looseness = 3, in looseness=0.5] (-0.7,-1.5);
       \draw<5-> [->, dashed] (6.3,-0.5) to[in=0, out=0] (6,-4.5);
-      \draw<6-> [->, dashed] (-7,-2) to[in=0, out=-90, out looseness=0.5] (5.3,-1.5);
+      \draw<6-> [->, dashed] (-7,-3.5) to[in=0, out=0, out looseness = 0.2, in looseness = 0.7] (5.3,-1.5);
+      \draw<7-> [->, dashed] (6,-4.5) to[in=0, out=0] (5.3,-2.5);
 
       \draw<-2> [->] (-4,-0.3) to (-3.4,-0.3);
       \draw<3> [->] (-4,-0.7) to (-3.4,-0.7);
-      \draw<4> [->] (-4,-1.7) to (-3.4,-1.7);
+      \draw<4-> [->] (-4,-1.7) to (-3.4,-1.7);
 
       \draw<-4> [->] (2,-0.3) to (2.6,-0.3);
       \draw<5> [->] (2,-0.7) to (2.6,-0.7);
       \draw<6> [->] (2,-1.7) to (2.6,-1.7);
+      \draw<7> [->] (2,-2.7) to (2.6,-2.7);
   \end{tikzpicture}
   }
 \end{latex}
@@ -264,7 +273,7 @@ zápis do paměti není na moderních CPU okamžitě viditelný ostatním proces
 
 *   každý zápis, čtení, atomická instrukce a paměťová bariéra transformovány
     *   zápis proběhne do store bufferu
-    *   čtení kontroluje jestli je v lokálním store bufferu nová hodnota
+    *   čtení kontroluje, jestli je v lokálním store bufferu nová hodnota
 *   přidáno vlákno, které vylévá store buffer
 
 . . .
@@ -385,7 +394,7 @@ opt. = odstranění konstantních lokálních proměnných + detekce konstantní
 Shrnutí
 
 *   demonstrována použitelnost LLVM transformací pro model checking v DIVINE
-*   podpora pro paměťové modely pomocí LLVM transforamce
+*   podpora pro paměťové modely pomocí LLVM transformace
 *   optimalizace zachovávající verifikované vlastnosti
 
 . . .
@@ -393,7 +402,7 @@ Shrnutí
 Plány do budoucna
 
 *   další snahy o redukci stavového prostoru při použití memory modelu
-*   vyžití dalších analýz k redukci stavového prostoru
+*   využití dalších analýz k redukci stavového prostoru
 
 . . .
 
@@ -433,7 +442,7 @@ void doSomething( int *ptr, int val ) {
 
 \begin{latex}
 \only<1>{Pokud není \texttt{doSomething} voláno pod maskou, pak objekt \texttt{mask} na řádku 2 vlastní masku a ta je na řádku 5 uvolněna.}
-\only<2>{Pokud je \texttt{doSomething} voláno pod maskou, pak \texttt{mask} objekt nemá na tuto masku žádný vliv a tedy řádek 7 je pod (vnější) maskou.}
+\only<2>{Pokud je \texttt{doSomething} voláno pod maskou, pak \texttt{mask} objekt nemá na tuto masku žádný vliv, a tedy řádek 7 je pod (vnější) maskou.}
 \end{latex}
 
 ## Dotazy oponenta
