@@ -1,6 +1,6 @@
 ---
 title: LLVM Transformations for Model Checking
-subtitle: Magisterská práce
+subtitle: Diplomová práce
 author:
     - Vladimír Štill
 header-includes:
@@ -377,8 +377,8 @@ Jméno  & SC & \multicolumn{3}{c|}{LLVM} & \multicolumn{3}{c|}{LLVM: nárůst} \
 ## Optimalizace: vyhodnocení
 
 \begin{tabularx}{\textwidth}{|>{\tt\,}l<{\,}|CCC|CCC|} \hline
-    \multicolumn{1}{|c|}{\sf Jméno} & \multicolumn{3}{c|}{Čas} & \multicolumn{3}{c|}{Paměť} \\
-    & původní & opt. & zrychl. & původní & opt. & úspora \\ \hline
+    \multicolumn{1}{|c|}{\sf Jméno} & \multicolumn{3}{c|}{Počet stavů} & \multicolumn{3}{c|}{Paměť} \\
+    & původní & opt. & úspora & původní & opt. & úspora \\ \hline
     fifo & \si{791} & \si{791} & \speedup{791}{791} & \dmem{388724} & \dmem{338960} & \speedup{388724}{338960} \\
     fifo-tso-3 & \si{48787} & \si{42098} & \speedup{48787}{42098} & \dmem{703484} & \dmem{522304} & \speedup{703484}{522304} \\
     elevator2 & \si{17720078} & \si{11482370} & \speedup{17720078}{11482370} & \dmem{1296532} & \dmem{1328844} & \speedup{1296532}{1328844} \\
