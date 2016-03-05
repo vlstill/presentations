@@ -41,7 +41,7 @@ date: 7th March 2015
 
 # Lazy-CSeq \cite{LazyCAV14, Lazy16}
 
-## Assumption about the Input
+## Assumption About the Input
 
 *   sequentially consistent memory access
 *   each statement ($\sim$ line of code) is atomic
@@ -205,7 +205,7 @@ Guard control flow validity.
 
 \hfill
 
-## Thread dispatch
+## Thread Dispatch
 
 In the new `main`
 
@@ -239,7 +239,7 @@ for K rounds:
 *   download at <http://users.ecs.soton.ac.uk/gp4/cseq/cseq.html>
 *   requires CBMC (or BLITZ, ESBMC, LLBMC, …), Python 2, `pycparser`
     *   CBMC needs to be in `PATH`
-*   `python2 ./cseq.py -i file.c`
+*   `./cseq.py -i file.c`
 
 ## Does It Work?
 
@@ -269,7 +269,159 @@ warning: warnings on stderr from the backend)
 inc.c, SAFE, 0.89
 ```
 
-## Bibliography
+# MU-CSeq \cite{MUTACAS15, MUSVC16}
+
+## Memory Unwindings
+
+*Memory unwinding* = a sequence of write operations into the shared memory
+
+*   guessed nondeterministically
+*   program scheduling must match MUs
+*   MU-CSeq bounds the number of writes into concurrently-accessed memory
+    locations (*shared variables*)
+
+## Definitions I
+
+### *n-memory unwinding $M$*
+
+\vspace{-\medskipamount}
+
+*   a sequence of writes $w_1\ldots w_n$ of shared variables
+*   each $w_i$ is a triple $(t_i, var_i, val_i)$
+    *   $t_i$ is the identifier of the thread which performed the write
+    *   $var_i$ is the name of the written variables
+    *   $val_i$ is the new value of $var_i$
+
+### *Position* in an *n*-memory unwinding $M$
+
+\vspace{-\medskipamount}
+
+*   an index in the interval $[1, n]$
+
+## Definitions II
+
+### Execution of program $P$ *conforms to* a memory unwinding $M$
+
+\vspace{-\medskipamount}
+
+*   if the sequence of its writes in the shared memory exactly matches $M$
+
+### *Unfeasible* unwinding $M$ for program $P$
+
+\vspace{-\medskipamount}
+
+*   no execution of $P$ conforms to $M$
+
+## Simulation of Program $P$ under Unwinding $M$
+
+with thread number bound $\tau$
+
+*   the aim is to simulate all runs of $P$ which conforms to $M$
+*   threads communicate by
+    *   shared variables, which are in the unwinding
+    *   locks and thread creation/joining functions
+*   therefore, for the given unwinding $M$, threads can be executed
+    sequentially
+    *   thread creation $\rightarrow$ function call
+    *   joins and locks prune infeasible runs
+
+## Simulation of Program $P$ under Unwinding $M$
+
+simulation of thread $t$
+
+*   keeps track of last position in $M$
+*   operations over non-shared variables are not changed
+*   a write of $val$ to shared a variable $var$ check that the closest entry in
+    $M$ for $t$ is ($t$, $var$, $val$) (write of the same value to the same
+    variable)
+    *   otherwise the run is abandoned
+*   a read of variable $var$ nondeterministically guesses a position of write to
+    $var$ between the last position of $t$ in $M$ and the position of next write
+    from $t$
+
+## Memory Unwinding Implementations
+
+authors discuss several implementations
+
+### *fine-grained* MU
+
+\vspace{-\medskipamount}
+
+*   all writes to shared variable are stored in MU
+*   this was presented so far
+
+### *coarse-grained* MU
+
+\vspace{-\medskipamount}
+
+*   only some writes are visible in MU
+*   writes can be grouped together
+    *   *intra-thread* coarse-grained MU (grouping only in one thread)
+    *   *inter-thread* coarse-grained MU (writes from multiple threads can occur
+        at a single MU position)
+*   nondeterministically selects which writes are visible to other threads
+
+## Coarse-Grained MU
+
+### Intra-Thread Coarse-Grained MU
+
+\vspace{-\medskipamount}
+
+
+*   stores sequence of *clusters of writes*
+    *   thread id + partial mapping from shared variables to values
+*   simulation of thread $t$ at position $i$:
+    *   if $t$ does not write into memory at $i$ it can only read;
+    *   otherwise:
+        *   the write must be to the variable in the mapping,
+        *   all the writes in the cluster must be matched before advancing to the
+            next position
+        *   (the last written value to each variable in the cluster must match
+            the mapping)
+
+### Inter-Thread Coarse-Grained MU
+
+\vspace{-\medskipamount}
+
+*   multiple threads can be assigned to a single cluster/position
+*   unexposed writes can be seen by other threads of the cluster
+
+## Individual Memory Location Unwindings \cite{MUSVC16}
+
+*   separate unwinding for each individual shared memory location
+    *   for locations corresponding to scalar types of pointers
+*   timestamps of writes to recover global total order of writes
+*   supports dynamic memory and pointer arithmetics
+*   detailed description not available
+
+
+## MU-CSeq
+
+*   works with CBMC as a backend
+*   does loop and recursion bounding (but not context-switch bounding)
+*   winner of SV-COMP 2016 (beats Lazy-CSeq in speed)
+
+### How to use it
+
+\vspace{-\medskipamount}
+
+*   <http://users.ecs.soton.ac.uk/gp4/cseq/cseq.html>
+*   needs CBMC + Python 2 + `pycparser`
+*   needs SV-COMP-style specification file (`ALL.prp`):
+
+    ```
+    CHECK(init(main()), LTL(G ! call(__VERIFIER_error())))
+    ```
+
+*   `./mu-cseq.py -i file.c --spec ALL.prp`
+
+## Does it work?
+
+*   the transformation seems to be buggy
+    *   is not able to handle prefix increment (`++x`)
+*   but with postfix increment finds the bug omitted by Lazy-CSeq
+
+## Bibliography {.allowframebreaks}
 
 \bibliographystyle{plain}
 \bibliography{pres}

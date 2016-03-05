@@ -6,7 +6,7 @@ PWD=$(shell pwd)
 
 all : mds $(SEQPROGS)
 
-.PRECIOUS: %.md.tex %.pdf
+.PRECIOUS: %.pdf
 
 mds :	$(ALL_MD:.md=.pdf)
 

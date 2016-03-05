@@ -24,3 +24,22 @@
     author = {Omar Inverso and Truc L. Nguyen and Ermenegildo Tomasco and Bernd Fischer 2 and Salvatore La Torre and Gennaro Parlato},
     title = {{Lazy-CSeq 1.0 (Competition Contribution), rejected, \url{http://eprints.soton.ac.uk/387010/}}}
 }
+
+
+@inproceedings{MUTACAS15,
+       booktitle = {21st International Conference on Tools and Algorithms for the Construction and Analysis of Systems (TACAS)},
+           month = {April},
+           title = {Verifying concurrent programs by memory unwinding},
+          author = {Ermenegildo Tomasco and Omar Inverso and Bernd Fischer and Salvatore La Torre and Gennaro Parlato},
+            year = {2015},
+             url = {http://eprints.soton.ac.uk/370322/},
+        abstract = {We describe a new sequentialization-based approach to the symbolic verification of multi-threaded programs with shared memory and dynamic thread creation. Its main novelty is the idea of memory unwinding, i.e., an explicit representation of the sequence of write operations into the shared memory. For the verification, we nondeterministically guess this unwinding and then simulate the behavior of the program according to any scheduling that respects this guess. This approach is complementary to other sequentializations and explores an orthogonal dimension, i.e., the number of write operations. It also simplifies the implementation of several important optimizations, in particular the targeted exposure of individual writes. We implemented this approach as code-to-code transformation from multi-threaded into nondeterministic sequential programs, which allows the reuse of sequential verification tools. Experiments show that our approach is very promising: it found all errors in the concurrency category of SV-COMP15.}
+}
+
+@inproceedings{MUSVC16,
+    booktitle = {22st International Conference on Tools and Algorithms for the Construction and Analysis of Systems (TACAS), to appear},
+    title = {{MU-CSeq 0.4: Individual Memory Location Unwindings (Competition Contribution)}},
+    author = {Ermenegildo Tomasco and Truc L. Nguyen and Omar Inverso and
+              Bernd Fischer and Salvatore La Torre and Gennaro Parlato},
+    year = 2016
+}

@@ -4,14 +4,14 @@
 int x;
 
 void *thread( void *_ ) {
-    ++x;
+    x++;
     return 0;
 }
 
 int main() {
     pthread_t t;
     pthread_create( &t, 0, thread, 0 );
-    ++x;
+    x++;
     pthread_join( t, 0 );
     assert( x == 2 );
 }
