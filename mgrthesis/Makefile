@@ -20,3 +20,4 @@ watch :
 	while true; do inotifywait -e close_write,moved_to,create .; sleep 1; make; done
 
 .PHONY: watch
+.PRECIOUS: %.tex %.pdf
