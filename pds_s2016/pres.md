@@ -236,6 +236,8 @@ for K rounds:
 
 ### How to Use It
 
+\vspace{-\medskipamount}
+
 *   download at <http://users.ecs.soton.ac.uk/gp4/cseq/cseq.html>
 *   requires CBMC (or BLITZ, ESBMC, LLBMC, …), Python 2, `pycparser`
     *   CBMC needs to be in `PATH`
@@ -401,7 +403,7 @@ authors discuss several implementations
 *   does loop and recursion bounding (but not context-switch bounding)
 *   winner of SV-COMP 2016 (beats Lazy-CSeq in speed)
 
-### How to use it
+### How to Use It
 
 \vspace{-\medskipamount}
 
@@ -409,9 +411,12 @@ authors discuss several implementations
 *   needs CBMC + Python 2 + `pycparser`
 *   needs SV-COMP-style specification file (`ALL.prp`):
 
+    \small
     ```
     CHECK(init(main()), LTL(G ! call(__VERIFIER_error())))
     ```
+
+    \normalsize
 
 *   `./mu-cseq.py -i file.c --spec ALL.prp`
 
