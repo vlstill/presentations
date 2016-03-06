@@ -1,7 +1,7 @@
 ---
 title: Bounded Model Checking of Multi-threaded C Programs
 subtitle: Lazy-CSeq and MU-CSeq
-titleshort: \*-CSeq
+titleshort: Lazy-CSeq and MU-CSeq
 author:
     - presented by Vladimír Štill
 header-includes:
@@ -14,32 +14,34 @@ date: 7th March 2015
 
 **bounded model checking of parallel C via *sequentialization* **
 
-*   multi-threaded programs translated to nondeterministic sequential programs
-    *   simulates all round-robin schedules
-    *   bound on the number of rounds
+*   ANSI C (C89) + `pthreads`
 
-*   also bounded in the number of cycle iterations and recursion depth
+*   multi-threaded programs translated to nondeterministic sequential programs
+
+*   bounded in the number of cycle iterations and recursion depth
     *   cycle/function *unwinding*
     *   each thread represented by a single function without cycles
 
 *   bounded and sequentialized program passed to a backend
-    *   CBMC in this case
+    *   CBMC is preferred, but both claim to work with multiple bounded model
+        checkers
 
-## Lazy-CSeq and MU-CSeq
+# Lazy-CSeq \cite{LazyCAV14, Lazy16}
 
-**bounded model checking of parallel C via *sequentialization* **
+## Lazy-CSeq
 
-*   exploit the simple structure of unwound programs
+*   exploits the simple structure of unwound programs
     *   no function calls
     *   no cycles $\rightarrow$ no back jumps
     *   very simple control flow (`if`, forward `goto`, thread creation/joining)
     *   every statement is executed at most once
 
+*   simulates all round-robin schedules
+    *   bound on the number of rounds
+
 *   the actual property violation detection left to the backend
 
 *   sequentialization preserves safety properties *within the bounds*
-
-# Lazy-CSeq \cite{LazyCAV14, Lazy16}
 
 ## Assumption About the Input
 
@@ -56,7 +58,7 @@ date: 7th March 2015
 1.  functions which appear in `pthread_create` and `main` are copied as *thread
     entries*
     *   every `pthread_create` corresponds to a new thread entry
-    *   we will denote them $f_0$ to $f_n$ ($f_0$ = copy of `main`)
+    *   we will denote them $f_0$ to $f_n$ ($f_0$ = a copy of `main`)
 
 2.  loop and function calls are unwound in $f_0$ to $f_n$
     *   except for calls to `pthread_*`
@@ -64,11 +66,10 @@ date: 7th March 2015
 3.  $f_0$ to $f_n$ are instrumented to allow partial execution and to preserve
     state between invocations
     *   all locals are turned into `static`
-    *   control flow is instrumented (later)
+    *   control flow is instrumented
 
 4.  new `main` is added
-    *   dispatches $f_0$ to $f_n$ repeatedly in the round-robin fashion for a
-        nondeterministically guessed number of statements
+    *   dispatches $f_0$ to $f_n$ repeatedly in the round-robin fashion
 
 ## Thread Control Flow Instrumentation
 
@@ -119,7 +120,7 @@ void *prod( void *b ) {
 }
 ```
 
-Make variables `static`
+Make variables `static`.
 
 \hfill
 
@@ -146,8 +147,7 @@ void *prod( void *b ) {
               _l1: }
               pthread_mutex_unlock( &m );
 ```
-
-Unwinding
+Loop unwinding.
 
 ## Thread Control Flow Instrumentation
 
@@ -173,7 +173,7 @@ void *prod( void *b ) {
   7: J(7,8)   pthread_mutex_unlock( &m );
 ```
 
-Add support for jumping over statements (invisible not considered)
+Add support for jumping over statements (invisible not considered).
 
 \hfill
 
@@ -216,9 +216,9 @@ In the new `main`
 *   thread executes until its PC equals `cs` (context-switch point)
 *   keeps an array of active thread IDs, PCs for each thread
 
-. . .
-
 for K rounds:
+
+\vspace{-\medskipamount}
 
 *   for each active thread $t$
     1.  guess next context switch point (`cs`) nondeterministically
@@ -231,6 +231,9 @@ for K rounds:
 *   but wins SV-COMP since 2014 (together with MU-CSeq)
 *   works with many bounded model checkers
 *   supports deadlock detection, counterexamples
+*   ignores array bounds
+*   seems to support small part of C library (for example `malloc`, `strcpy`,
+    but not `assert`, `qsort`)
 
 . . .
 
@@ -244,8 +247,6 @@ for K rounds:
 *   `./cseq.py -i file.c`
 
 ## Does It Work?
-
-. . .
 
 ```{.cpp}
 int x;
@@ -274,6 +275,10 @@ inc.c, SAFE, 0.89
 # MU-CSeq \cite{MUTACAS15, MUSVC16}
 
 ## Memory Unwindings
+
+MU-CSeq based on the idea of bounded memory unwindings
+
+*   targets C, but explained on a simplified language
 
 *Memory unwinding* = a sequence of write operations into the shared memory
 
@@ -337,9 +342,9 @@ simulation of thread $t$
     $M$ for $t$ is ($t$, $var$, $val$) (write of the same value to the same
     variable)
     *   otherwise the run is abandoned
-*   a read of variable $var$ nondeterministically guesses a position of write to
-    $var$ between the last position of $t$ in $M$ and the position of next write
-    from $t$
+*   a read of variable $var$ nondeterministically guesses a position of write in
+    the unwinding which writes to $var$ between the last position of $t$ in $M$
+    and the position of next write from $t$ and reads this value
 
 ## Memory Unwinding Implementations
 
@@ -391,7 +396,7 @@ authors discuss several implementations
 ## Individual Memory Location Unwindings \cite{MUSVC16}
 
 *   separate unwinding for each individual shared memory location
-    *   for locations corresponding to scalar types of pointers
+    *   for locations corresponding to scalar types or pointers
 *   timestamps of writes to recover global total order of writes
 *   supports dynamic memory and pointer arithmetics
 *   detailed description not available
@@ -424,6 +429,8 @@ authors discuss several implementations
 
 *   the transformation seems to be buggy
     *   is not able to handle prefix increment (`++x`)
+*   seems to support very little of C library
+*   ignores memory errors
 *   but with postfix increment finds the bug omitted by Lazy-CSeq
 
 ## Bibliography {.allowframebreaks}
