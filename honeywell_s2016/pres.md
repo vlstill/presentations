@@ -21,19 +21,49 @@ date: 11th March 2015
 
 ## DIVINE: Input Formalisms
 
+LLVM
+
+\vspace{-\medskipamount}
+
+*   for verification of C and C++
+*   more later
+
 DVE
 
-*   
+\vspace{-\medskipamount}
+
+*   simple input formalism for communicating processes
+*   each process has finitely many states
+*   channels, guards for communication and synchronization
 
 CESMI
 
-*
+\vspace{-\medskipamount}
+
+*   user-implemented, compiled models, using C API
 
 Timed automata
 
-## DIVINE: Input Formalisms
+\vspace{-\medskipamount}
 
-\llvm
+*   using UPPALL formalism
+
+## DIVINE: State Space Output
+
+DIVINE can either run a verification algorithm over the state space, *or
+calculate and save the state space*
+
+\bigskip
+
+**DESS (DIVINE Explicit State Space)**
+
+*   binary format of explicit state space
+*   DIVINE can materialize any state space into DESS
+*   state flags (assertion violation, atomic propositions) can be read from
+    DESS
+
+
+## DIVINE: LLVM as an Input Language
 
 *   used for verification of C and C++ programs
 *   since \divine{} 3
