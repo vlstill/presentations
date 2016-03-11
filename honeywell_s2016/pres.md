@@ -5,7 +5,8 @@ author:
 header-includes:
     - \usepackage{divine}
 lang: english
-date: 11th March 2015
+date: 11th March 2016
+aspectratio: 169
 ...
 
 ## DIVINE
@@ -16,7 +17,7 @@ date: 11th March 2015
 *   verifies safety and LTL properties
     *   specification depends on the input formalism
 *   parallel (and distributed) verification
-*   reduction strategies
+*   efficient state space reduction and compression techniques
 *   <https://divine.fi.muni.cz>
 
 ## DIVINE: Input Formalisms
@@ -46,7 +47,7 @@ Timed automata
 
 \vspace{-\medskipamount}
 
-*   using UPPALL formalism
+*   using UPPAAL formalism
 
 ## DIVINE: State Space Output
 
@@ -76,10 +77,10 @@ calculate and save the state space*
 
 ## DIVINE: Input Formalisms
 
-\framesubtitle{LTL in LLVM}
+**LTL in LLVM**
 
 *   explicitly activated atomic propositions
-*   hold only in the state they were raised
+*   hold only in the state they were signalled
     *   two APs cannot hold at the same time
 *   better support is planned in DIVINE 4
 
@@ -87,8 +88,7 @@ calculate and save the state space*
 #include <divine.h>
 enum APs { c1in, c1out, c2in, c2out };
 LTL(exclusion,
-    G( (c1in -> (!c2in W c1out))
-      && (c2in -> (!c1in W c2out))) );
+    G( (c1in -> (!c2in W c1out)) && (c2in -> (!c1in W c2out))) );
 
 void critical1() { AP( c1in ); AP( c1out ); }
 void critical2() { AP( c2in ); AP( c2out ); }
@@ -133,7 +133,7 @@ void critical2() { AP( c2in ); AP( c2out ); }
 divine compile --lib # needed only once
 divine compile --pre=. test.cpp --cflags="-std=c++11"
 divine info test.bc # list properties
-divine verify test.bc --compress --display-counterex
+divine verify test.bc --compress --display-counterexample
 ```
 
 ## C++/LLVM as a Modelling Language
@@ -167,14 +167,15 @@ void *malloc( size_t size ) {
 
 \footnotesize
 
+\vspace{-\bigskipamount}
+
 ```{.cpp}
 #include <divine/problem.h>
 #include <divine.h>
 struct Mutex {
     void unlock() {
         __divine_interrupt(); __divine_interrupt_mask();
-        if ( _locktid == 0 )
-            __divine_problem( Other, "mutex not locked" );
+        if ( _locktid == 0 ) __divine_problem( Other, "mutex not locked" );
         _locktid = 0;
     }
     void lock() {
@@ -206,7 +207,7 @@ struct Mutex {
 *   
     ```{.bash}
     divine compile --pre=. test.cpp
-    lart test.bc test-tso.bc weakmem:tso
+    lart test.bc test-tso.bc weakmem:tso:2
     divine verify test-tso.bc
     ``` 
 *   in development
