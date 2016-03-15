@@ -14,82 +14,39 @@ aspectratio: 169
 ## DIVINE
 
 *   explicit-state model checker for verification of parallel programs
-    *   main focus on C++/\llvm
+    *   main focus on C/C++ using \llvm
     *   also many other inputs: DVE, CESMI, timed automata
 *   verifies safety and LTL properties
     *   specification depends on the input formalism
+    *   for C/C++: assertion safety, memory safety, uninitialized variables
+        tracking, `pthreads` deadlock detection,…
 *   parallel (and distributed) verification
 *   efficient state space reduction and compression techniques
 *   <https://divine.fi.muni.cz>
 
-## DIVINE: LLVM as an Input Language
-
-*   used for verification of C and C++ programs
-*   C and C++ library, C++ exceptions support
-*   threads through `pthreads` or C++11
-*   state space size reductions
-*   safety properties: assertion safety, memory safety, uninitialized variables
-    tracking, `pthreads` deadlock detection
-*   LTL support
-
-## DIVINE Verification Workflow
-
-\begin{latex}
-    \medskip
-    \footnotesize
-    \makebox[\textwidth][c]{
-    \begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
-                       , semithick
-                       , scale=0.7
-                       , state/.style={ rectangle, draw=black, very thick,
-                         minimum height=2em, minimum width = 4em, inner
-                         sep=2pt, text centered, node distance = 2em }
-                       ]
-      \node[state, minimum width = 5em] (lib) {Libraries};
-
-      \node[state, below = of lib.south west, anchor = north west] (cpp) {C++};
-      \node[state, right = 4em of cpp, rounded corners] (clang) {Clang};
-      \node[state, right = 4em of clang] (llvm) {LLVM IR};
-      \node[state, right = 4em of llvm, rounded corners] (divine) {\divine};
-
-      \node[state, above = of divine.north east, anchor = south east, minimum width = 15em] (ltl) {Verified property: safety, LTL};
-      \node[state, below = of divine] (valid) {\color{paradisegreen!70!black}OK};
-      \node[state, left = of valid, minimum width = 8em] (ce) {\color{red!70!black}Counterexample};
-
-      \path (ltl.south) edge[out=270, in=90] (divine.north)
-            (cpp) edge (clang)
-            (clang) edge (llvm)
-            (lib) edge [out=0, in=90, looseness = 1] (clang)
-            (llvm) edge (divine)
-            (divine.south) edge (valid) edge[out=270, in=90] (ce.north)
-            ;
-    \end{tikzpicture}
-    }
-\end{latex}
-
-```{.bash}
-divine compile --lib # needed only once
-divine compile --pre=. test.cpp --cflags="-std=c++11"
-divine info test.bc # list properties
-divine verify test.bc --compress --display-counterexample
-```
 
 ## My Work on DIVINE
 
 *   compression of the state space
-    *   reduces state space size for LLVM, roughly $100 - 500\times$ for
-        reasonably sized programs (efficiency grows with program size)
+    *   reduces memory requirements for LLVM verification, roughly $100 -
+        500\times$ for reasonably sized programs (efficiency grows with program
+        size)
     *   bachelor's thesis, published at SEFM 2015
+    \pause
 *   export of explicit state space from DIVINE
     *   useful for chaining with other tools
     *   case study for probabilistic verification to appear on ACM SAC 2016
+    \pause
 *   verification under more realistic memory models
     *   verification which is closer to behaviour or real-world memory
         hierarchies
-    *   master's thesis, preliminary version at MEMICS 2015, extended version submitted for publication
+    *   master's thesis, preliminary version at MEMICS 2015, extended version
+        submitted for publication
+    \pause
 *   extended and fixed state space reductions
     *   up to $3\times$ extra reduction
     *   master's thesis
+    \pause
 *   code maintenance
 
 ## LLVM Transformations
@@ -142,14 +99,14 @@ divine verify test.bc --compress --display-counterexample
 
 *   in CPU a write performed by one thread need not be visible to other thread
     immediately
-*   writes can be reordered -- with reads/also with stores
+*   writes can be reordered -- with reads or also with stores
 *   verifiers often omit this
 
 . . .
 
 Solution
 
-*   the program is instrumented to simulate delayed writes
+*   the program is instrumented to simulate delayed/reordered writes
 *   adds more nondeterminism to the program
 *   LLVM transformation
 
@@ -182,14 +139,14 @@ Short Term (this year)
     *   together with tweaked LLVM-based linker
 *   DIVINE has to provide own implementation of C/C++/`thread`/… libraries
 *   system configuration and even system headers can leak into DIVINE
-    compilation now
+    compilation
 *   hard to integrate into nontrivial build processes (makefiles, cmake,…)
 
 . . .
 
 Solution
 
-*   an isolated environment which can access only user provided sources and
+*   an isolated environment which can access only user-provided sources and
     DIVINE libraries
 *   DIVINE compiler which can be used as a drop-in replacement for GCC/clang
 *   ideally it would produce both LLVM bitcode for DIVINE and ELF binary
@@ -216,9 +173,11 @@ Solution
 *   SymDIVINE can do this for simple programs
     -   a proof-of-concept tool for verification of open LLVM programs
 
+. . .
+
 Solution
 
-*   the idea is to merge SymDIVINE into DIVINE using LLVM transformation
+*   the idea is to merge SymDIVINE into DIVINE using an LLVM transformation
 *   the program is to be changed so that is manipulates (parts of) data
     symbolically
 *   this hybrid program is then executed by DIVINE which uses special algorithm
