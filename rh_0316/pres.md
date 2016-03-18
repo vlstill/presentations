@@ -14,30 +14,19 @@ aspectratio: 169
 ## My Work on DIVINE
 
 *   compression of the state space
-    *   reduces memory requirements for LLVM verification, roughly $100 -
-        500\times$ for reasonably sized programs (efficiency grows with program
-        size)
     *   bachelor's thesis, published in SEFM 2015
-    \pause
 *   export of explicit state space from DIVINE
     *   useful for chaining with other tools
     *   case study for probabilistic verification to appear in ACM SAC 2016
-    \pause
 *   verification under more realistic memory models
-    *   verification closer to behaviour of real-world memory hierarchies
     *   master's thesis, preliminary version in MEMICS 2015, extended version
         submitted for publication
-    \pause
-*   extended and fixed state space reductions
-    *   up to $3\times$ extra reduction
-    *   master's thesis
-    \pause
 *   code maintenance
 
 ## LLVM Transformations
 
-*   LLVM IR can be easily transformed before the verification
-*   can be used to extend model checker's abilities, reduce state space
+*   LLVM IR can be transformed (pre-processed) before verification
+*   use static analysis to extend model checker's abilities, improve performance
 
 \begin{latex}
     \bigskip
@@ -82,10 +71,10 @@ aspectratio: 169
 
 ## Weak Memory Models
 
-*   in CPU a write performed by one thread need not be visible to other thread
+*   a write performed by one thread need not be visible to other threads
     immediately
 *   writes can be reordered -- with reads or with reads and writes
-*   verifiers often omit this
+*   resulting bugs might be hard to detect by traditional methods
 
 . . .
 
@@ -103,16 +92,15 @@ Solution
 
 Long Term
 
-*   improve practical usability of model checking for development of parallel
-    programs
-*   explore the usage of static analysis for pre-processing of programs for
+*   improve practical usability of model checking for development of programs
+*   explore the use of static analysis for pre-processing of programs for
     DIVINE
 
 Short Term (this year)
 
 *   more robust compilation of programs for DIVINE
 *   register allocation for LLVM
-*   verification of programs with inputs using SMT (merge of SymDIVINE into DIVINE)
+*   verification of programs with inputs using SMT (merge SymDIVINE into DIVINE)
 
 \endSaveBox
 
@@ -121,7 +109,6 @@ Short Term (this year)
 ## Compilation of Programs for DIVINE
 
 *   currently, DIVINE facilitates a simple wrapper over clang for compilation
-    *   together with tweaked LLVM-based linker
 *   DIVINE has to provide own implementation of C/C++/`thread`/… libraries
 *   system configuration and even system headers can leak into DIVINE
     compilation
@@ -134,23 +121,7 @@ Solution
 *   an isolated environment which can access only user-provided sources and
     DIVINE libraries
 *   DIVINE compiler which can be used as a drop-in replacement for GCC/clang
-*   ideally it would produce both LLVM bitcode for DIVINE and ELF binary
-    *   allow build processes which feature code generating programs
-
-## Register Allocation for LLVM
-
-*   LLVM uses Static Single Assignment (registers not reused)
-*   wastes memory in DIVINE
-*   can prevent state merging (e.g. in optimized busy-waiting cycles)
-
-. . .
-
-Solution
-
-*   allocate registers into slots, reuse slots
-*   differs from register allocation in code generator of a compiler
-    *   the number of registers is not fixed
-    *   should consider program semantics
+*   produce LLVM bitcode for DIVINE alongside native code in a single ELF binary
 
 ## Verification of Programs with Inputs
 
