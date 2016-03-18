@@ -11,36 +11,21 @@ aspectratio: 169
 
 # The Current Situation
 
-## DIVINE
-
-*   explicit-state model checker for verification of parallel programs
-    *   main focus on C/C++ using \llvm
-    *   also many other inputs: DVE, CESMI, timed automata
-*   verifies safety and LTL properties
-    *   specification depends on the input formalism
-    *   for C/C++: assertion safety, memory safety, uninitialized variables
-        tracking, `pthreads` deadlock detection,…
-*   parallel (and distributed) verification
-*   efficient state space reduction and compression techniques
-*   <https://divine.fi.muni.cz>
-
-
 ## My Work on DIVINE
 
 *   compression of the state space
     *   reduces memory requirements for LLVM verification, roughly $100 -
         500\times$ for reasonably sized programs (efficiency grows with program
         size)
-    *   bachelor's thesis, published at SEFM 2015
+    *   bachelor's thesis, published in SEFM 2015
     \pause
 *   export of explicit state space from DIVINE
     *   useful for chaining with other tools
-    *   case study for probabilistic verification to appear on ACM SAC 2016
+    *   case study for probabilistic verification to appear in ACM SAC 2016
     \pause
 *   verification under more realistic memory models
-    *   verification which is closer to behaviour or real-world memory
-        hierarchies
-    *   master's thesis, preliminary version at MEMICS 2015, extended version
+    *   verification closer to behaviour of real-world memory hierarchies
+    *   master's thesis, preliminary version in MEMICS 2015, extended version
         submitted for publication
     \pause
 *   extended and fixed state space reductions
@@ -165,19 +150,19 @@ Solution
 *   allocate registers into slots, reuse slots
 *   differs from register allocation in code generator of a compiler
     *   the number of registers is not fixed
-    *   must consider program semantics
+    *   should consider program semantics
 
 ## Verification of Programs with Inputs
 
 *   programs with inputs cannot be fully verified by DIVINE
 *   SymDIVINE can do this for simple programs
-    -   a proof-of-concept tool for verification of open LLVM programs
+    -   a proof-of-concept tool for verification of LLVM programs with inputs
 
 . . .
 
 Solution
 
-*   the idea is to merge SymDIVINE into DIVINE using an LLVM transformation
+*   merge SymDIVINE into DIVINE using an LLVM transformation
 *   the program is to be changed so that it manipulates (parts of) data
     symbolically
 *   this hybrid program is then executed by DIVINE which uses special algorithm
