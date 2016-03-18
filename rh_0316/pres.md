@@ -99,7 +99,7 @@ aspectratio: 169
 
 *   in CPU a write performed by one thread need not be visible to other thread
     immediately
-*   writes can be reordered -- with reads or also with stores
+*   writes can be reordered -- with reads or with reads and writes
 *   verifiers often omit this
 
 . . .
@@ -127,7 +127,7 @@ Short Term (this year)
 
 *   more robust compilation of programs for DIVINE
 *   register allocation for LLVM
-*   verification of open programs using SMT (merge of SymDIVINE into DIVINE)
+*   verification of programs with inputs using SMT (merge of SymDIVINE into DIVINE)
 
 \endSaveBox
 
@@ -165,9 +165,9 @@ Solution
 *   allocate registers into slots, reuse slots
 *   differs from register allocation in code generator of a compiler
     *   the number of registers is not fixed
-    *   needs to consider program semantics
+    *   must consider program semantics
 
-## Verification of Open Programs
+## Verification of Programs with Inputs
 
 *   programs with inputs cannot be fully verified by DIVINE
 *   SymDIVINE can do this for simple programs
@@ -178,10 +178,10 @@ Solution
 Solution
 
 *   the idea is to merge SymDIVINE into DIVINE using an LLVM transformation
-*   the program is to be changed so that is manipulates (parts of) data
+*   the program is to be changed so that it manipulates (parts of) data
     symbolically
 *   this hybrid program is then executed by DIVINE which uses special algorithm
-    to explore state space of such program
+    to explore state space of such programs
 
 ## Plans -- Overview
 
