@@ -59,6 +59,7 @@ _aspectratio: 169
 *   C++ library support and full C++ language features support
 *   specializes on parallel programs
 *   verifies large scale of properties
+*   got 951 points out of 1240 in concurrecy category
 *   <https://divine.fi.muni.cz>
 
 . . .
