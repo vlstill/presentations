@@ -130,3 +130,9 @@ sympy-plots-for-*.tex/
 .*.swo
 
 *.pdf
+
+# divine & compilation
+*.ll
+*.bc
+*.o
+*.bin
