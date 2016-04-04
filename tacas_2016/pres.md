@@ -4,7 +4,7 @@ author:
     - "**Vladimír Štill**"
     - Petr Ročkai
     - Jiří Barnat
-authorshort: Vladimír Štill et al.
+authorshort: V. Štill, P. Ročkai, J. Barnat
 header-includes:
     - \usepackage{divine}
 lang: english
@@ -12,28 +12,13 @@ date: 7th April 2016
 _aspectratio: 169
 ...
 
-## DIVINE: an Overview
+## Verification of Unit Tests for Real-World C++ Code
 
-*   verification of real-world parallel C++ code
-
-\iffalse
-\fi
-
-\bigskip
-
-*   safety and LTL properties
-
-\bigskip
-
-*   powerfull reduction techniques
-
-## Verification of Real-World Parallel C++ Code
-
-*   explicit-state model checking
-*   using LLVM as an itermediate language
+*   explicit-state model checking of parallel programs
+*   using LLVM as an intermediate language
 *   standard C, C++, and `pthread` libraries nearly completely supported
 *   exact verification, no bounding, all meaningful interleavings
-*   support all language features (including exceptions)
+*   supports all language features (including exceptions)
 *   no symbolic data support (yet)
 
 ## Verification Properties
@@ -46,20 +31,19 @@ _aspectratio: 169
 *   LTL
 *   gives counterexample if property does not hold
 
-## Powerfull Reduction Techniques
+## Powerful Reduction Techniques
 
 *   state space size reduction ($\tau+$ reduction)
-    *   ommision of uninteresting interleavings
+    *   omission of uninteresting interleavings
 *   memory footprint reduction (lossless compression)
 *   parallel and distributed search
 
 ## DIVINE: Summarization
 
-*   a powerfull explicit-state model checker for real-world C++
-*   C++ library support and full C++ language features support
+*   a powerful explicit-state model checker for unit tests of real-world C++ programs
 *   specializes on parallel programs
 *   verifies large scale of properties
-*   got 951 points out of 1240 in concurrecy category
+*   got 951 points out of 1240 in concurrency category
 *   <https://divine.fi.muni.cz>
 
 . . .
