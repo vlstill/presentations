@@ -9,10 +9,12 @@ header-includes:
     - \usepackage{divine}
 lang: english
 date: 7th April 2016
-_aspectratio: 169
+aspectratio: 169
 ...
 
-## Verification of Unit Tests for Real-World C++ Code
+## Verification of Unit Tests for Real-World Parallel C++ Code
+
+\large
 
 *   explicit-state model checking of parallel programs
 *   using LLVM as an intermediate language
@@ -23,15 +25,19 @@ _aspectratio: 169
 
 ## Verification Properties
 
+\large
+
 *   assertion safety
 *   memory safety
 *   memory leaks
 *   mutex safety
 *   uninitialized memory use
 *   LTL
-*   gives counterexample if property does not hold
+*   gives a counterexample if the property does not hold
 
 ## Powerful Reduction Techniques
+
+\large
 
 *   state space size reduction ($\tau+$ reduction)
     *   omission of uninteresting interleavings
@@ -40,8 +46,10 @@ _aspectratio: 169
 
 ## DIVINE: Summarization
 
-*   a powerful explicit-state model checker for unit tests of real-world C++ programs
-*   specializes on parallel programs
+\large
+
+*   a powerful explicit-state model checker for C++ programs
+*   specializes on unit tests of real-world parallel programs
 *   verifies large scale of properties
 *   got 951 points out of 1240 in concurrency category
 *   <https://divine.fi.muni.cz>
