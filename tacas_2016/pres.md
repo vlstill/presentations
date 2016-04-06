@@ -21,6 +21,7 @@ aspectratio: 169
 *   standard C, C++, and `pthread` libraries nearly completely supported
 *   exact verification, no bounding, all meaningful interleavings
 *   supports all language features (including exceptions)
+*   supports relaxed memory models
 *   no symbolic data support (yet)
 
 ## Verification Properties
@@ -44,14 +45,14 @@ aspectratio: 169
 *   memory footprint reduction (lossless compression)
 *   parallel and distributed search
 
-## DIVINE: Summarization
+## DIVINE: Summary
 
 \large
 
 *   a powerful explicit-state model checker for C++ programs
 *   specializes on unit tests of real-world parallel programs
-*   verifies large scale of properties
-*   got 951 points out of 1240 in concurrency category
+*   verifies a variety of properties
+*   951 points out of 1240 in the concurrency category
 *   <https://divine.fi.muni.cz>
 
 . . .
