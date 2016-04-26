@@ -37,10 +37,10 @@ however testing has its downsides
 
 ## Parallel Programs
 
-Pallel programs are much harder to think about and debug
+parallel programs are much harder to think about and debug
 
 *   the timing of the execution can influence results
-    *   *two therads writting to the same memory loacation*
+    *   *two threads writing to the same memory location*
 
 *   results for the same input can differ
 *   some results can be much less probable
@@ -49,15 +49,15 @@ Pallel programs are much harder to think about and debug
 
 $\Rightarrow$ testing is not deterministic
 
-*   might not discover bug
+*   might not discover a bug
 *   test cannot be repeated with guarantee of the same results
 *   hard to debug from failed test
 
 ## Explicit State Model Checking
 
-a technique usefull for verification of parallel programs
+a technique useful for verification of parallel programs
 
-*   explores all meanighfull interleavings of the program
+*   explores all meaningful interleavings of the program
 *   can provide deterministic testing procedure
 *   and prove absence of bugs
 *   can be very resource consuming
@@ -84,14 +84,14 @@ a technique usefull for verification of parallel programs
 }
 \end{latex}
 
-## Verification in Practictice?
+## Verification in Practice?
 
 traditionally, the program has to be translated to a modelling language
 
 *   extra effort (usually manual translation)
 *   not everything can be translated exactly
 *   translation can introduce or hide errors
-*   still usefull in critical systems (modelling before development)
+*   still useful in critical systems (modelling before development)
 
 . . .
 
@@ -99,7 +99,7 @@ solution: verify code in some programming language directly!
 
 *   program is verified directly, no need to model it
 *   should not limit the programmer to a subset of the language
-*   even more compulationaly expensive
+*   even more computationally expensive
 
 ## Verification of Unit Tests of Parallel C++ Programs in DIVINE
 
@@ -153,7 +153,7 @@ we aim at
 
 . . .
 
-safety property: assertion safety, memory safety (dereferrence, array bounds, memory leaks), use of uninitialized memory, deadlocks, …
+safety property: assertion safety, memory safety (dereference, array bounds, memory leaks), use of uninitialized memory, deadlocks, …
 
 . . .
 
@@ -165,15 +165,15 @@ during bachelor & masters studies
 
 *   memory-efficient representation of program states
 *   verification with relaxed memory models
-*   general maintanance
+*   general maintenance
 
 . . .
 
 Ph.D. research topic
 
 *   optimizations and transformations of the LLVM intermediate representation
-*   to allow faster/more efficient verification
-*   to be able to verify more properties
+    *   to allow faster and more efficient verification
+    *   to be able to verify more properties
 *   general usability of DIVINE
 
 ## Summary
