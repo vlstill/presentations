@@ -21,7 +21,7 @@ aspectratio: 169
 
 *   What is my work?
 
-## Why Verification?
+## Is Testing Sufficient?
 
 it is important to check that programs do what they are supposed to
 
@@ -30,7 +30,7 @@ it is important to check that programs do what they are supposed to
 
 . . .
 
-however testing has its downsides
+however, testing has its downsides
 
 *   it cannot proof absence of bugs
 *   **not very efficient in problem discovery for parallel programs**
@@ -84,7 +84,7 @@ a technique useful for verification of parallel programs
 }
 \end{latex}
 
-## Verification in Practice?
+## Model Checking in Practice?
 
 traditionally, the program has to be translated to a modelling language
 
@@ -179,7 +179,7 @@ Ph.D. research topic
 ## Summary
 
 *   parallel programming is hard, testing not very efficient
-*   model-checking can help in this regards
+*   model checking can help in this regards
 *   C/C++ code can be verified directly
 
 . . .
