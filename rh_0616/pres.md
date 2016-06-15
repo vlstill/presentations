@@ -98,6 +98,7 @@ date: 15th June 2016
         \begin{itemize}
             \item \textbf{\llvm{} instrumentation}: interrupt points, metadata,
             annotations
+            \item command line arguments, file system
             \item conversion of \llvm{} to the internal representation
         \end{itemize}
     }
@@ -223,7 +224,8 @@ Jakub Kadaši
 Katarína Kejstová
 
 *   works on \divine{} VFS
-*   also on \divine{} 4: pointer and value-initialization tracking
+*   also on \divine{} 4: shadow maps -- metadata for heap memory
+    * pointer and value-initialization tracking
 
 . . .
 
