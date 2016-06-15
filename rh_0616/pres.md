@@ -1,5 +1,5 @@
 ---
-title: Compilation, code transformations, and executable counterexamples for DIVINE
+title: Compilation, Code Transformations, and Executable Counterexamples for DIVINE
 author:
     - Vladimír Štill
 header-includes:
@@ -10,7 +10,7 @@ date: 15th June 2016
 # aspectratio: 169
 ...
 
-## Verification of C++ program {.t}
+## Verification of C++ programs {.t}
 
 \begin{latex}
     \bigskip
@@ -25,8 +25,8 @@ date: 15th June 2016
 
 
       \node[state] (cpp) {C++ code};
-      \node[state, right of = cpp, anchor = west, node distance = 5em
-           , rounded corners, minimum width = 5em] (libclang) {LibClang};
+      \node[state, right = of cpp, anchor = west
+           , rounded corners, minimum width = 5em] (libclang) {\clang{} API};
       \node[state, above = of libclang, minimum width = 5em
            , onslide = {<3> fill = paradisegreen!50}] (lib) {Libraries};
       \node[state, right = of libclang, align = center, rounded corners]
@@ -39,9 +39,9 @@ date: 15th June 2016
            , onslide = {<2> fill = paradisegreen!50}] (cc) {};
         \end{pgfonlayer}
 
-      \node[below] at (cc.north) {\divine{} CC};
+      \node[below] at (cc.north) {\textbf{\divine{} CC}};
 
-      \node[state, right of = lart, anchor = west, node distance = 5em
+      \node[state, right = 2.4em of lart, anchor = west, node distance = 5em
            , rounded corners, onslide = {<4> fill = paradisegreen!50}] (load) {Loader};
       \node[state, right = of load, rounded corners] (verify) {Verify};
       \node[state, below = of verify.south east, anchor = north east, rounded corners
@@ -54,10 +54,10 @@ date: 15th June 2016
           \node[state, rounded corners, inner sep = 0.8em
                , fit = (load) (phantom2) (verify) (cegen)] (divine) {};
       \end{pgfonlayer}
-      \node[below] at (divine.north) {\divine};
+      \node[below] at (divine.north) {\textbf{\divine}};
 
-      \node[state, above of = divine,
-            node distance = 11em, minimum width = 15em] (ltl) {Verified property: safety, LTL};
+      \node[state, above = 5em of divine, minimum width = 15em]
+          (ltl) {Verified property: safety, LTL};
 
       \node[state, right = of verify] (valid) {\color{paradisegreen!70!black}OK};
       \node[state, right = of cegen, align = center, onslide = {<6> fill = paradisegreen!50}]
@@ -78,17 +78,16 @@ date: 15th June 2016
     }
 
     \only<2>{
-        \divine{} compiler using LibClang and \llvm{} linker
+        \divine{} compiler using \clang{} API and \llvm{} linker
         \begin{itemize}
             \item isolated from system libraries
             \item isolated from (most of) system defines
-            \item completely in-memory compilation
-            \item does not depend on any part of the system compiler
         \end{itemize}
     }
     \only<3>{
         Libraries
         \begin{itemize}
+            \item \divine{} has to have complete implementation of libraries
             \item PDClib for C99
             \item libc++ and libc++ ABI for C++14 (newly ported to \divine{})
             \item pthreads, \divine{} runtime,…
@@ -105,7 +104,7 @@ date: 15th June 2016
     \only<5>{
         Counterexample generator
         \begin{itemize}
-            \item algorithm produces counterexample as a list of choices
+            \item algorithms will produce a counterexample as a list of choices
                 \begin{itemize}
                     \item thread switches, nondeterminism
                 \end{itemize}
@@ -125,12 +124,35 @@ date: 15th June 2016
     \vspace*{10em}
 \end{latex}
 
+## \divine{} CC
+
+\divine{} 3 used a wrapper over system's \clang{} for compilation into \llvm
+
+*   depends on *the particular version* of \clang{}
+    *   the same version as used to build \divine{}
+*   can accidentally use system libraries
+
+. . .
+
+now \divine{} 4 uses fully integrated \clang{} API based compiler
+
+*   C++ API exports most of features of \clang{}
+    *   primarily intended for syntactic manipulation and refactoring tools and
+        for \clang{} itself
+*   uses \clang's VFS for in-memory compilation and isolation
+    *   isolated from system headers (unless explicitly imported: `-I`)
+*   isolated from most of system defines (like `__unix__`)
+*   does not depend on any part of the system compiler
+
 ## Instrumentations in \divine{} Loader
 
 In \divine{} 4 the interpreter needs to be notified when
 
-*   memory location visible by multiple threads is accessed
-*   cycle in the control flow can occur
+*   a memory location visible to multiple threads is accessed
+*   a cycle in the state space can occur
+    *   safely approximated by cycles in the control flow
+
+. . .
 
 instrumenting the code allows more flexible interaction between \divine{} and
 static analysis in LART
@@ -143,23 +165,26 @@ static analysis in LART
 
 Loader also adds metadata for each function:
 
-*   function pointer, number of arguments, argument types, frame size…
+*   function pointer
+*   number of arguments
+*   argument types
+*   frame size
 *   instruction metadata
 
 . . .
 
 Annotations to facilitate debugging/counterexamples
 
-*   output when a function is entered or left (including exceptions)
+*   printed when a function is entered or left (including unwinding)
 
 ## Executable Counterexamples
 
 the bitcode already contains C and C++ library implementation
 
-*   native implementation of \divine{} runtime has to be added
+*   native implementation of the \divine{} runtime has to be added
 *   simulates counterexample found by \divine
 *   no parallelism, instead manages and switches separate stacks
-*   currently support planned only for `x86_64` on Linux
+*   support now planned only for `x86_64` on Linux
     *   depends on calling conventions, syscalls
 *   work in progress
 
@@ -171,8 +196,8 @@ the bitcode already contains C and C++ library implementation
     ```{.sh}
     $ CC=divine.cc CXX=divine.cc make
     ```
-*   optimized instructions for loader
-    *   detect some cases when interrupts cannot happen statically
+*   optimized instrumentations for the loader
+    *   statically detect some cases when interrupts cannot happen
         *   local variables
         *   cycles which must terminate
 
@@ -180,8 +205,29 @@ the bitcode already contains C and C++ library implementation
     *   includes allocation of \llvm{} registers into memory slots
     *   can save memory
 
+## Students
+
+Peter Hutta
+
+*   found suspected memory leak in `boost` parallel queue
+    *   not yet tracked to the code
+
 . . .
 
-\bigskip\bigskip
-\hfill Thanks for your attention!
+Jakub Kadaši
 
+*   works on \divine{} VFS in order to allow verification of `lvmetad`
+
+. . .
+
+Katarína Kejstová
+
+*   works on \divine{} VFS
+*   also on \divine{} 4: pointer and value-initialization tracking
+
+. . .
+
+Jan Mrázek
+
+*   will present Caching in Control-Explicit Data-Symbolic Model Checking
+*   also works on \divine{} 4 on \divine{} runtime
