@@ -1,5 +1,5 @@
 ---
-vim: spell spelllang=cs
+vim: spell spelllang=cs tw=80 fo+=t
 title: DIVINE 4
 subtitle: Proč chceme mít další DIVINE?
 author:
@@ -11,6 +11,8 @@ lang: english
 date: 15th June 2016
 # aspectratio: 169
 ...
+
+# Představení DIVINE 4
 
 ## Co je DIVINE?
 
@@ -26,9 +28,10 @@ date: 15th June 2016
     verifikace, LTL…
     *   které DIVINE 4 zatím nemá
 *   pro verifikaci C/C++ postupně dosaženo limitů architektury
+    *   protipříklady
     *   podpora procesů
-    *   sledování inicializovanosti paměti
-    *   celkově pomalá interpretace
+    *   podrobné sledování inicializovanosti paměti
+    *   rychlost interpretace
     *   podpora různých módů plánování (asynchronní/synchronní paralelismus)
 
 ## Architektura DIVINE 3
@@ -176,7 +179,7 @@ k
 Hlavní myšlenkou DIVINE 4 je oddělení velké části kódu do DiOS
 
 *   odpovídá operačnímu systému
-*   DiVM nemusí řešit plánování vláken, jen nedeterministickou volbu
+*   DiVM (interpret) nemusí řešit plánování vláken, jen nedeterministickou volbu
 *   DiOS běží uvnitř DIVINE takže se snáze testuje než interpret
 *   DiOS lze v případě potřeby vyměnit za jiný systém s jiným plánováním
     (například synchronní paralelismus)
@@ -235,238 +238,190 @@ předání řízení do plánovače.
 
 ## DiVM: ovládání control flow
 
-DiOS musí být schopný:
+DiOS (případně knihovny) musí být schopny:
 
 *   vytvářet a spravovat zásobníky
 *   nastavovat program counter
-*   zakazovat interrupt
+*   zakazovat interrupt (vytvářet atomické sekce)
 *   nastavit, která funkce řeší plánování
 *   nastavovat handler chyb
 *   nastavovat globální proměnné a konstanty (kvůli procesům)
 
-K tomu DiVM poskytuje sadu registrů a hypercall, který je umí modifikovat.
+K tomu DiVM poskytuje sadu registrů a hypercall, který je umí modifikovat a číst.
 
-## Verification of C++ programs {.t}
+## Protipříklady
 
-\begin{latex}
+Protipříklad v DIVINE 3 byl posloupností stavů
 
-    \bigskip
-    \makebox[\textwidth][c]{
-    \scriptsize
-    \begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
-                       , semithick
-                       , state/.style={ rectangle, draw=black, very thick,
-                         minimum height=2em, minimum width = 4em, inner
-                         sep=2pt, text centered, node distance = 1.8em }
-                       ]
-
-
-      \node[state] (cpp) {C++ code};
-      \node[state, right = of cpp, anchor = west
-           , rounded corners, minimum width = 5em] (libclang) {\clang{} API};
-      \node[state, above = of libclang, minimum width = 5em
-           , onslide = {<3> fill = paradisegreen!50}] (lib) {Libraries};
-      \node[state, right = of libclang, align = center, rounded corners]
-            (lart) {\lart};
-      \node[above of = lart, node distance = 6em] (phantom) {};
-
-      \begin{pgfonlayer}{background}
-      \node[state, rounded corners, inner sep = 0.8em
-           , fit = (libclang) (lib) (lart) (phantom)
-           , onslide = {<2> fill = paradisegreen!50}] (cc) {};
-        \end{pgfonlayer}
-
-      \node[below] at (cc.north) {\textbf{\divine{} CC}};
-
-      \node[state, right = 2.4em of lart, anchor = west, node distance = 5em
-           , rounded corners, onslide = {<4> fill = paradisegreen!50}] (load) {Loader};
-      \node[state, right = of load, rounded corners] (verify) {Verify};
-      \node[state, below = of verify.south east, anchor = north east, rounded corners
-           , align = center, onslide = {<5> fill = paradisegreen!50}]
-          (cegen) {Counterexample\\generator};
-
-      \node[above of = load, node distance = 2em] (phantom2) {};
-
-      \begin{pgfonlayer}{background}
-          \node[state, rounded corners, inner sep = 0.8em
-               , fit = (load) (phantom2) (verify) (cegen)] (divine) {};
-      \end{pgfonlayer}
-      \node[below] at (divine.north) {\textbf{\divine}};
-
-      \node[state, above = 5em of divine, minimum width = 15em]
-          (ltl) {Verified property: safety, LTL};
-
-      \node[state, right = of verify] (valid) {\color{paradisegreen!70!black}OK};
-      \node[state, right = of cegen, align = center, onslide = {<6> fill = paradisegreen!50}]
-          (ce) {\color{red!70!black}Counterexample:\\program with\\encoded choices};
-
-
-      \path (ltl.south) edge[out=270, in=90] (divine.north)
-            (cpp) edge (libclang)
-            (libclang) edge (lart)
-            (lart) edge (load)
-            (load) edge (verify)
-            (verify) edge (valid)
-            (verify) edge [in=60,out=270] (cegen)
-            (cegen) edge (ce)
-            (lib) edge (libclang)
-            ;
-    \end{tikzpicture}
-    }
-
-    \only<2>{
-        \divine{} compiler using \clang{} API and \llvm{} linker
-        \begin{itemize}
-            \item isolated from system libraries
-            \item isolated from (most of) system defines
-        \end{itemize}
-    }
-    \only<3>{
-        Libraries
-        \begin{itemize}
-            \item \divine{} has to have complete implementation of libraries
-            \item PDClib for C99
-            \item libc++ and libc++ ABI for C++14 (newly ported to \divine{})
-            \item pthreads, \divine{} runtime,…
-        \end{itemize}
-    }
-    \only<4>{
-        \divine{} Loader
-        \begin{itemize}
-            \item \textbf{\llvm{} instrumentation}: interrupt points, metadata,
-            annotations
-            \item command line arguments, file system
-            \item conversion of \llvm{} to the internal representation
-        \end{itemize}
-    }
-    \only<5>{
-        Counterexample generator
-        \begin{itemize}
-            \item algorithms will produce a counterexample as a list of choices
-                \begin{itemize}
-                    \item thread switches, nondeterminism
-                \end{itemize}
-            \item embed choices into the program
-            \item add implementation of \divine{} runtime
-        \end{itemize}
-    }
-    \only<6>{
-        Counterexample
-        \begin{itemize}
-            \item can be executed as normal binary
-            \item can be debugged using existing debuggers
-            \item does not depend on system libraries
-        \end{itemize}
-    }
-
-    \vspace*{10em}
-\end{latex}
-
-## \divine{} CC
-
-\divine{} 3 used a wrapper over system's \clang{} for compilation into \llvm
-
-*   depends on *the particular version* of \clang{}
-    *   the same version as used to build \divine{}
-*   can accidentally use system libraries
+*   mezi stavy může být spuštěno mnoho instrukcí (díky redukci)
+*   k mezivýsledkům se nedalo dostat
+*   samotné stavy nebylo možné přehledně reprezentovat
 
 . . .
 
-now \divine{} 4 uses fully integrated \clang{} API based compiler
+Protipříklad v DIVINE 4 je posloupností fixovaných hodnot nedeterministických voleb
 
-*   C++ API exports most of features of \clang{}
-    *   primarily intended for syntactic manipulation and refactoring tools and
-        for \clang{} itself
-*   uses \clang's VFS for in-memory compilation and isolation
-    *   isolated from system headers (unless explicitly imported: `-I`)
-*   isolated from most of system defines (like `__unix__`)
-*   does not depend on any part of the system compiler
+*   není závislý na granularitě stavů
+    *   lze tedy krokovat po stavech, po instrukcích, po řádcích
+*   k dispozici je interaktivní debugger
+    *   umožňuje krokovat
+    *   umožňuje inspekci programu v daném bodě výpočtu
+    *   podobně jako GDB, ale umí spolehlivě chodit i zpět
+*   v plánu je podpora pro generování spustitelných protipříkladů
+    *   pro debugování v GDB
 
-## Instrumentations in \divine{} Loader
 
-In \divine{} 4 the interpreter needs to be notified when
+# DEMO
 
-*   a memory location visible to multiple threads is accessed
-*   a cycle in the state space can occur
-    *   safely approximated by cycles in the control flow
+# LLVM transformace v DIVINE 4
 
-. . .
+## Postup verifikace programu v C++
 
-instrumenting the code allows more flexible interaction between \divine{} and
-static analysis in LART
-
-*   some interrupt points can be omitted
-*   it is easier to specify where the thread was interrupted
-*   it is possible to generate executable counterexamples
-
-## Instrumentations in \divine{} Loader
-
-Loader also adds metadata for each function:
-
-*   function pointer
-*   number of arguments
-*   argument types
-*   frame size
-*   instruction metadata
+1.  kompilace pomocí clang API
+    *   využívá knihovny zabalené v DIVINE (C, C++, pthreads)
+    *   produkuje LLVM IR
 
 . . .
 
-Annotations to facilitate debugging/counterexamples
-
-*   printed when a function is entered or left (including unwinding)
-
-## Executable Counterexamples
-
-the bitcode already contains C and C++ library implementation
-
-*   native implementation of the \divine{} runtime has to be added
-*   simulates counterexample found by \divine
-*   no parallelism, instead manages and switches separate stacks
-*   support now planned only for `x86_64` on Linux
-    *   depends on calling conventions, syscalls
-*   work in progress
-
-## Future Work
-
-*   Finish executable counterexamples
-*   \divine{} CC which works as a drop-in replacement for \clang{}/GCC
-
-    ```{.sh}
-    $ CC=divine.cc CXX=divine.cc make
-    ```
-*   optimized instrumentations for the loader
-    *   statically detect some cases when interrupts cannot happen
-        *   local variables
-        *   cycles which must terminate
-
-*   calculate frame layout in the loader
-    *   includes allocation of \llvm{} registers into memory slots
-    *   can save memory
-
-## Students
-
-Peter Hutta
-
-*   found suspected memory leak in `boost` parallel queue
-    *   not yet tracked to the code
+2.  instrumentace a transformace
+    *   modifikuje LLVM IR
+    *   některé transformace nutné pro fungování DIVINE
+    *   vytváření metadat
+    *   redukční transformace
 
 . . .
 
-Jakub Kadaši
-
-*   works on \divine{} VFS in order to allow verification of `lvmetad`
-
-. . .
-
-Katarína Kejstová
-
-*   works on \divine{} VFS
-*   also on \divine{} 4: shadow maps -- metadata for heap memory
-    * pointer and value-initialization tracking
+3.  vytváření runtime reprezentace programu
+    *   převod LLVM do interních struktur DIVINE pro rychlejší spouštění
+    *   doplňování metadat
 
 . . .
 
-Jan Mrázek
+4.  spuštění verifikace
 
-*   will present Caching in Control-Explicit Data-Symbolic Model Checking
-*   also works on \divine{} 4 on \divine{} runtime
+## Instrumentace přístupu do paměti a cyklů
+
+*   nutné pro korektnost DIVINE
+
+přístupy do paměti se oznamují DiVM voláním hypercallu s adresou a typem přístupu
+
+*   pouze instrumentované přístupy mohou způsobit přerušení vlákna
+*   DiVM se může rozhodnou pokračovat bez přerušení ($\tau$-stores redukce)
+
+
+instrumentace cyklů
+
+*   instrumentují se zpětné hrany cyklů
+*   volání hypercallu, který může přerušit výpočet
+*   k přerušení dojde pokud se v průběhu generování následníka tento hypercall
+    zavolá ze stejného místa v programu dvakrát
+
+## Statické redukce
+
+statická escape analýza (statická $\tau$ redukce)
+
+*   k odstranění části instrumentací přístupu k paměti
+*   detekuje lokální proměnné, které garantovaně neopustí scope funkce
+*   aktuální jen jednoduchá analýza, možno rozšířit o komplikovanější escape analýzu
+    *   případně i s využitím points-to analýzy
+
+\+ odstraňování konstantních proměnných a další optimalizace z diplomky
+
+## Metadata
+
+DiOS a knihovny potřebují metadata pro své fungování
+
+*   schopnost vyhledávat funkce podle názvu, zjišťovat počty jejich argumentů
+*   schopnost zjistit potřebnou velikost rámce pro funkci
+*   metadata pro výjimky
+
+metadata se přidávají částečně do LLVM a částečně do runtime reprezentace
+
+*   velkou část lze napočítat staticky (argumenty, jména)
+*   část je závislá na tvorbě runtime reprezentace (mapování program counteru
+    na instrukce, tabulky výjimek)
+
+## Výjimky
+
+DIVINE je primárně zaměřen na verifikaci C++, potřebuje tedy umět výjimky
+
+*   v DIVINE 3 řešeny modifikací C++ knihovny (libc++abi) a specifickým
+    intrinsikem pro vyhledávání landing padů a odvíjení zásobníku
+
+*   v DIVINE 4 je libc++abi nemodifikované, výjimky řešeny na úrovni metadat a
+    unwinderu
+
+## Jak fungují výjimky? (v C++ a LLVM)
+
+*   LLVM má specifické instrukce pro volání funkce, které může zachytit výjimku:
+    `invoke` -- `landingpad` kombinace
+    *   `invoke` volá funkci a pokud funkce vyhodí výjimku pokračuje na
+        příslušný `landingpad`
+    *   `landingpad` instrukce vrátí informace o výjimce
+    *   program dále výjimku ošetří nebo znovu vyhodí (`resume` instrukce)
+    *   program může využívat informace o type id výjimky s pomocí LLVM
+        intrinsiků
+    *   landingpad odpovídá `catch` bloku nebo místu volání destruktorů
+
+*   vyhození výjimky je řešeno knihovnou jazyka (například libc++abi pro C++)
+    spolu s knihovnou pro odvíjení zásobníku (unwinder, například libunwind)
+    *   tyto knihovny rovněž řeší detekci na který landingpad se má výjimka
+        vypropagovat
+
+## Jak fungují výjimky? (v C++ a LLVM)
+
+Část v knihovně jazyka by teoreticky mohla být platformě nezávislá
+
+*   prakticky ale existuje několik implementací
+    *   **zero-cost výjimky podle Itanium ABI** (`x86` a `x86_64` na Linuxu a Unixu)
+    *   zero-cost výjimky podle ARM ABI
+    *   výjimky pomocí `setjmp`, `longjmp` (dříve na `x86`)
+    *   Windows výjimky
+
+*   zero-cost výjimky používají velké množství metadat a mají drahé vyhození
+    výjimky
+    *   za cenu velmi levného volání funkce, která může vyhodit výjimku
+
+*   DIVINE 4 používá Itanium ABI výjimky
+
+Unwinder je závislý na platformě
+
+*   volací konvence, layout zásobníku, registry
+*   formát binárního souboru (uložení tabulek s metadaty)
+
+## Výjimky v DIVINE 4
+
+*   libc++abi v módu pro Itanium ABI unwinder je nemodifikované
+*   unwinder je vlastní
+
+. . .
+
+**DIVINE unwinder**
+
+*   Itanium ABI kompatibilní unwinder
+*   využívá metadat o instrukcích
+*   jazykově nezávislý až na tabulky s metadaty pro C++ (Language-Specific Data Area)
+    *   lze tedy použít i pro výjimky v jiných jazycích
+*   exception tabulky se generují při vytváření runtime reprezentace
+*   samotné odvíjení zásobníku je řešeno pomocí metadat o instrukcích a
+    nastavení rámce a program counteru v DiVM pomocí hypercallu
+
+## Závěr
+
+DIVINE 4 je postaven na nové architektuře
+
+*   rozdělení na interpretr (DiVM), operační systém (DiOS) a uživatelský program
+    s knihovnami
+    *   rozhraní (Di)VM by mělo být použitelné i pro jiné nástroje
+*   zjednodušení interpretru
+*   výrazné využívání LLVM transformací
+*   snadnější rozšiřování
+*   věrnější verifikace výjimek
+*   lepší protipříklady
+
+LLVM transformace
+
+*   instrumentace přístupu do paměti a cyklů
+*   escape analýza (statická $\tau$ redukce)
+*   metadata
+
