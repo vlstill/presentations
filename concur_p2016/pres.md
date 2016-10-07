@@ -24,7 +24,7 @@ date: 15th June 2016
 ## Proč nový DIVINE?
 
 *   DIVINE 3 vznikl jako první DIVINE s podporou LLVM (2012)
-*   zároveň si udržel podporu dalších vstupních formalismů, distribuované
+*   zároveň zachoval podporu dalších vstupních formalismů, distribuované
     verifikace, LTL…
     *   které DIVINE 4 zatím nemá
 *   pro verifikaci C/C++ postupně dosaženo limitů architektury
@@ -69,8 +69,7 @@ date: 15th June 2016
 k
       \node[above right] at (dcore.south west) {\textbf{DIVINE core}};
 
-      \path[<->] (alg) edge (interp) edge (dve) edge (dots)
-                 ;
+      \path (alg) edge (interp) edge (dve) edge (dots);
 
       \node[state, rounded corners, above = 5em of interp, minimum width = 6em] (libs) {
           \begin{minipage}{12em}\center
@@ -159,9 +158,9 @@ k
 
       \path[<->] (user) edge (libs)
                  (dios) edge node [right]{syscalls\ \ } (libs)
-                 (dios) edge node {\texttt{\_\_vm\_*} hypercalls} (divm)
-                 (libs.east) edge [->, bend left, out = 90, in = 135, looseness = 1.5]
-                      node {\texttt{\_\_vm\_*} hypercalls} (divm.north east)
+                 (dios) edge node [left] {VM interface} node [right] {(hypercalls, callbacks)} (divm)
+                 (libs.east) edge [->, bend left, out = 90, in = 100, looseness = 1.5]
+                      node {hypercalls} (divm.north east)
                  ;
 
       \begin{pgfonlayer}{background}
@@ -194,7 +193,7 @@ Plánovač vláken (a procesů) je základní součástí DiOS
 *   řeší prokládání vláken
 *   a spouštění procesů (`fork`, `exec`, případné sdílení paměti mezi procesy)
 *   při přerušení uživatelského kódu DiVM spustí plánovač
-*   uživatelský kód s plánovačem komunikuje pomocí systémových volání (syscallů)
+*   uživatelský kód s DiOS komunikuje pomocí systémových volání (syscallů)
 
 ## DiVM
 
@@ -204,7 +203,7 @@ hypervizoru)
 funkce (hyperally) pro:
 
 *   správu paměti (alokace, dealokace, změna a zjištění velikosti)
-*   nedeterministickou volba
+*   nedeterministickou volbu
 *   anotaci hran grafu (akceptující hrany, trace)
 *   oznamování cyklů a práce s pamětí (bude vysvětleno)
 *   ovládání control flow (bude vysvětleno)
@@ -221,15 +220,16 @@ DIVINE provádí redukci stavového prostoru skrýváním instrukcí, které
 nepřistupují k paměti viditelné jinými vlákny
 
 *   je třeba aby DIVINE vědět, kdy dochází k čtení/zápisu z/do paměti
-*   může detekovat přímo interpretr -- ale někdy lze staticky poznat, že
+*   může detekovat přímo DiVM -- ale někdy lze staticky poznat, že
     manipulovaná paměť je privátní
 *   program musí oznámit DiVM kdy přistupuje k (potenciálně) viditelné paměti
 *   oznámení zajistí instrumentace
 
 . . .
 
-Obdobně pro cykly v control flow (třeba detekovat kvůli terminaci hledání
-následníka).
+obdobně pro cykly v control flow 
+
+*   třeba detekovat kvůli terminaci hledání následníka
 
 . . .
 
@@ -353,7 +353,7 @@ DIVINE je primárně zaměřen na verifikaci C++, potřebuje tedy umět výjimky
 
 ## Jak fungují výjimky? (v C++ a LLVM)
 
-*   LLVM má specifické instrukce pro volání funkce, které může zachytit výjimku:
+*   LLVM má specifické instrukce pro volání funkce, která může zachytit výjimku:
     `invoke` -- `landingpad` kombinace
     *   `invoke` volá funkci a pokud funkce vyhodí výjimku pokračuje na
         příslušný `landingpad`
@@ -365,7 +365,7 @@ DIVINE je primárně zaměřen na verifikaci C++, potřebuje tedy umět výjimky
 
 *   vyhození výjimky je řešeno knihovnou jazyka (například libc++abi pro C++)
     spolu s knihovnou pro odvíjení zásobníku (unwinder, například libunwind)
-    *   tyto knihovny rovněž řeší detekci na který landingpad se má výjimka
+    *   tyto knihovny rovněž řeší detekci landingpadu, na který se má výjimka
         vypropagovat
 
 ## Jak fungují výjimky? (v C++ a LLVM)
