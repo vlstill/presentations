@@ -237,9 +237,25 @@ Krok 2 $\rightarrow$ rekurze 3
 
 \includegraphics[page=4, clip, trim=1cm 12.5cm 1cm 2cm, width=\textwidth]{paper}
 
+## Multihry
+
+*   uvedený algoritmus má problémy se spotřebou paměti
+*   **multihra**: hra ve které se hráč snaží vyhrát více formulí zároveň
+    $$ QX.\;\set{ \varphi_1,…,\varphi_n} $$
+    *   kde každá $\varphi_i$ je v prenexové normální formě začínající
+        $\overline{Q}$, nebo je nekvantifikovaná
+    *   všechny volné proměnné v $\varphi_i$ musí být v $X$
+    *   $\varphi_i$ nazýváme podhry
+    *   vítězný tah pro multihru je takové dosazení, které je vítězným tahem pro
+        každou $QX.\;\varphi_i$
+
 ## Algoritmus pro multihry
 
-\includegraphics[page=7, clip, trim=1cm 12.5cm 1cm 2cm, width=\textwidth]{paper}
+\includegraphics[page=7, clip, trim=0.5cm 12.8cm 0.5cm 2cm, width=\textwidth]{paper}
+
+\vspace{-\medskipamount}
+
+\includegraphics[page=6, clip, trim=0.5cm 7.9cm 0.5cm 13.3cm, width=\textwidth]{paper}
 
 ## Výsledky I
 
