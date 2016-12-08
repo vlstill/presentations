@@ -236,3 +236,15 @@ Krok 2 $\rightarrow$ rekurze 3
 ## Algoritmus
 
 \includegraphics[page=4, clip, trim=1cm 12.5cm 1cm 2cm, width=\textwidth]{paper}
+
+## Algoritmus pro multihry
+
+\includegraphics[page=7, clip, trim=1cm 12.5cm 1cm 2cm, width=\textwidth]{paper}
+
+## Výsledky I
+
+\includegraphics[page=11, clip, trim=1cm 11.7cm 1cm 2cm, width=\textwidth]{paper}
+
+## Výsledky II
+
+\includegraphics[page=12, clip, trim=1cm 9.8cm 1cm 2.85cm, height=0.9\textheight]{paper}
