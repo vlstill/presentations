@@ -155,7 +155,7 @@ Krok 1
         $=\forall y\,\exists z.\; \bot$
         \only<2>{
         \begin{itemize}
-            \item protipříklad: $\set{y}$ ($\forall$ hráč má výtězný tah)
+            \item protipříklad: $\set{y}$ ($\forall$ hráč má vítězný tah)
             \item $\omega \leftarrow \omega \cup \set{\set{y}}$
         \end{itemize}
         }
@@ -197,7 +197,7 @@ Krok 2 $\rightarrow$ rekurze 1
     \item ověření: $\exists z.\; z$
         \only<6>{
         \begin{itemize}
-            \item protipříklad \set{z} ($\exists$ hráč má výtězný tah)
+            \item protipříklad \set{z} ($\exists$ hráč má vítězný tah)
             \item $\omega \leftarrow \omega \cup \set{\set{z}}$
         \end{itemize}
         }
@@ -213,7 +213,7 @@ Krok 2 $\rightarrow$ rekurze 2
     \item ověření: $\exists z.\; \lnot z$
         \only<8>{
         \begin{itemize}
-            \item protipříklad \set{\lnot z} ($\exists$ hráč má výtězný tah)
+            \item protipříklad \set{\lnot z} ($\exists$ hráč má vítězný tah)
             \item $\omega \leftarrow \omega \cup \set{\set{\lnot z}}$
         \end{itemize}
         }
