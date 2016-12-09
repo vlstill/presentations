@@ -6,8 +6,6 @@ author:
     - William Klieber
     - Joao Marques-Silva
     - Edmund Clarke
-    - \
-    - presented by Vladimír Štill
 header-includes:
     - \usepackage{divine}
     - \usetikzlibrary{fit,backgrounds}
@@ -37,9 +35,9 @@ date: 8th December 2016
 ## Bloky kvantifikátorů
 
 *   namísto
-    $$ \forall x_1 … \forall x_n\,\exists x_1 … \exists x_m.\ \varphi $$
-    budeme psát
-    $$ \forall X\,\exists Y.\ \varphi $$
+    $$ \forall x_1 … \forall x_n\,\exists x_1 … \exists x_m.\;\varphi $$
+    můžeme psát
+    $$ \forall X\,\exists Y.\;\varphi $$
     kde $X = \set{ x_1, …, x_n }$ a $Y = \set{ y_1, …, y_m }$
 
 \bigskip
@@ -47,7 +45,7 @@ date: 8th December 2016
 *   maximální bloky: nelze do nich přidat další proměnné
 
 *   alternace:
-    $$QX\,\overline{Q}Y\,QZ.\ \varphi$$
+    $$QX\,\overline{Q}Y\,QZ.\;\varphi$$
     *   jestliže $Q = \forall$ pak $\overline{Q} = \exists$
     *   jestliže $Q = \exists$ pak $\overline{Q} = \forall$
 
@@ -60,8 +58,8 @@ a přiřazení $\tau$ proměnným z $X$
 
 pak $\tau$ je **výherní tah** pro $\varphi$, jestliže
 
-*   $Q = \exists$ a $\varphi[\tau] = \top$
-*   $Q = \forall$ a $\varphi[\tau] = \bot$
+*   $Q = \exists$ a $\psi[\tau] = \top$
+*   $Q = \forall$ a $\psi[\tau] = \bot$
 
 . . .
 
@@ -80,9 +78,9 @@ Nechť $\varphi$ je QBF (ne nutně uzavřená)
 
 ## Expanze kvantifikátorů
 
-*   označme $\mathcal{B}^Y$ množinu všech přiřazení proměnným v množině $Y$
+*   označme $\mathcal{B}^Y$ množinu všech přiřazení proměnným z množiny $Y$
 
-Nechť $\varphi$ je QBF, pak platí:
+Nechť $\varphi$ je QBF (s volnými proměnnými v $X \cup Y$), pak platí:
 
 $$ \mathcal{M}(\forall X\,\exists Y.\;\varphi) = \mathcal{M}(\forall X.
 \bigvee_{\mu \in \mathcal{B}^Y} \varphi[\mu]) $$
@@ -102,6 +100,8 @@ nechť $\omega \subseteq \mathcal{B}^Y$, pak
 
 *   $\omega$-abstrakce uzavřené QBF $\exists X\,\forall Y.\;\varphi$ je
     $\exists X.\;\bigwedge_{\mu\in\omega} \varphi[\mu]$
+
+. . .
 
 ### Pozorování
 
@@ -214,7 +214,7 @@ Krok 2 $\rightarrow$ rekurze 2
         \only<8>{
         \begin{itemize}
             \item protipříklad \set{\lnot z} ($\exists$ hráč má výtězný tah)
-            \item $\omega \leftarrow \omega \cup \set{\set{z}}$
+            \item $\omega \leftarrow \omega \cup \set{\set{\lnot z}}$
         \end{itemize}
         }
 \end{itemize}
