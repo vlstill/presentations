@@ -1,6 +1,6 @@
 ---
 vim: spell spelllang=cs tw=80 fo+=t
-title: DIVINE
+title: DIVINE 4
 author:
     - Vladimír Štill
 header-includes:
@@ -20,7 +20,9 @@ date: 16th December 2016
 *   nástup na PhD, dokončování publikace o podpoře relaxovaných paměťových
     modelů pro DIVINE 3
     *   nakonec nepublikováno z důvodu nalezení chyby v implementaci, odloženo
+
 *   prezentace DIVINE 3 na SV-COMP/TACAS 2016 v Eindhovenu
+
 *   práce na kompilátoru pro DIVINE
     *   integrace clangu
     *   robustnější prostředí pro kompilaci
@@ -31,10 +33,11 @@ date: 16th December 2016
 
 *   v květnu proběhl první DIVINE sprint, vznikla první interně použitelná verze
     DIVINE 4
-*   dokončování kompilace
+
+*   dokončování kompilátoru
 *   instrumentace LLVM pro DIVINE 4
 *   metadata pro potřeby programu/DiOS-u (DIVINE Operating System -- poskytuje
-    podporu pro vlákna, části POSIX verifikovanému programu)
+    podporu pro vlákna, část POSIX prostředí verifikovanému programu)
 *   podpora C/C++ knihoven pro DIVINE 4
 
 ## Srpen až říjen
@@ -42,7 +45,9 @@ date: 16th December 2016
 *   implementace výjimek a `setjmp`/`longjmp` pro DIVINE 4
     *   robustnější podpora výjimek založená na vlastním unwinderu
     *   funguje bez modifikací C++ knihovny
+
 *   statické redukce stavového prostoru na základně detekce lokálních proměnných
+
 *   podíl na přípravě článku o architektuře DiVM
     *   Ročkai, Mrázek, Štill, Barnat: *A Virtual Machine with Graph-Organised
         Memory for Model Checking*, odesláno na TACAS
@@ -53,10 +58,12 @@ date: 16th December 2016
     *   optimalizace Thread Local Storage
     *   robustnější kontrola chyb
     *   využití symetrie vláken k redukci stavového prostoru
+
 *   testy, větší množství oprav
     *   testy knihovny `bricks`, kterou DIVINE využívá částečně verifikovány
         DIVINE
     *   díky tomu identifikace a částečné doplnění chybějící funkcionality
+
 *   příprava publikace: Štill, Ročkai, Mrázek, Barnat: *Verifying
     Exception-Enabled C++ Using Unmodified Standard Library*, odesláno na NASA
     Formal Methods
@@ -76,6 +83,7 @@ date: 16th December 2016
 ## Vylepšení interaktivního debuggeru
 
 *   (dostupný jako `divine sim`)
+
 *   lepší podpora pro debugovací informace
 *   mnoho opravených chyb
 *   breakpointy podle jména souboru a čísla řádku
@@ -85,6 +93,7 @@ date: 16th December 2016
 
 *   DiOS -- jednoduchý operační systém uvnitř DIVINE, který poskytuje část
     POSIX rozhraní verifikovanému programu
+
 *   předávání argumentů programu (argumenty funkce `main`, `environ`,…)
 *   konfigurace chování chybových stavů, simulace chyb
     *   lze deaktivovat některé kontroly
@@ -94,16 +103,21 @@ date: 16th December 2016
 ## Virtuální souborový systém v DIVINE 4
 
 *   DIVINE 4 nyní podporuje základní funkce pro práci se souborovým systémem
+
 *   lze zachytit část souborového systému, vstup
+
 *   výstup (`printf`/`write`…) zaznamenáván, součástí případného protipříkladu
 
 ## Symbolizace a abstrakce programu
 
 *   cílem je verifikace programů se vstupy
+
 *   rozmyšlena reprezentace stavu symbolizovaného programu a reprezentace
     symbolických hodnot
+
 *   algoritmus pro transformaci programu momentálně zvládá transformovat
     programy s celočíselnými proměnnými
+
 *   připraveno jako základ nejen pro přesnou symbolickou reprezentaci, ale také
     pro abstrakci
 
@@ -126,8 +140,9 @@ date: 16th December 2016
 **Podpora POSIX systémových volání**
 
 *   cílem je vytvořit režim spuštění programu v DIVINE, který umožní volat
-    skutečná systémová volání Linuxu na kterém DIVINE běží
+    systémová volání Linuxu na kterém DIVINE běží
     *   možné pouze v run módu
+    *   nyní DIVINE některá systémová volání simuluje
 *   umožní využít striktních kontrol DiVM i pro programy, které interagují se
     sítí, čtou větší množství dat z filesystému, …
 
