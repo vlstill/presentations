@@ -83,7 +83,7 @@ date: 16th December 2016
 
 ## Vylepšení DiOS
 
-*   DiOS -- jednoduchý operační systém uvnitř DIVINE, který poskytuje části
+*   DiOS -- jednoduchý operační systém uvnitř DIVINE, který poskytuje část
     POSIX rozhraní verifikovanému programu
 *   předávání argumentů programu (argumenty funkce `main`, `environ`,…)
 *   konfigurace chování chybových stavů, simulace chyb
@@ -91,7 +91,7 @@ date: 16th December 2016
     *   nastavitelné chování `malloc`, …
 *   přepracovaný systém systémových volání
 
-## Podpora pro virtuální souborový v DIVINE 4
+## Virtuální souborový systém v DIVINE 4
 
 *   DIVINE 4 nyní podporuje základní funkce pro práci se souborovým systémem
 *   lze zachytit část souborového systému, vstup
@@ -103,15 +103,15 @@ date: 16th December 2016
 
 ## Aktuální stav DIVINE 4
 
-*   první beta verze 1. 12.
-*   druhá 14. 12.
-*   RC do Vánoc
-*   finální verze pravděpodobně v lednu
-    *   v plánu dát k dispozici virtuální stoj s predinstalovaným DIVINE
+*   první beta verze 1. 12., druhá 14. 12.
+*   RC do Vánoc, finální v lednu
+    *   v plánu dát k dispozici virtuální stoj s předinstalovaným DIVINE
 *   podali jsme návrh na prezentaci a workshop na DevConf, obojí ale zamítnuto
 
-*   rozšíření dokumentace na webu
+*   od května v průměru $>200$ patchů/měsíc
 *   7 vývojářů
+
+*   rozšířená dokumentace na webu
 
 # Pohled do roku 2017
 
