@@ -97,9 +97,15 @@ date: 16th December 2016
 *   lze zachytit část souborového systému, vstup
 *   výstup (`printf`/`write`…) zaznamenáván, součástí případného protipříkladu
 
-## Symbolizace programu
+## Symbolizace a abstrakce programu
 
-*   \TODO{TODO}
+*   cílem je verifikace programů se vstupy
+*   rozmyšlená reprezentace stavu symbolizovaného programu a reprezentace
+    symbolických hodnot
+*   algoritmus pro transformaci programu momentálně zvládá transformovat
+    programy s celočíselnými proměnnými
+*   připraveno jako základ nejen pro přesnou symbolickou reprezentaci, ale také
+    pro abstrakci
 
 ## Aktuální stav DIVINE 4
 
