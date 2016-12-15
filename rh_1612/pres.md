@@ -13,36 +13,55 @@ lang: czech
 date: 16th December 2016
 ...
 
-## Stav DIVINE 4
+# Shrnutí prvního roku PhD
 
-*   první beta verze 1. 12.
-*   druhá 14. 12.
-*   třetí beta a RC do Vánoc
-*   release pravděpodobně v lednu
-    *   v plánu dát k dispozici virtuální stoj s predinstalovaným DIVINE
-*   mnoho novinek
-*   7 vývojářů
+## Únor až duben
 
-## Vylepšení knihovny `pthreads`
+*   nástup na PhD, dokončování publikace o podpoře relaxovaných paměťových
+    modelů pro DIVINE 3
+    *   nakonec nepublikováno z důvodu nalezení chyby v implementaci, odloženo
+*   prezentace DIVINE 3 na SV-COMP/TACAS 2016 v Eindhovenu
+*   práce na kompilátoru pro DIVINE
+    *   integrace clangu
+    *   robustnější prostředí pro kompilaci
+    *   nezávislost na systémovém kompilátoru a jeho nastavení
+    *   nezávislost na systémových hlavičkových souborech
 
-*   DIVINE potřebuje vlastní implementaci `pthreads`
-*   původní implementace z roku 2013, postupně upravována
-*   zásadnější změny související s DIVINE 4
-    *   robustnější kontrola chyb (re-inicializace, mutex zamčený mrtvým
-        vláknem,…)
-    *   efektivnější Thread-Local Storage
-    *   nová implementace umožňuje využít symetrie vláken k redukci stavového
-        prostoru
-    *   lepší pokrytí testy
+## Květen až červenec
 
-## Vylepšená podpora výjimek, `setjmp`/`longjmp`
+*   v květnu proběhl první DIVINE sprint, vznikla první interně použitelná verze
+    DIVINE 4
+*   dokončování kompilace
+*   instrumentace LLVM pro DIVINE 4
+*   metadata pro potřeby programu/DiOS (DIVINE Operating System -- poskytuje
+    podporu pro vlákna, části POSIX verifikovanému programu)
+*   podpora C/C++ knihoven pro DIVINE 4
 
-*   podpora C++ výjimek pro DIVINE 4 přepracována
-    *   implementována podmnožina `libunwind` používaná pro výjimky
-    *   kód v C++ knihovně pro podporu výjimek běží v DIVINE 4 nezměněný
-*   přidána podpora pro `setjmp`/`longjmp`
-*   článek: Štill, Ročkai, Mrázek, Barnat: *Verifying Exception-Enabled C++ Using
-    Unmodified Standard Library*, odesláno na NASA Formal Methods
+## Srpen až říjen
+
+*   implementace výjimek a `setjmp`/`longjmp` pro DIVINE 4
+    *   robustnější podpora výjimek založená na vlastním unwinderu
+    *   funguje bez modifikací C++ knihovny
+*   statické redukce stavového prostoru na základně detekce lokálních proměnných
+*   podíl na přípravě článku o architektuře DiVM
+    *   Ročkai, Mrázek, Štill, Barnat: *A Virtual Machine with Graph-Organised
+        Memory for Model Checking*, odesláno na TACAS
+
+## Listopad a prosinec
+
+*   refaktoring a optimalizace podpory vláken (`pthreads`)
+    *   optimalizace Thread Local Storage
+    *   robustnější kontrola chyb
+    *   využití symetrie vláken k redukci stavového prostoru
+*   testy, větší množství oprav
+    *   testy knihovny `bricks`, kterou DIVINE využívá částečně verifikovány
+        DIVINE
+    *   díky tomu identifikace a částečné doplnění chybějící funkcionality
+*   příprava publikace: Štill, Ročkai, Mrázek, Barnat: *Verifying
+    Exception-Enabled C++ Using Unmodified Standard Library*, odesláno na NASA
+    Formal Methods
+
+# Další novinky v DIVINE 4
 
 ## Vylepšení jádra DIVINE (DiVM)
 
@@ -51,8 +70,6 @@ date: 16th December 2016
     *   zápis no neviditelných objektů nemusí vyvolat interrupt
     *   rychlejší sledování viditelnosti objektu než v DIVINE 3
 *   \TODO{objID TODO}
-*   článek: Ročkai, Mrázek, Štill, Barnat: *A Virtual Machine with
-    Graph-Organised Memory for Model Checking*, odesláno na TACAS
 
 ## Vylepšení simulátoru protipříkladů
 
@@ -70,71 +87,30 @@ date: 16th December 2016
     *   lze deaktivovat některé kontroly
     *   nastavitelné chování `malloc`, …
 *   přepracovaný systém systémových volání
-    *   příprava pro podporu většího množství POSIX systémových volání
-    *   a možnost provolávání se z DIVINE do systému ve kterém DIVINE běží
 
 ## Podpora pro virtuální souborový v DIVINE 4
 
 *   DIVINE 4 nyní podporuje základní funkce pro práci se souborovým systémem
 *   lze zachytit část souborového systému, vstup
 *   výstup (`printf`/`write`…) zaznamenáván, součástí případného protipříkladu
-*   součástí DiOS, využívá nového rozhraní pro systémová volání
 
 ## Symbolizace programu
 
 *   \TODO{TODO}
 
-## Testy
+## Aktuální stav DIVINE 4
 
--   mnoho nových vlastních testů
--   část testů na knihovnu `bricks` (součást DIVINE) nyní verifikovány DIVINE
-    *   z 22 testů DIVINE zvládá 16
-    *   4 testy využívají procesy, případně některé nepodporované
-        syscally (`mmap`, část FS)
-    *   2 vyžadují sledování inicializace paměti po bitech
--   Posix Test Suite testy na knihovnu `pthreads`
-    *   156 testů, 78 aktivních
-*   $\rightarrow$ identifikace chybějící funkcionality
-    *   některé pokročilejší funkcionality `pthreads`
-    *   semafory
-    *   `sys/sched.h`, `sys/time.h`
-    *   význačná vlastnost: \uv{nenastane chyba a program skončí} (neboli
-        nenastane livelock) -- v PTS simulované pomocí `alarm`
+*   první beta verze 1. 12.
+*   druhá 14. 12.
+*   RC do Vánoc
+*   release pravděpodobně v lednu
+    *   v plánu dát k dispozici virtuální stoj s predinstalovaným DIVINE
+*   podali jsme návrh na prezentaci a workshop na DevConf, obojí ale zamítnuto
 
-## Různé
-
-*   opravy fungování některých přepínačů integrovaného kompilátoru (`-x`,
-    některé případy `-I`)
 *   rozšíření dokumentace na webu
-*   návrh na prezentaci a workshop na DevConf
-    *   obojí zamítnuto
+*   7 vývojářů
 
-# Demo (bricks-test)
-
-## Shrnutí prvního roku PhD {.allowframebreaks}
-
-*   únor
-    *   nástup na PhD, příprava publikace o verifikaci s relaxovanými paměťovými
-        modely (v návaznosti na diplomovou práci)
-        *   na základně review později odhalena chyba, prozatím odloženo
-*   březen -- duben
-    *   práce na kompilaci (integrace clangu do DIVINE)
-    *   prezentace DIVINE 3 na SV-COMP/TACAS v Eindhovenu
-*   květen -- srpen
-    *   *květen: první DIVINE sprint, první použitelný prototyp DIVINE 4*
-    *   instrumentace programu pro verifikaci, přidávání metadat
-    *   úpravy knihoven pro DIVINE 4
-    *   statické redukce stavového prostoru
-    *   prototyp spustitelných protipříkladů
-    *   automatické buildy DIVINE
-
-*   září -- prosinec
-    *   podpora výjimek
-    *   rozsáhlejší změny v `pthreads`
-    *   prezentace posteru o verifikaci programů se vstupy na MEMICS
-    *   příprava publikací
-
-průběžně různé opravy, testy, konzultace s mladšími studenty…
+# Pohled do roku 2017
 
 ## Výhled na rok 2017
 
