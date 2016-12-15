@@ -33,7 +33,7 @@ date: 16th December 2016
     DIVINE 4
 *   dokončování kompilace
 *   instrumentace LLVM pro DIVINE 4
-*   metadata pro potřeby programu/DiOS (DIVINE Operating System -- poskytuje
+*   metadata pro potřeby programu/DiOS-u (DIVINE Operating System -- poskytuje
     podporu pro vlákna, části POSIX verifikovanému programu)
 *   podpora C/C++ knihoven pro DIVINE 4
 
@@ -66,17 +66,20 @@ date: 16th December 2016
 ## Vylepšení jádra DIVINE (DiVM)
 
 *   vylepšené redukce stavového prostoru
-    *   sledování, které objekty jsou viditelné ostatními vlákny
-    *   zápis no neviditelných objektů nemusí vyvolat interrupt
-    *   rychlejší sledování viditelnosti objektu než v DIVINE 3
-*   \TODO{objID TODO}
+    *   sledování, které objekty jsou sdílené mezi vlákny
+    *   zápis no soukromých objektů nemusí vyvolat přerušení
+    *   podobná redukce ale menší režie než DIVINE 3
+*   lepší reprezentace haldy
+    *   úspora paměti
+    *   rychlejší srovnávání stavů
 
-## Vylepšení simulátoru protipříkladů
+## Vylepšení interaktivního debuggeru
 
-*   `divine sim`
+*   (dostupný jako `divine sim`)
 *   lepší podpora pro debugovací informace
-*   mnoho oprav chyb
-*   \TODO{TODO}
+*   mnoho opravených chyb
+*   breakpointy podle jména souboru a čísla řádku
+*   automatické testy
 
 ## Vylepšení DiOS
 
@@ -103,7 +106,7 @@ date: 16th December 2016
 *   první beta verze 1. 12.
 *   druhá 14. 12.
 *   RC do Vánoc
-*   release pravděpodobně v lednu
+*   finální verze pravděpodobně v lednu
     *   v plánu dát k dispozici virtuální stoj s predinstalovaným DIVINE
 *   podali jsme návrh na prezentaci a workshop na DevConf, obojí ale zamítnuto
 
