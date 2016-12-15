@@ -46,7 +46,7 @@ date: 16th December 2016
     *   robustnější podpora výjimek založená na vlastním unwinderu
     *   funguje bez modifikací C++ knihovny
 
-*   statické redukce stavového prostoru na základně detekce lokálních proměnných
+*   statické redukce stavového prostoru na základě detekce lokálních proměnných
 
 *   podíl na přípravě článku o architektuře DiVM
     *   Ročkai, Mrázek, Štill, Barnat: *A Virtual Machine with Graph-Organised
@@ -74,8 +74,8 @@ date: 16th December 2016
 
 *   vylepšené redukce stavového prostoru
     *   sledování, které objekty jsou sdílené mezi vlákny
-    *   zápis no soukromých objektů nemusí vyvolat přerušení
-    *   podobná redukce ale menší režie než DIVINE 3
+    *   zápis do soukromých objektů nemusí vyvolat přerušení
+    *   podobná redukce, ale menší režie než DIVINE 3
 *   lepší reprezentace haldy
     *   úspora paměti
     *   rychlejší srovnávání stavů
@@ -125,7 +125,7 @@ date: 16th December 2016
 
 *   první beta verze 1. 12., druhá 14. 12.
 *   RC do Vánoc, finální v lednu
-    *   v plánu dát k dispozici virtuální stoj s předinstalovaným DIVINE
+    *   v plánu dát k dispozici virtuální stroj s předinstalovaným DIVINE
 *   podán návrh na prezentaci a workshop na DevConf, obojí ale zamítnuto
 
 *   od května v průměru $>200$ patchů/měsíc
@@ -140,7 +140,7 @@ date: 16th December 2016
 **Podpora POSIX systémových volání**
 
 *   cílem je vytvořit režim spuštění programu v DIVINE, který umožní volat
-    systémová volání Linuxu na kterém DIVINE běží
+    systémová volání Linuxu, na kterém DIVINE běží
     *   možné pouze v run módu
     *   nyní DIVINE některá systémová volání simuluje
 *   umožní využít striktních kontrol DiVM i pro programy, které interagují se
@@ -154,7 +154,7 @@ date: 16th December 2016
 
 *   možnost načtení více programů do DIVINE, `exec`
 
-*   meziprocesová komunikace, ocharana paměti
+*   meziprocesová komunikace, ochrana paměti
 
 ## Verifikace programů se vstupem
 
