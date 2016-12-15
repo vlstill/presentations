@@ -100,7 +100,7 @@ date: 16th December 2016
 ## Symbolizace a abstrakce programu
 
 *   cílem je verifikace programů se vstupy
-*   rozmyšlená reprezentace stavu symbolizovaného programu a reprezentace
+*   rozmyšlena reprezentace stavu symbolizovaného programu a reprezentace
     symbolických hodnot
 *   algoritmus pro transformaci programu momentálně zvládá transformovat
     programy s celočíselnými proměnnými
@@ -112,7 +112,7 @@ date: 16th December 2016
 *   první beta verze 1. 12., druhá 14. 12.
 *   RC do Vánoc, finální v lednu
     *   v plánu dát k dispozici virtuální stoj s předinstalovaným DIVINE
-*   podali jsme návrh na prezentaci a workshop na DevConf, obojí ale zamítnuto
+*   podán návrh na prezentaci a workshop na DevConf, obojí ale zamítnuto
 
 *   od května v průměru $>200$ patchů/měsíc
 *   7 vývojářů
