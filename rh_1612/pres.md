@@ -19,6 +19,7 @@ date: 16th December 2016
 *   druhá 14. 12.
 *   třetí beta a RC do Vánoc
 *   release pravděpodobně v lednu
+    *   v plánu dát k dispozici virtuální stoj s predinstalovaným DIVINE
 *   mnoho novinek
 
 ## Vylepšení knihovny `pthreads`
@@ -98,6 +99,13 @@ date: 16th December 2016
     *   `sys/sched.h`, `sys/time.h`
     *   význačná vlastnost: \uv{nenastane chyba a program skončí} (neboli
         nenastane livelock) -- v PTS simulované pomocí `alarm`
+
+## Různé
+
+*   opravy fungování některých přepínačů integrovaného kompilátoru (`-x`,
+    některé případy `-I`)
+*   návrh na prezentaci a workshop na DevConf
+    *   obojí zamítnuto
 
 # Demo (bricks-test)
 
