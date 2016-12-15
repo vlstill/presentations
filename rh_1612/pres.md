@@ -21,6 +21,7 @@ date: 16th December 2016
 *   release pravděpodobně v lednu
     *   v plánu dát k dispozici virtuální stoj s predinstalovaným DIVINE
 *   mnoho novinek
+*   7 vývojářů
 
 ## Vylepšení knihovny `pthreads`
 
@@ -104,13 +105,42 @@ date: 16th December 2016
 
 *   opravy fungování některých přepínačů integrovaného kompilátoru (`-x`,
     některé případy `-I`)
+*   rozšíření dokumentace na webu
 *   návrh na prezentaci a workshop na DevConf
     *   obojí zamítnuto
 
 # Demo (bricks-test)
 
-## Shrnutí prvního roku PhD
+## Shrnutí prvního roku PhD {.allowframebreaks}
 
-*   
+*   únor
+    *   nástup na PhD, příprava publikace o verifikaci s relaxovanými paměťovými
+        modely (v návaznosti na diplomovou práci)
+        *   na základně review později odhalena chyba, prozatím odloženo
+*   březen -- duben
+    *   práce na kompilaci (integrace clangu do DIVINE)
+    *   prezentace DIVINE 3 na SV-COMP/TACAS v Eindhovenu
+*   květen -- srpen
+    *   *květen: první DIVINE sprint, první použitelný prototyp DIVINE 4*
+    *   instrumentace programu pro verifikaci, přidávání metadat
+    *   úpravy knihoven pro DIVINE 4
+    *   statické redukce stavového prostoru
+    *   prototyp spustitelných protipříkladů
+    *   automatické buildy DIVINE
 
+*   září -- prosinec
+    *   podpora výjimek
+    *   rozsáhlejší změny v `pthreads`
+    *   prezentace posteru o verifikaci programů se vstupy na MEMICS
+    *   příprava publikací
 
+průběžně různé opravy, testy, konzultace s mladšími studenty…
+
+## Výhled na rok 2017
+
+*   větší podpora POSIX systémových volání
+    *   pass-through mód pro run -- volání systémových volání Linuxu z `divine
+        run`
+*   podpora procesů, meziprocesové komunikace
+*   podpora verifikace se symbolickým/abstrahovaným vstupem
+*   další vylepšování redukce a komprese stavového prostoru
