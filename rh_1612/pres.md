@@ -121,11 +121,53 @@ date: 16th December 2016
 
 # Pohled do roku 2017
 
-## Výhled na rok 2017
+## Rozšíření DiOS-u
 
-*   větší podpora POSIX systémových volání
-    *   pass-through mód pro run -- volání systémových volání Linuxu z `divine
-        run`
-*   podpora procesů, meziprocesové komunikace
-*   podpora verifikace se symbolickým/abstrahovaným vstupem
-*   další vylepšování redukce a komprese stavového prostoru
+**Podpora POSIX systémových volání**
+
+*   cílem je vytvořit režim spuštění programu v DIVINE, který umožní volat
+    skutečná systémová volání Linuxu na kterém DIVINE běží
+    *   možné pouze v run módu
+*   umožní využít striktních kontrol DiVM i pro programy, které interagují se
+    sítí, čtou větší množství dat z filesystému, …
+
+\bigskip
+
+**Podpora procesů**
+
+*   přidání podpory pro `fork`
+
+*   možnost načtení více programů do DIVINE, `exec`
+
+*   meziprocesová komunikace, ocharana paměti
+
+## Verifikace programů se vstupem
+
+*   dokončení základní implementace
+    *   nutné úpravy v DiVM
+    *   nový verifikační algoritmus
+
+*   postupné rozšiřování nad rámec symbolické verifikace podporované SymDIVINE
+    *   floaty, dynamická paměť
+    *   možná abstrakce/over-aproximace
+
+## Redukce stavového prostoru
+
+*   optimalizace současných redukcí
+
+*   komprese stavového prostoru
+
+*   optimalizace reprezentace rámce funkce
+
+*   využití detekce ukončení cyklu k odstranění některých přerušení
+
+## Monitory, LTL
+
+*   podpora složitějších vlastností, například:
+    *   globální asserty
+    *   \uv{nenastane chyba a program se ukončí}
+
+*   vlastnosti zapsané pomocí monitoru v C(++), který sleduje chování programu,
+    nebo pomocí LTL
+
+*   související verifikační algoritmy
