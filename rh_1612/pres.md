@@ -60,7 +60,7 @@ date: 16th December 2016
     *   využití symetrie vláken k redukci stavového prostoru
 
 *   testy, větší množství oprav
-    *   testy knihovny `bricks`, kterou DIVINE využívá částečně verifikovány
+    *   testy knihovny `bricks`, kterou DIVINE využívá, částečně verifikovány
         DIVINE
     *   díky tomu identifikace a částečné doplnění chybějící funkcionality
 
