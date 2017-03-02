@@ -9,19 +9,21 @@ header-includes:
     - \usepackage{sansmathfonts}
     - \usepackage[small]{eulervm}
     - \newcommand{\TODO}[1]{{\color{red}#1}}
+    - \setbeamersize{text margin left=1.2em, text margin right=1.2em}
 lang: czech
 date: 3\. Března 2017
 ...
 
 ## Shrnutí posledního čtvrt roku
 
-*   DIVINE 4 final (9. 1.) \pause
+*   DIVINE 4.0 final (9. 1.) \pause
 *   2\. DIVINE sprint -- 9. 1. -- 15. 1.
     *   prototyp DIVINE s podporou symbolické verifikace
     *   přidávání benchmarků a testů, související úpravy
-        *   doplněny některé chybějící části knihovny (libm, …)
+        *   doplněny některé chybějící části knihovny (libm, `regex.h`, …)
         *   C++ benchmarky s podporou Google Test, CATCH
     *   prototyp provolávání systémových volání v `divine run`
+    *   monitory
     \pause
 *   upraven bitcode linker
 *   testy pro PDClib (implementace standardní C knihovny)
@@ -51,5 +53,6 @@ date: 3\. Března 2017
     *   třeba rozšíření implementace → očekávané zlepšení výkonu i
         použitelnosti DIVINE
     \pause
-*   `divine-cc`/`divine-ld` pro kompilaci větších projektů
+*   `divine-cc`/`divine-ld` pro kompilaci větších projektů \pause
+*   podpora procesů \pause
 
