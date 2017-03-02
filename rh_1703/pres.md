@@ -45,7 +45,7 @@ date: 3\. Března 2017
     *   provolávání syscallů do systému
     *   přesná kontrola paměti (lepší než `valgrind`), složitější vlastnosti než
         sanitizery
-    *   aktuálně základ implementace třeba rozšířit
+    *   aktuálně základ implementace, třeba rozšířit
     \pause
 *   další publikace: halda, simulátor, symbolická verifikace
     *   třeba rozšíření implementace → očekávané zlepšení výkonu i
