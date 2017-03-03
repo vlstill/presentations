@@ -27,8 +27,8 @@ date: 3\. Března 2017
     \pause
 *   upraven bitcode linker
 *   testy pro PDClib (implementace standardní C knihovny)
-    *   nalezené chyby: přístup k neinicializované paměti, out-of-bound access,
-        chyby v printf
+    *   nalezené chyby: přístup k neinicializované paměti, přístup mimo meze
+        paměti, chyby v printf
     \pause
 *   VM obrazy DIVINE ke stažení \pause
 *   vzniká sada benchmarků a benchmarkovací nástroj, pravidelnější analýza
