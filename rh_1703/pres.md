@@ -14,7 +14,7 @@ lang: czech
 date: 3\. Března 2017
 ...
 
-## Shrnutí posledního čtvrt roku
+## Shrnutí posledního čtvrt roku I
 
 *   DIVINE 4.0 final (9. 1.) \pause
 *   2\. DIVINE sprint -- 9. 1. -- 15. 1.
@@ -24,7 +24,9 @@ date: 3\. Března 2017
         *   C++ benchmarky s podporou Google Test, CATCH
     *   prototyp provolávání systémových volání v `divine run`
     *   monitory
-    \pause
+
+## Shrnutí posledního čtvrt roku II
+
 *   upraven bitcode linker
 *   testy pro PDClib (implementace standardní C knihovny)
     *   nalezené chyby: přístup k neinicializované paměti, přístup mimo meze
@@ -35,24 +37,39 @@ date: 3\. Března 2017
     výkonu DIVINE
     *   testy standardní knihovny C, libc++, DIVINE, programovací úlohy, …
     \pause
-*   optimalizace implementace výjimek, optimalizace výkonu haldy
+*   optimalizace implementace výjimek, optimalizace výkonu haldy \pause
+*   nezávislý článek \uv{Bounded model checking of C++ programs based on the
+    Qt cross-platform framework} (Software testing Verification & Reliability)
+    *   porovnání DIVINE s ESBMC, LLBMC -- DIVINE 3 měl nejméně false positives,
+        srovnatelné pokrytí testů, ale pomalejší (ale započítán i čas kompilace
+        knihoven)
 
 ## Aktuální plány
+
+\vspace*{-\medskipamount}
+
+**moje:**
 
 *   blízké publikace: výjimky, architektura DIVINE 4
     *   další benchmarky, testy
     *   evaluace
     \pause
+*   `divine-cc`/`divine-ld` pro kompilaci větších projektů \pause
+*   možnosti redukce stavového prostoru \pause
+
+\hrule\medskip
+
+**celkové:**
+
 *   run-mód DIVINE
     *   provolávání syscallů do systému
     *   přesná kontrola paměti (lepší než `valgrind`), složitější vlastnosti než
         sanitizery
-    *   aktuálně základ implementace, třeba rozšířit
+    *   aktuálně základ implementace, nutno rozšířit
     \pause
 *   další publikace: halda, simulátor, symbolická verifikace
     *   třeba rozšíření implementace → očekávané zlepšení výkonu i
         použitelnosti DIVINE
     \pause
-*   `divine-cc`/`divine-ld` pro kompilaci větších projektů \pause
 *   podpora procesů \pause
 
