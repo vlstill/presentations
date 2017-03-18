@@ -10,6 +10,7 @@ header-includes:
     - \usepackage[small]{eulervm}
     - \newcommand{\TODO}[1]{{\color{red}#1}}
     - \setbeamersize{text margin left=1.2em, text margin right=1.2em}
+    - \input{../names.tex}
 lang: czech
 date: 3\. Března 2017
 ...
@@ -43,6 +44,7 @@ date: 3\. Března 2017
     *   porovnání DIVINE s ESBMC, LLBMC -- DIVINE 3 měl nejméně false positives,
         srovnatelné pokrytí testů, ale pomalejší (ale započítán i čas kompilace
         knihoven)
+*   nový člen týmu: \zuz
 
 ## Aktuální plány
 
@@ -72,4 +74,5 @@ date: 3\. Března 2017
         použitelnosti DIVINE
     \pause
 *   podpora procesů \pause
+*   nový člen týmu: \hh
 
