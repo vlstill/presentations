@@ -16,7 +16,7 @@ lang: english
 date: 18th March 2017
 ...
 
-## Intro {.t}
+## Introduction {.t}
 
 \begin{latex}
 \vspace*{3em}
@@ -33,11 +33,11 @@ Abstraction} and \redon{5}{Well-Founded Relations}
 \only<2>{
 \begin{itemize}
     \item we are concerned with infinite state systems
-    \item more precisely infinite state transition systems described implicitly
+    \item more precisely infinite state transition systems described symbolically
           using first order logic formulas
     \item transition system $S = \langle X, I, T \rangle$
         \begin{itemize}
-            \item $X$ -- set of state variables
+            \item $X$ -- set of state variables -- $\set{ x_1, x_2, …}$
             \item $I(X)$ is formula which describes initial states
             \item $T(X, X')$ is formula which describes transition (from state
             described by $X$ to state described by $X'$)
@@ -58,7 +58,7 @@ Abstraction} and \redon{5}{Well-Founded Relations}
 \begin{itemize}
     \item using predicate abstraction to obtain finite state abstract system
     \item but the abstraction is \emph{implicit} -- we don't actually generate
-          the abstract transition system
+          and explicitly explore the abstract transition system
 \end{itemize}
 }
 
@@ -80,9 +80,9 @@ Abstraction} and \redon{5}{Well-Founded Relations}
 
 ## LTL Model Checking Using Fair Path Detection
 
-*   given a system $S = \langle X, I, T \rangle$ and LTL formula $\phi$ over $X$
-    we want to check that for all infinite paths $\pi$ of $S$, $\phi$ is true in
-    $\pi$
+*   given a system $S = \langle X, I, T \rangle$ and LTL formula $\phi$ over
+    $X$, we want to check that for all infinite paths $\pi$ of $S$, $\phi$ is
+    true in $\pi$
     *   $S \models \phi$
 
 . . .
@@ -93,7 +93,7 @@ Abstraction} and \redon{5}{Well-Founded Relations}
     *   counterexample is \emph{fair path} -- path that visits $f_{\lnot\phi}$
         infinitely often
     *   \pause{}weird?\pause{} Not really… $S_{\lnot\phi}$ can be Büchi automaton
-        for $\lnot\phi$ and $f$ property "state of product is accepting"
+        for $\lnot\phi$ and $f$ property "state of the product is accepting"
 
 . . .
 
@@ -127,9 +127,15 @@ an invariant model checking problem
 *   a relation $\rho$ over $S$ is *transition invariant* if it contains the transitive
     closure of $T$ restricted to $R$
     *   $T^+ \cap (R \times R) \subseteq \rho$
+
+. . .
+
 *   relation ${\prec} \subseteq Q \times Q$ is *well-founded* if every
     non-empty subset $U \subseteq Q$ has a minimal element with respect to
     $\prec$
+
+. . .
+
 *   relation $\rho$ is *disjunctively well-founded* if it is a finite union of
     well-founded relations
 
@@ -140,7 +146,7 @@ an invariant model checking problem
 
 ## \textsc{IC3} with Implicit Abstraction
 
-*   \textsc{IC3} works with transitions systems encoded into SAT
+*   \textsc{IC3} works with transition systems encoded into SAT
 *   to verify invariant (= safety) properties
 
 . . .
