@@ -184,8 +184,44 @@ an invariant model checking problem
     *   search for concrete lasso by bounded model checking
     *   if it fails, try to prove infeasibility of this lasso
         *   for increasing but finite number of unrollings of the lasso
-        *   when found infeasibility, derive new predicates from interpolants of
+        *   when CE is infeasible, derive new predicates from interpolants of
             unrollings
+
+## Extending with Well-Founded Relations I
+
+*   refinement has a problem: if real CE is not lasso
+    *   it can happen that all unrollings of abstract lasso will be feasible,
+        but CE is not
+    *   if there exists unrolling of arbitrary, but finite length
+
+. . .
+
+*   idea: incorporate well-founded relations into encoding
+    *   spurious counterexamples can then be blocked by adding termination
+        arguments in form of disjunctively well-founded transition invariants
+
+. . .
+
+*   counterexample refinement:
+    1.  try to block finite prefix (with upper bound on loop unrollings)
+    2.  try to find termination argument
+
+## Extending with Well-Founded Relations II
+
+\includegraphics[page=10, clip, trim=4.5cm 17.4cm 4cm 8.7cm, width=\textwidth]{paper}
+
+*   new copies of state variables
+    *   $x_0$ -- initial values
+    *   $\overline{x}$ -- values stored nondeterministically at some occurrence of $f$
+*   $s$ indicates state variables' values were saved into $\overline{x}$ (second
+    disjunct of $T_{\mathit{mem}}$)
+*   $w$ can be changed only once, it is set to false if current $(X,
+    \overline{X})$ does not satisfy any of the relations in $W$
+    *   $r$ captures check of well-foundedness
+
+## Evaluation
+
+\includegraphics[page=17, clip, trim=5.5cm 17.4cm 5cm 4cm, width=\textwidth]{paper}
 
 ## Bibliography {.allowframebreaks}
 
