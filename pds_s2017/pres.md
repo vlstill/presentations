@@ -1,11 +1,11 @@
 ---
 vim: spell spelllang=en fo+=t tw=80
-title: Infitine-State Liveness-to-Safety via Implict Abstraction and Well-Founded Relations \cite{Daniel2016}
+title: Infinite-State Liveness-to-Safety via Implicit Abstraction and Well-Founded Relations \cite{Daniel2016}
 author:
     - Jakub Daniel
     - Alessandro Cimatti
     - Alberto Griggio
-    - StefanoTonetta
+    - Stefano\ Tonetta
     - Sergio Mover
     - \
     - presented by Vladimír Štill
@@ -13,7 +13,7 @@ header-includes:
     - \newcommand{\redon}[2]{{\only<#1>{\color{red}}#2}}
     - \newcommand{\FG}{\textrm{\textbf{FG}}}
 lang: english
-date: 18th March 2017
+date: 20th March 2017
 ...
 
 ## Introduction {.t}
