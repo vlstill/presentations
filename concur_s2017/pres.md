@@ -126,7 +126,7 @@ quantified bit-vector formula,
            & \multicolumn{2}{c}{uninterpreted funs} & \multicolumn{2}{c|}{uninterpreted funs} \\
   encoding & no  & yes     & no & yes \\ \hline
   unary    & QF\_BV1 \NP & QF\_UFBV1 \NP     & BV1 \PSPACE & UFBV1 \NEXP \\ \hline
-  binary   & QF\_BV2 \NEXP & QF\_UFBV2 \NEXP & BV2 ? & UFBV2 2-\NEXP \\
+  binary   & QF\_BV2 \NEXP & QF\_UFBV2 \NEXP & BV2 $\mathrm{AEXP(poly)}$ & UFBV2 2-\NEXP \\
 \end{tabularx}
 
 # Logics with Unary Encoding
@@ -406,17 +406,40 @@ only have the value of the aforementioned constants
 \[ {} \bvand (\bv{X}{4} \ll 1 = \bvnot\bv{X}{4}) \bvand (\bv{Y}{4} \ll 2 =
 \bvnot\bv{Y}{4}) \]
 
-\only<2->{
+\only<2-3>{
 \begin{itemize}\item still, the existentially-quantified variables can depend on any
 universally-quantified variables\end{itemize}
+}
 
 \only<3->{
-\begin{itemize}\item we have to ensure the value of existentially-quantified variable does not change
-unless any universally-quantified variable it depends on changed\end{itemize}
+\begin{itemize}
+    \item we have to ensure the value of existentially-quantified variable does
+    not change unless any universally-quantified variable it depends on changed
 
-TODO
+    \only<4>{
+    \begin{itemize}
+        \item consider existentially-qualified variable $e$,
+        universally-qualified variable $u$, and two universal assignments
+        $\alpha$, $\beta$, such that $\alpha$ differs from $\beta$ only in value
+        of $u$
+        \item if $e$ does not depend on $u$, then value of $e$ for both
+        $\alpha$ and $\beta$ has to be the same
+    \end{itemize}
+    }
+    \only<5>{
+    \begin{itemize}
+        \item consider $E_i$ which does not depend on $U_m$ (which correspond to
+        assignments of $e_i$ and $u_m$ respectively)
+        \item all assignments in which $e_i$ is \emph{true} an $u_m$ is \emph{false}: $E_i
+        \bvand \bvnot U_m$
+        \item assignemnts of $e_i$ shifted so that the corresponding value of
+        $u_i$ is \emph{true}: $E_i \ll 2^m$
+        \item $E_i \bvand \bvnot U_m = (E_i \ll 2^m) \bvand \bvnot U_m$
+    \end{itemize}
+    }
+\end{itemize}
 }
-}
+
 \end{latex}
 
 ## Quantified Bit-Vector Logic with Binary Encoding
