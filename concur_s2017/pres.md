@@ -15,6 +15,7 @@ header-includes:
     - \newcommand{\NP}{\ensuremath{\mathrm{NP}}}
     - \newcommand{\PSPACE}{\ensuremath{\mathrm{PSPACE}}}
     - \newcommand{\NEXPTIME}{\ensuremath{\mathrm{NEXPTIME}}}
+    - \newcommand{\NEXP}{\ensuremath{\mathrm{NEXP}}}
     - \newcommand{\SAT}{\ensuremath{\mathsf{SAT}}}
     - \newcommand{\QBF}{\ensuremath{\mathsf{QBF}}}
     - \newcommand{\DQBF}{\ensuremath{\mathsf{DQBF}}}
@@ -31,7 +32,7 @@ date: 7th April 2017
 
 \begin{block}{\SAT{}}
 
-satisfiability of unqualified boolean formula
+satisfiability of quantifier-free boolean formula
 
 $$(x \lor y \lor ¬z) \land (¬y \lor ¬x)$$
 
@@ -119,14 +120,13 @@ quantified bit-vector formula,
 ## Complexity Overview
 
 
-\begin{tabularx}{\textwidth}{l|C|C|C|}
-           & \multicolumn{3}{c|}{quantifiers} \\
-           & no & \multicolumn{2}{c|}{yes} \\ \hline
-           & uninterp. fns & \multicolumn{2}{c|}{uninterp. fns} \\
-  encoding & both     & no & yes \\ \hline
-  unary    & \NP     & \PSPACE & \NEXPTIME \\
-  binary   & \NEXPTIME & ? & 2-\NEXPTIME \\
-
+\begin{tabularx}{\textwidth}{l|CCCC|}
+           & \multicolumn{4}{c|}{quantifiers} \\
+           & \multicolumn{2}{c}{no} & \multicolumn{2}{c|}{yes} \\ \hline
+           & \multicolumn{2}{c}{uninterpreted funs} & \multicolumn{2}{c|}{uninterpreted funs} \\
+  encoding & no  & yes     & no & yes \\ \hline
+  unary    & QF\_BV1 \NP & QF\_UFBV1 \NP     & BV1 \PSPACE & UFBV1 \NEXP \\ \hline
+  binary   & QF\_BV2 \NEXP & QF\_UFBV2 \NEXP & BV2 ? & UFBV2 2-\NEXP \\
 \end{tabularx}
 
 # Logics with Unary Encoding
@@ -142,6 +142,8 @@ quantified bit-vector formula,
 
 QF\_BV1 is \NP-complete
 
+. . .
+
 *   is in \NP{}
     *   by bit-blasting: since bit-widths are encoded in unary, bit-blasting
         is polynomial
@@ -153,31 +155,41 @@ QF\_BV1 is \NP-complete
     *   every \SAT{} formula can be transformed to QF\_BV1 formula by replacing
         every boolean variable with variable of bit-width 1
 
-## Ackermann Reduction
+## Refresh: Uninterpreted functions
 
-a way to remove uninterpreted functions from a formula
-
-*   given term with uninterpreted functions
-
-$$ F(F(x)) = 0 $$
+*   functions for which we know only their arity, type of inputs and type or
+    result
 
 . . .
 
-1.  number the occurrences of uninterpreted function
+$$ \left(x > 0 \lor f\left(x\right) > 0\right) \land x = 0 \land f\left(0\right)
+= 0 $$
 
+. . .
+
+*   but we still know they are functions
+
+## Ackermann Reduction
+
+a way to remove uninterpreted functions from a (quantifier-free) formula
+
+*   given term with uninterpreted functions
+    $$ F(F(x)) = 0 $$
+
+. . .
+
+1.  number the occurrences of uninterpreted functions
     $$ \underbrace{F(\ \overbrace{F(x)}^{f_1}\ )}_{f_2} = 0 $$
 
     . . .
 
 2.  replace each function with a fresh variable
-
     $$ f_2 = 0 $$
 
     . . .
 
 3.  add functional consistency constraints for every pair of instances of the
     same function
-
     $$ ((x = f_1) \implies (f_2 = f_1)) \land (f_2 = 0) $$
 
 ## Ackermann Reduction Example {.t}
@@ -214,6 +226,8 @@ $$ F(F(x)) = 0 $$
 
 QF\_UFBV1 is \NP-complete
 
+. . .
+
 *   is in \NP{}
     *   use Ackermann reduction
     *   quadratic growth
@@ -226,7 +240,12 @@ QF\_UFBV1 is \NP-complete
 
 BV1 is \PSPACE-complete
 
+. . .
+
 *   it is in \PSPACE{} -- by bit-blasting
+
+. . .
+
 *   it is \PSPACE-hard -- \QBF{} is special case of BV1
 
 ## Adding Quantifiers and Uninterpreted Functions
@@ -238,6 +257,8 @@ BV1 is \PSPACE-complete
 ## Quantifier-free Bit-Vector Logic, Binary Encoding
 
 QF\_BV2 is \NEXPTIME-complete
+
+. . .
 
 *   it is in \NEXPTIME{}
     *   bit-blasting can cause exponential growth of the formula
@@ -274,7 +295,7 @@ QF\_BV2 is \NEXPTIME-complete
     . . .
 
 *   this check should be encoded as quantifier-free formula of bit-vector logic
-    which is satisfiable iff the original formula holds
+    (of polynomial size) which is satisfiable iff the original formula holds
 
 ## Reducing \DQBF{} to QF\_BV2
 
@@ -327,7 +348,7 @@ universally-quantified variables)?
 represent each universally-quantified variable with bitvector of length $2^n$
 (where $n$ is the number of universally-quantified variables)
 
-\only<5-6,9>{
+\only<5-6>{
 \[ (\bv{X}{4} \bvor \bv{Y}{4} \bvor \bv{Z}{4}) \bvand (\bv{Y}{4} \bvor
 \bvnot\bv{Z}{4}) = \bvnot\bv{0}{4}
 \]
@@ -339,12 +360,12 @@ represent each universally-quantified variable with bitvector of length $2^n$
 \]
 }
 
-\only<10->{%
+\only<9-10>{%
 \[ (\bv{X}{4} \bvor \bv{Y}{4} \bvor \bv{Z}{4}) \bvand (\bv{Y}{4} \bvor
 \bvnot\bv{Z}{4}) = \bvnot\bv{0}{4} \]
-\[ {} \bvand (\bv{X}{4} \ll 1 = \bvnot\bv{X}{4}) \bvand (\bv{Y}{4} \ll 2 =
+{\[ \only<9>{\color{white}}{} \bvand (\bv{X}{4} \ll 1 = \bvnot\bv{X}{4}) \bvand (\bv{Y}{4} \ll 2 =
 \bvnot\bv{Y}{4})
-\]
+\]}
 }
 
 \only<6-8>{
@@ -356,11 +377,11 @@ replace universally-quantified variables ($u_0, \ldots, u_{n-1}$) with constants
     \item \bv{00\dots{}0011\dots{}11}{2^n} for $u_{n-1}$
 \end{itemize}
 
-\only<8>{\par not really, these constants are exponential to the size of original
-formula!}
+\only<8>{\par not really, these constants are exponential to the size of the
+original formula!}
 }
 
-\only<9->{
+\only<9->{\vspace{-\bigskipamount}
 constrain the universally-quantified variables ($u_0, \ldots, u_{n-1}$) so they can
 only have the value of the aforementioned constants
 
@@ -377,11 +398,9 @@ only have the value of the aforementioned constants
 
 ## Reducing \DQBF{} to QF\_BV2 {.t}
 
-$$ \Phi = \forall x, y\,\exists z(y).\ (x \lor y \lor z) \land (y \lor \lnot z)
-$$
-
-\begin{center}→\end{center}
 \begin{latex}
+\[ \Phi = \forall x, y\,\exists z(y).\ (x \lor y \lor z) \land (y \lor \lnot z) \]
+\begin{center}→\end{center}
 \[ (\bv{X}{4} \bvor \bv{Y}{4} \bvor \bv{Z}{4}) \bvand (\bv{Y}{4} \bvor
 \bvnot\bv{Z}{4}) = \bvnot\bv{0}{4} \]
 \[ {} \bvand (\bv{X}{4} \ll 1 = \bvnot\bv{X}{4}) \bvand (\bv{Y}{4} \ll 2 =
@@ -447,14 +466,11 @@ problem of finding a mapping $\lambda : [0, f(n)-1] \times [0, f(n)-1]
 given $D = \langle T = [0, k-1], H, V, n \rangle$ encode
 
 *   tiles with bit-vectors of bit-width $\lceil \log_2 k \rceil = w$
-*   horizontal and vertical matching conditions with uninterpreted functions
-    (predicates) $\bv{h}{1}\left(\bv{t_1}{w}, \bv{t_2}{w}\right)$ and
-    $\bv{v}{1}\left(\bv{t_1}{w}, \bv{t_2}{w}\right)$
 *   the tiling with uninterpreted function $\lambda$ which assigns to a pair of
     indices the tile which resides on this index:
     $\bv{\lambda}{w}\left(\bv{i}{2^n}, \bv{j}{2^n}\right)$
 
-## Reducing $2^{(2^n)}$ Square Tiling to UFBV2
+## Reducing $2^{(2^n)}$ Square Tiling to UFBV2 {.t}
 
 given $D = \langle T = [0, k-1], H, V, n \rangle$
 
@@ -462,12 +478,21 @@ given $D = \langle T = [0, k-1], H, V, n \rangle$
 \begin{eqnarray*}
     \forall \bv{i}{2^n}\,\forall \bv{j}{2^n}.\ \lambda(0, 0) = 0 \land
     \lambda\left(2^{(2^n)} - 1, 2^{(2^n)} - 1\right) = k - 1 \\
-    {} \land \bigwedge_{(t_1, t_2) \in H} h(t_1, t_2)
-    \land \bigwedge_{(t_1, t_2) \notin H} \lnot h(t_1, t_2) \\
-    {} \land \bigwedge_{(t_1, t_2) \in V} v(t_1, t_2)
-    \land \bigwedge_{(t_1, t_2) \notin V} \lnot v(t_1, t_2) \\
-    {} \land \left( j \neq 2^{(2^n)} - 1 \implies h(\lambda(i, j), \lambda(i, j + 1)) \right) \\
-    {} \land \left( i \neq 2^{(2^n)} - 1 \implies h(\lambda(i, j), \lambda(i + 1, j)) \right) \\
+    {} \land \left( j \neq 2^{(2^n)} - 1 \implies (\lambda(i, j), \lambda(i, j + 1)) \in H \right) \\
+    {} \land \left( i \neq 2^{(2^n)} - 1 \implies (\lambda(i, j), \lambda(i + 1, j)) \in V \right) \\
+\end{eqnarray*}
+\end{latex}
+
+## Reducing $2^{(2^n)}$ Square Tiling to UFBV2 {.t}
+
+given $D = \langle T = [0, k-1], H, V, n \rangle$
+
+\begin{latex}
+\begin{eqnarray*}
+    \forall \bv{i}{2^n}\,\forall \bv{j}{2^n}.\ \lambda(0, 0) = 0 \land
+    \lambda\left(2^{(2^n)} - 1, 2^{(2^n)} - 1\right) = k - 1 \\
+    {} \land \left( j \neq 2^{(2^n)} - 1 \implies \bigvee_{(t_1,t_2) \in  H} (\lambda(i, j) = t_1 \land \lambda(i, j + 1) = t_2) \right) \\
+    {} \land \left( i \neq 2^{(2^n)} - 1 \implies \bigvee_{(t1, t_2) \in V} (\lambda(i, j) = t_1 \land \lambda(i + 1, j) = t_2) \right) \\
 \end{eqnarray*}
 \end{latex}
 
