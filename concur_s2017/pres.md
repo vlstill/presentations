@@ -250,7 +250,10 @@ BV1 is \PSPACE-complete
 
 ## Adding Quantifiers and Uninterpreted Functions
 
-*   TODO
+UFBV1 is \NEXPTIME-complete
+
+*   can be shown reducible to and from Effectively Propositional Logic (EPR),
+    proof not in the paper
 
 # Logics with Binary Encoding
 
@@ -315,7 +318,7 @@ QF\_BV2 is \NEXPTIME-complete
 
 ## Reducing \DQBF{} to QF\_BV2 {.t}
 
-$$ \Phi = \forall x, y\,\exists z(y).\ (x \lor y \lor z) \land (y \lor \lnot z)
+$$ \Phi = \forall x, y, z\,\exists w(y).\ (x \lor y \lor w) \land (y \lor \lnot w)
 $$
 
 \begin{latex}
@@ -324,8 +327,8 @@ $$
 what if we only wanted to check satisfiability of Matrix? (Using QF\_BV2
 solver)
 
-\[ (\bv{X}{1} \bvor \bv{Y}{1} \bvor \bv{Z}{1}) \bvand (\bv{Y}{1} \bvor
-\bvnot\bv{Z}{1})
+\[ (\bv{X}{1} \bvor \bv{Y}{1} \bvor \bv{W}{1}) \bvand (\bv{Y}{1} \bvor
+\bvnot\bv{W}{1})
 \]
 }
 
@@ -348,33 +351,32 @@ universally-quantified variables)?
 represent each universally-quantified variable with bitvector of length $2^n$
 (where $n$ is the number of universally-quantified variables)
 
-\only<5-6>{
-\[ (\bv{X}{4} \bvor \bv{Y}{4} \bvor \bv{Z}{4}) \bvand (\bv{Y}{4} \bvor
-\bvnot\bv{Z}{4}) = \bvnot\bv{0}{4}
+\only<5-6>{\noindent\smallskip
+\[ (\bv{X}{8} \bvor \bv{Y}{8} \bvor \bv{Z}{8}) \bvand (\bv{Y}{8} \bvor
+\bvnot\bv{Z}{8}) = \bvnot\bv{0}{8}
 \]
 }
 
-\only<7-8>{
-\[ (\bv{0101}{4} \bvor \bv{0011}{4} \bvor \bv{Z}{4}) \bvand (\bv{0011}{4} \bvor
-\bvnot\bv{Z}{4}) = \bvnot\bv{0}{4}
-\]
+\only<7-8>{\noindent\smallskip
+\[ (\bv{01010101}{8} \bvor \bv{00110011}{8} \bvor \bv{W}{8}) \bvand (\bv{00110011}{8} \bvor
+\bvnot\bv{W}{8}) = \bvnot\bv{0}{8} \]
 }
 
-\only<9-10>{%
-\[ (\bv{X}{4} \bvor \bv{Y}{4} \bvor \bv{Z}{4}) \bvand (\bv{Y}{4} \bvor
-\bvnot\bv{Z}{4}) = \bvnot\bv{0}{4} \]
-{\[ \only<9>{\color{white}}{} \bvand (\bv{X}{4} \ll 1 = \bvnot\bv{X}{4}) \bvand (\bv{Y}{4} \ll 2 =
-\bvnot\bv{Y}{4})
+\only<9-10>{\noindent\smallskip
+\[ (\bv{X}{8} \bvor \bv{Y}{8} \bvor \bv{W}{8}) \bvand (\bv{Y}{8} \bvor
+\bvnot\bv{W}{8}) = \bvnot\bv{0}{8} \]
+{\[ \only<9>{\color{white}}{} \bvand (\bv{X}{8} \ll 1 = \bvnot\bv{X}{8}) \bvand (\bv{Y}{8} \ll 2 =
+\bvnot\bv{Y}{8}) \bvand (\bv{Z}{8} \ll 4 = \bv{Z}{8})
 \]}
 }
 
 \only<6-8>{
-replace universally-quantified variables ($u_0, \ldots, u_{n-1}$) with constants of form
+replace universally-quantified variables ($U_0, \ldots, U_{n-1}$) with constants of form
 \begin{itemize}
-    \item \bv{01010101\dots{}0101}{2^n} for $u_0$
-    \item \bv{00110011\dots{}0011}{2^n} for $u_1$
+    \item \bv{01010101\dots{}0101}{2^n} for $U_0$
+    \item \bv{00110011\dots{}0011}{2^n} for $U_1$
     \item $\dots$
-    \item \bv{00\dots{}0011\dots{}11}{2^n} for $u_{n-1}$
+    \item \bv{00\dots{}0011\dots{}11}{2^n} for $U_{n-1}$
 \end{itemize}
 
 \only<8>{\par not really, these constants are exponential to the size of the
@@ -399,12 +401,13 @@ only have the value of the aforementioned constants
 ## Reducing \DQBF{} to QF\_BV2 {.t}
 
 \begin{latex}
-\[ \Phi = \forall x, y\,\exists z(y).\ (x \lor y \lor z) \land (y \lor \lnot z) \]
+\[ \Phi = \forall x, y, z\,\exists w(y).\ (x \lor y \lor w) \land (y \lor \lnot w) \]
 \begin{center}→\end{center}
-\[ (\bv{X}{4} \bvor \bv{Y}{4} \bvor \bv{Z}{4}) \bvand (\bv{Y}{4} \bvor
-\bvnot\bv{Z}{4}) = \bvnot\bv{0}{4} \]
-\[ {} \bvand (\bv{X}{4} \ll 1 = \bvnot\bv{X}{4}) \bvand (\bv{Y}{4} \ll 2 =
-\bvnot\bv{Y}{4}) \]
+\[ (\bv{X}{8} \bvor \bv{Y}{8} \bvor \bv{W}{8}) \bvand (\bv{Y}{8} \bvor
+\bvnot\bv{W}{8}) = \bvnot\bv{0}{8} \]
+\[ {} \bvand (\bv{X}{8} \ll 1 = \bvnot\bv{X}{8}) \bvand (\bv{Y}{8} \ll 2 =
+\bvnot\bv{Y}{8}) \bvand (\bv{Z}{8} \ll 4 = \bv{Z}{8})
+\]
 
 \only<2-3>{
 \begin{itemize}\item still, the existentially-quantified variables can depend on any
@@ -426,14 +429,35 @@ universally-quantified variables\end{itemize}
         $\alpha$ and $\beta$ has to be the same
     \end{itemize}
     }
-    \only<5>{
-    \begin{itemize}
+
+
+    \only<5-8>{
+    \medskip
+    \begin{minipage}[t]{0.3\textwidth}
+    \begin{tabular}{l|l}
+        X & \texttt{01010101} \\
+        Y & \texttt{00110011} \\
+        Z & \texttt{00001111} \\
+        W & \texttt{abcdefgh}
+    \end{tabular}
+    \end{minipage}
+    \only<6->{
+    \begin{minipage}{0.55\textwidth}
+        if $W$ is independent of \only<6>{$X$}\only<7>{$Y$}\only<8>{$Z$} we have
+        to ensure that
+        \only<6>{$(a = b) \land (c = d) \land (e = f) \land (g = h)$}
+        \only<7>{$(a = c) \land (b = d) \land (d = f) \land (f = h)$}
+        \only<8>{$(a = e) \land (b = f) \land (c = g) \land (d = h)$}
+    \end{minipage}
+    }
+    }
+
+    \only<9->{
+    \begin{itemize} \pause\pause\pause \pause\pause\pause \pause\pause
         \item consider $E_i$ which does not depend on $U_m$ (which correspond to
-        assignments of $e_i$ and $u_m$ respectively)
-        \item all assignments in which $e_i$ is \emph{true} an $u_m$ is \emph{false}: $E_i
+        assignments of $e_i$ and $u_m$ respectively) \pause
+        \item zero-out assignments of $e_i$ in which $u_m$ is \emph{false}: $E_i
         \bvand \bvnot U_m$
-        \item assignemnts of $e_i$ shifted so that the corresponding value of
-        $u_i$ is \emph{true}: $E_i \ll 2^m$
         \item $E_i \bvand \bvnot U_m = (E_i \ll 2^m) \bvand \bvnot U_m$
     \end{itemize}
     }
@@ -441,6 +465,25 @@ universally-quantified variables\end{itemize}
 }
 
 \end{latex}
+
+## Reducing \DQBF{} to QF\_BV2 {.t}
+
+\begin{latex}
+\[ \Phi = \forall x, y, z\,\exists w(y).\ (x \lor y \lor w) \land (y \lor \lnot w) \]
+\begin{center}→\end{center}
+\[ (\bv{X}{8} \bvor \bv{Y}{8} \bvor \bv{W}{8}) \bvand (\bv{Y}{8} \bvor
+\bvnot\bv{W}{8}) = \bvnot\bv{0}{8} \]
+\[ {} \bvand (\bv{X}{8} \ll 1 = \bvnot\bv{X}{8}) \bvand (\bv{Y}{8} \ll 2 =
+\bvnot\bv{Y}{8}) \bvand (\bv{Z}{8} \ll 4 = \bv{Z}{8})
+\]
+\[{} \bvand \left(\bv{W}{8} \bvand \bvnot \bv{X}{8} = \left(\bv{W}{8} \ll \bv{1}{8}\right) \bvand \bvnot \bv{X}{8}\right)
+\]
+\[{} \bvand \left(\bv{W}{8} \bvand \bvnot \bv{Z}{8} = \left(\bv{W}{8} \ll \bv{4}{8}\right) \bvand \bvnot \bv{Z}{8}\right)
+\]
+\end{latex}
+
+*   add the constraints of form $E_i \bvand \bvnot U_m = (E_i \ll 2^m) \bvand
+    \bvnot U_m$ for every $U_m$ on which $E_i$ does not depend
 
 ## Quantified Bit-Vector Logic with Binary Encoding
 
