@@ -49,8 +49,8 @@ is given quantified formula true?
 
 $$\forall a \exists y \forall z.\ (x \lor y \lor ¬z) \land (¬y \lor ¬x)$$
 
-*   every existential variable can depend on value of any universally-quantified variables
-    before it in the prefix
+*   every existential variable can depend on value of any of the
+    universally-quantified variables before it in the prefix
 *   \PSPACE-complete
 
 ## Complexity: DQBF
