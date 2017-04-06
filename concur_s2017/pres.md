@@ -49,23 +49,11 @@ is given quantified formula true?
 
 $$\forall a \exists y \forall z.\ (x \lor y \lor ¬z) \land (¬y \lor ¬x)$$
 
-*   every existential variable can depend on value of any of the
+*   every existentially-quantified variable can depend on value of any of the
     universally-quantified variables before it in the prefix
 *   \PSPACE-complete
 
-## Complexity: DQBF
-
-**Dependency Quantified Boolean Formulas** (\DQBF)
-
-*   every existentially-quantified variable specifies which
-    universally-quantified variables it can depend on
-
-$$\forall x_1, x_2, x_3\,\exists y_1 (x_1, x_3), y_2(x_2, x_1).\ \Phi$$
-
-*   more general than \QBF
-*   satisfiability is \NEXPTIME-complete
-
-## Refresh: Theory of Bitvectors
+## Refresh: Theory of Bit-Vectors
 
 first order logic with bit-vectors -- numbers of fixed bit width and operations
 on them
@@ -87,13 +75,13 @@ on them
 
     . . .
 
-    $$ \forall \bv{x}{32} \exists \bv{y}{32}.\ \bv{x}{32} + \bv{y}{32} = \bv{0}{32}
-    \bvand \bv{x}{32} \neq \bvnot\bv{y}{32}$$
+    $$ \forall \bv{x}{32} \exists \bv{y}{32}.\ \left(\bv{x}{32} + \bv{y}{32} = \bv{0}{32}\right)
+    \bvand \left(\bv{x}{32} \neq \bvnot\bv{y}{32}\right)$$
 
     *   matrix of a formula is a term
     *   it should result in bit-vector of size 1
 
-## Bitvector Formula Encoding Size
+## Bit-Vector Formula Encoding Size
 
 We will consider bit-vector formulas in *flat form*
 
@@ -108,7 +96,7 @@ We will consider bit-vector formulas in *flat form*
     *   binary -- more natural
     *   unary -- larger formulas, but easier complexity analysis
 
-## Bitvector Formula Encoding Size
+## Bit-Vector Formula Encoding Size
 
 let $\Phi = Q_0\bv{x_0}{n_0}\,Q_1\bv{x_1}{n_1}…Q_k\bv{x_k}{n_k}.\ \bv{t}{1}$ be
 quantified bit-vector formula,
@@ -144,13 +132,13 @@ QF\_BV1 is \NP-complete
 
 . . .
 
-*   is in \NP{}
+*   in \NP{}
     *   by bit-blasting: since bit-widths are encoded in unary, bit-blasting
         is polynomial
 
 . . .
 
-*   is \NP-hard
+*   \NP-hard
     *   by reduction from \SAT{}
     *   every \SAT{} formula can be transformed to QF\_BV1 formula by replacing
         every boolean variable with variable of bit-width 1
@@ -173,54 +161,30 @@ $$ \left(x > 0 \lor f\left(x\right) > 0\right) \land x = 0 \land f\left(0\right)
 
 a way to remove uninterpreted functions from a (quantifier-free) formula
 
-*   given term with uninterpreted functions
-    $$ F(F(x)) = 0 $$
+*   given a term with uninterpreted functions
+    $$ x_1 \neq x_2 \lor F(x_1) = F(x_2) \lor F(x_1) \neq F(x_3) $$
 
 . . .
 
 1.  number the occurrences of uninterpreted functions
-    $$ \underbrace{F(\ \overbrace{F(x)}^{f_1}\ )}_{f_2} = 0 $$
+    $$ x_1 \neq x_2 \lor \underbrace{F(x_1)}_{f_1} = \underbrace{F(x_2)}_{f_2} \lor \underbrace{F(x_1)}_{f_3} \neq \underbrace{F(x_3)}_{f_3} $$
 
     . . .
 
 2.  replace each function with a fresh variable
-    $$ f_2 = 0 $$
+    $$ x_1 \neq x_2 \lor f_1 = f_2 \lor f_1 \neq f_3 $$
 
     . . .
 
 3.  add functional consistency constraints for every pair of instances of the
     same function
-    $$ ((x = f_1) \implies (f_2 = f_1)) \land (f_2 = 0) $$
-
-## Ackermann Reduction Example {.t}
-
-\begin{latex}
-
-\only<1>{
-\[ x_1 \neq x_2 \lor F(x_1) = F(x_2) \lor F(x_1) \neq F(x_3) \]
-}
-\only<2->{
-\[ x_1 \neq x_2 \lor \underbrace{F(x_1)}_{f_1} = \underbrace{F(x_2)}_{f_2} \lor \underbrace{F(x_1)}_{f_3} \neq \underbrace{F(x_3)}_{f_3} \]
-}
-
-\pause \pause \center transformed to
-
-\only<3>{
-\[ x_1 \neq x_2 \lor f_1 = f_2 \lor f_1 \neq f_3 \]
-}
-
-\only<4>{
-
-\[  \left( \begin{matrix}
+    $$  \left( \begin{matrix}
         (x_1 = x_2 \implies f_1 = f_2) \land {} \\
-        (x_1 = x3 \implies f_1 = f_3) \land {} \\
+        (x_1 = x_3 \implies f_1 = f_3) \land {} \\
         (x_2 = x_3 \implies f_2 = f_3)
     \end{matrix} \right) \land
     (x_1 \neq x_2 \lor f_1 = f_2 \lor f_1 \neq f_3)
-\]
-}
-
-\end{latex}
+    $$
 
 ## Adding Uninterpreted Functions
 
@@ -228,13 +192,13 @@ QF\_UFBV1 is \NP-complete
 
 . . .
 
-*   is in \NP{}
+*   in \NP{}
     *   use Ackermann reduction
     *   quadratic growth
 
 . . .
 
-*   is \NP-hard: $\text{QF\_BV1} \subset \text{QF\_UFBV1}$
+*   \NP-hard: $\text{QF\_BV1} \subset \text{QF\_UFBV1}$
 
 ## Adding Quantifiers
 
@@ -242,11 +206,11 @@ BV1 is \PSPACE-complete
 
 . . .
 
-*   it is in \PSPACE{} -- by bit-blasting
+*   in \PSPACE{} -- by bit-blasting
 
-. . .
+    . . .
 
-*   it is \PSPACE-hard -- \QBF{} is special case of BV1
+*   \PSPACE-hard -- \QBF{} is special case of BV1
 
 ## Adding Quantifiers and Uninterpreted Functions
 
@@ -263,7 +227,7 @@ QF\_BV2 is \NEXPTIME-complete
 
 . . .
 
-*   it is in \NEXPTIME{}
+*   in \NEXPTIME{}
     *   bit-blasting can cause exponential growth of the formula
     *   bit-blasted formula is solvable in \NP
 
@@ -272,6 +236,18 @@ QF\_BV2 is \NEXPTIME-complete
 *   we want to show that it is \NEXPTIME-hard
 
     *   by reduction of \DQBF{} to QF\_BV2 (\DQBF{} is \NEXPTIME-complete)
+
+## Complexity: DQBF
+
+**Dependency Quantified Boolean Formulas** (\DQBF)
+
+*   every existentially-quantified variable specifies which
+    universally-quantified variables it can depend on
+
+$$\forall x_1, x_2, x_3\,\exists y_1 (x_1, x_3), y_2(x_2, x_1).\ \Phi$$
+
+*   more general than \QBF
+*   satisfiability is \NEXPTIME-complete
 
 ## Reducing \DQBF{} to QF\_BV2
 
@@ -327,8 +303,8 @@ $$
 what if we only wanted to check satisfiability of Matrix? (Using QF\_BV2
 solver)
 
-\[ (\bv{X}{1} \bvor \bv{Y}{1} \bvor \bv{W}{1}) \bvand (\bv{Y}{1} \bvor
-\bvnot\bv{W}{1})
+\[ \left(\bv{X}{1} \bvor \bv{Y}{1} \bvor \bv{W}{1}\right) \bvand \left(\bv{Y}{1} \bvor
+\bvnot\bv{W}{1}\right)
 \]
 }
 
@@ -340,7 +316,7 @@ universally-quantified variables)?
 \only<4>{
 \begin{itemize}
     \item there are $2^n$ assignments
-    \item represent each universally-quantified variable with bitvector of
+    \item represent each universally-quantified variable with bit-vector of
     length $2^n$
     \item let first bit of all variables represent first possible assignment,
     second bit represent second assignment…
@@ -348,25 +324,25 @@ universally-quantified variables)?
 }
 
 \only<5->{
-represent each universally-quantified variable with bitvector of length $2^n$
+represent each universally-quantified variable with bit-vector of length $2^n$
 (where $n$ is the number of universally-quantified variables)
 
 \only<5-6>{\noindent\smallskip
-\[ (\bv{X}{8} \bvor \bv{Y}{8} \bvor \bv{Z}{8}) \bvand (\bv{Y}{8} \bvor
-\bvnot\bv{Z}{8}) = \bvnot\bv{0}{8}
+\[ \left(\bv{X}{8} \bvor \bv{Y}{8} \bvor \bv{Z}{8}\right) \bvand \left(\bv{Y}{8} \bvor
+\bvnot\bv{Z}{8}\right) = \bvnot\bv{0}{8}
 \]
 }
 
 \only<7-8>{\noindent\smallskip
-\[ (\bv{01010101}{8} \bvor \bv{00110011}{8} \bvor \bv{W}{8}) \bvand (\bv{00110011}{8} \bvor
-\bvnot\bv{W}{8}) = \bvnot\bv{0}{8} \]
+\[ \left(\bv{01010101}{8} \bvor \bv{00110011}{8} \bvor \bv{W}{8}\right) \bvand \left(\bv{00110011}{8} \bvor
+\bvnot\bv{W}{8}\right) = \bvnot\bv{0}{8} \]
 }
 
 \only<9-10>{\noindent\smallskip
-\[ (\bv{X}{8} \bvor \bv{Y}{8} \bvor \bv{W}{8}) \bvand (\bv{Y}{8} \bvor
-\bvnot\bv{W}{8}) = \bvnot\bv{0}{8} \]
-{\[ \only<9>{\color{white}}{} \bvand (\bv{X}{8} \ll 1 = \bvnot\bv{X}{8}) \bvand (\bv{Y}{8} \ll 2 =
-\bvnot\bv{Y}{8}) \bvand (\bv{Z}{8} \ll 4 = \bv{Z}{8})
+\[ \left(\bv{X}{8} \bvor \bv{Y}{8} \bvor \bv{W}{8}\right) \bvand \left(\bv{Y}{8} \bvor
+\bvnot\bv{W}{8}\right) = \bvnot\bv{0}{8} \]
+{\[ \only<9>{\color{white}}{} \bvand \left(\bv{X}{8} \ll 1 = \bvnot\bv{X}{8}\right) \bvand \left(\bv{Y}{8} \ll 2 =
+\bvnot\bv{Y}{8}\right) \bvand \left(\bv{Z}{8} \ll 4 = \bv{Z}{8}\right)
 \]}
 }
 
@@ -402,11 +378,11 @@ only have the value of the aforementioned constants
 
 \begin{latex}
 \[ \Phi = \forall x, y, z\,\exists w(y).\ (x \lor y \lor w) \land (y \lor \lnot w) \]
-\begin{center}→\end{center}
-\[ (\bv{X}{8} \bvor \bv{Y}{8} \bvor \bv{W}{8}) \bvand (\bv{Y}{8} \bvor
-\bvnot\bv{W}{8}) = \bvnot\bv{0}{8} \]
-\[ {} \bvand (\bv{X}{8} \ll 1 = \bvnot\bv{X}{8}) \bvand (\bv{Y}{8} \ll 2 =
-\bvnot\bv{Y}{8}) \bvand (\bv{Z}{8} \ll 4 = \bv{Z}{8})
+\begin{center}$\downarrow$\end{center}
+\[ \left(\bv{X}{8} \bvor \bv{Y}{8} \bvor \bv{W}{8}\right) \bvand \left(\bv{Y}{8} \bvor
+\bvnot\bv{W}{8}\right) = \bvnot\bv{0}{8} \]
+\[ {} \bvand \left(\bv{X}{8} \ll 1 = \bvnot\bv{X}{8}\right) \bvand \left(\bv{Y}{8} \ll 2 =
+\bvnot\bv{Y}{8}\right) \bvand \left(\bv{Z}{8} \ll 4 = \bv{Z}{8}\right)
 \]
 
 \only<2-3>{
@@ -456,8 +432,6 @@ universally-quantified variables\end{itemize}
     \begin{itemize} \pause\pause\pause \pause\pause\pause \pause\pause
         \item consider $E_i$ which does not depend on $U_m$ (which correspond to
         assignments of $e_i$ and $u_m$ respectively) \pause
-        \item zero-out assignments of $e_i$ in which $u_m$ is \emph{false}: $E_i
-        \bvand \bvnot U_m$
         \item $E_i \bvand \bvnot U_m = (E_i \ll 2^m) \bvand \bvnot U_m$
     \end{itemize}
     }
@@ -470,15 +444,15 @@ universally-quantified variables\end{itemize}
 
 \begin{latex}
 \[ \Phi = \forall x, y, z\,\exists w(y).\ (x \lor y \lor w) \land (y \lor \lnot w) \]
-\begin{center}→\end{center}
-\[ (\bv{X}{8} \bvor \bv{Y}{8} \bvor \bv{W}{8}) \bvand (\bv{Y}{8} \bvor
-\bvnot\bv{W}{8}) = \bvnot\bv{0}{8} \]
-\[ {} \bvand (\bv{X}{8} \ll 1 = \bvnot\bv{X}{8}) \bvand (\bv{Y}{8} \ll 2 =
-\bvnot\bv{Y}{8}) \bvand (\bv{Z}{8} \ll 4 = \bv{Z}{8})
+\begin{center}$\downarrow$\end{center}
+\[ \left(\bv{X}{8} \bvor \bv{Y}{8} \bvor \bv{W}{8}\right) \bvand \left(\bv{Y}{8} \bvor
+\bvnot\bv{W}{8}\right) = \bvnot\bv{0}{8} \]
+\[ {} \bvand \left(\bv{X}{8} \ll 1 = \bvnot\bv{X}{8}\right) \bvand \left(\bv{Y}{8} \ll 2 =
+\bvnot\bv{Y}{8}\right) \bvand \left(\bv{Z}{8} \ll 4 = \bv{Z}{8}\right)
 \]
-\[{} \bvand \left(\bv{W}{8} \bvand \bvnot \bv{X}{8} = \left(\bv{W}{8} \ll \bv{1}{8}\right) \bvand \bvnot \bv{X}{8}\right)
+\[{} \bvand \left(\bv{W}{8} \bvand \bvnot \bv{X}{8} = \left(\bv{W}{8} \ll 1\right) \bvand \bvnot \bv{X}{8}\right)
 \]
-\[{} \bvand \left(\bv{W}{8} \bvand \bvnot \bv{Z}{8} = \left(\bv{W}{8} \ll \bv{4}{8}\right) \bvand \bvnot \bv{Z}{8}\right)
+\[{} \bvand \left(\bv{W}{8} \bvand \bvnot \bv{Z}{8} = \left(\bv{W}{8} \ll 4\right) \bvand \bvnot \bv{Z}{8}\right)
 \]
 \end{latex}
 
@@ -497,7 +471,7 @@ UFBV2 is 2-\NEXPTIME-complete
 
 . . .
 
-*   it is \NEXPTIME-hard
+*   \NEXPTIME-hard
     *   proof by reduction from *square domino tiling problem*
 
 ## Square Domino Tiling Problem
@@ -525,7 +499,7 @@ problem of finding a mapping $\lambda : [0, f(n)-1] \times [0, f(n)-1]
 *   first row starts with the start tile (tile 0)
 *   last row ends with the terminal tile (tile $k - 1$)
 *   all horizontal and vertical matching conditions are met
-*   *this problem is $\mathsf{NTIME(f(n))}$-complete*
+*   **this problem is $\mathsf{NTIME(f(n))}$-complete**
 
 ## Reducing $2^{(2^n)}$ Square Tiling to UFBV2
 
