@@ -49,7 +49,7 @@ is given quantified formula true?
 
 $$\forall a \exists y \forall z.\ (x \lor y \lor ¬z) \land (¬y \lor ¬x)$$
 
-*   every existential variable can depend on value of any universal variables
+*   every existential variable can depend on value of any universally-quantified variables
     before it in the prefix
 *   \PSPACE-complete
 
@@ -57,12 +57,12 @@ $$\forall a \exists y \forall z.\ (x \lor y \lor ¬z) \land (¬y \lor ¬x)$$
 
 **Dependency Quantified Boolean Formulas** (\DQBF)
 
-*   every existentially quantified variable specifies which universally
-    quantified variables it can depend on
+*   every existentially-quantified variable specifies which
+    universally-quantified variables it can depend on
 
 $$\forall x_1, x_2, x_3\,\exists y_1 (x_1, x_3), y_2(x_2, x_1).\ \Phi$$
 
-*   more general then \QBF
+*   more general than \QBF
 *   satisfiability is \NEXPTIME-complete
 
 ## Refresh: Theory of Bitvectors
@@ -82,7 +82,7 @@ on them
 . . .
 
 *   unlike other definitions, the definition in the paper does not distinguish
-    booloans and bit-vectors of size 1
+    booleans and bit-vectors of size 1
 
 
     . . .
@@ -157,7 +157,7 @@ QF\_BV1 is \NP-complete
 
 ## Refresh: Uninterpreted functions
 
-*   functions for which we know only their arity, type of inputs and type or
+*   functions for which we know only their arity, type of inputs and type of
     result
 
 . . .
@@ -293,7 +293,7 @@ QF\_BV2 is \NEXPTIME-complete
     . . .
 
     *   that is, value of an existentially-quantified variable has to remain
-        same as long as only variables it does not depend on changed
+        the same as long as only variables it does not depend on changed
 
     . . .
 
@@ -421,8 +421,8 @@ universally-quantified variables\end{itemize}
 
     \only<4>{
     \begin{itemize}
-        \item consider existentially-qualified variable $e$,
-        universally-qualified variable $u$, and two universal assignments
+        \item consider existentially-quantified variable $e$,
+        universally-quantified variable $u$, and two universal assignments
         $\alpha$, $\beta$, such that $\alpha$ differs from $\beta$ only in value
         of $u$
         \item if $e$ does not depend on $u$, then value of $e$ for both
@@ -507,7 +507,7 @@ UFBV2 is 2-\NEXPTIME-complete
 
 \begin{itemize}
     \item $T$ -- finite set of \emph{tile types}, $T = [0, k-1]$
-    \item $H, V \subseteq T \times T$ -- horizontal and vertical matchning
+    \item $H, V \subseteq T \times T$ -- horizontal and vertical matching
     conditions
     \item $n \ge 1$ -- size parameter encoded in \emph{unary} format
 \end{itemize}
