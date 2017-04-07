@@ -167,7 +167,7 @@ a way to remove uninterpreted functions from a (quantifier-free) formula
 . . .
 
 1.  number the occurrences of uninterpreted functions
-    $$ x_1 \neq x_2 \lor \underbrace{F(x_1)}_{f_1} = \underbrace{F(x_2)}_{f_2} \lor \underbrace{F(x_1)}_{f_3} \neq \underbrace{F(x_3)}_{f_3} $$
+    $$ x_1 \neq x_2 \lor \underbrace{F(x_1)}_{f_1} = \underbrace{F(x_2)}_{f_2} \lor \underbrace{F(x_1)}_{f_1} \neq \underbrace{F(x_3)}_{f_3} $$
 
     . . .
 
@@ -328,8 +328,8 @@ represent each universally-quantified variable with bit-vector of length $2^n$
 (where $n$ is the number of universally-quantified variables)
 
 \only<5-6>{\noindent\smallskip
-\[ \left(\bv{X}{8} \bvor \bv{Y}{8} \bvor \bv{Z}{8}\right) \bvand \left(\bv{Y}{8} \bvor
-\bvnot\bv{Z}{8}\right) = \bvnot\bv{0}{8}
+\[ \left(\bv{X}{8} \bvor \bv{Y}{8} \bvor \bv{W}{8}\right) \bvand \left(\bv{Y}{8} \bvor
+\bvnot\bv{W}{8}\right) = \bvnot\bv{0}{8}
 \]
 }
 
@@ -339,8 +339,8 @@ represent each universally-quantified variable with bit-vector of length $2^n$
 }
 
 \only<9-10>{\noindent\smallskip
-\[ \left(\bv{X}{8} \bvor \bv{Y}{8} \bvor \bv{W}{8}\right) \bvand \left(\bv{Y}{8} \bvor
-\bvnot\bv{W}{8}\right) = \bvnot\bv{0}{8} \]
+\[ \left(\left(\bv{X}{8} \bvor \bv{Y}{8} \bvor \bv{W}{8}\right) \bvand \left(\bv{Y}{8} \bvor
+\bvnot\bv{W}{8}\right) = \bvnot\bv{0}{8} \right) \]
 {\[ \only<9>{\color{white}}{} \bvand \left(\bv{X}{8} \ll 1 = \bvnot\bv{X}{8}\right) \bvand \left(\bv{Y}{8} \ll 2 =
 \bvnot\bv{Y}{8}\right) \bvand \left(\bv{Z}{8} \ll 4 = \bv{Z}{8}\right)
 \]}
@@ -379,8 +379,8 @@ only have the value of the aforementioned constants
 \begin{latex}
 \[ \Phi = \forall x, y, z\,\exists w(y).\ (x \lor y \lor w) \land (y \lor \lnot w) \]
 \begin{center}$\downarrow$\end{center}
-\[ \left(\bv{X}{8} \bvor \bv{Y}{8} \bvor \bv{W}{8}\right) \bvand \left(\bv{Y}{8} \bvor
-\bvnot\bv{W}{8}\right) = \bvnot\bv{0}{8} \]
+\[ \left(\left(\bv{X}{8} \bvor \bv{Y}{8} \bvor \bv{W}{8}\right) \bvand \left(\bv{Y}{8} \bvor
+\bvnot\bv{W}{8}\right) = \bvnot\bv{0}{8}\right) \]
 \[ {} \bvand \left(\bv{X}{8} \ll 1 = \bvnot\bv{X}{8}\right) \bvand \left(\bv{Y}{8} \ll 2 =
 \bvnot\bv{Y}{8}\right) \bvand \left(\bv{Z}{8} \ll 4 = \bv{Z}{8}\right)
 \]
@@ -445,8 +445,8 @@ universally-quantified variables\end{itemize}
 \begin{latex}
 \[ \Phi = \forall x, y, z\,\exists w(y).\ (x \lor y \lor w) \land (y \lor \lnot w) \]
 \begin{center}$\downarrow$\end{center}
-\[ \left(\bv{X}{8} \bvor \bv{Y}{8} \bvor \bv{W}{8}\right) \bvand \left(\bv{Y}{8} \bvor
-\bvnot\bv{W}{8}\right) = \bvnot\bv{0}{8} \]
+\[ \left(\left(\bv{X}{8} \bvor \bv{Y}{8} \bvor \bv{W}{8}\right) \bvand \left(\bv{Y}{8} \bvor
+\bvnot\bv{W}{8}\right) = \bvnot\bv{0}{8}\right) \]
 \[ {} \bvand \left(\bv{X}{8} \ll 1 = \bvnot\bv{X}{8}\right) \bvand \left(\bv{Y}{8} \ll 2 =
 \bvnot\bv{Y}{8}\right) \bvand \left(\bv{Z}{8} \ll 4 = \bv{Z}{8}\right)
 \]
