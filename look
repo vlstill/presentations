@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+for i in $(git ls-files '*/pres.md'); do
+    p=$(echo $i | sed 's/md$/pdf/')
+    if ! git ls-files $p --error-unmatch >& /dev/null; then
+        echo $p
+    fi
+done
