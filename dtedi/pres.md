@@ -17,7 +17,13 @@ date: \today
 
 *   we are concerned with helping developers create correct programs
 
-*   these ways have to be actually usable
+    . . .
+
+*   using formal methods
+
+    . . .
+
+*   these methods have to be actually usable
 
     *   minimal investment from the developers perspective
     *   gives useful answers most of the time
@@ -101,6 +107,24 @@ date: \today
 *   does this by exploring all possible states in which the program can be and
     creating *state space graph*
 
+. . .
+
+\center
+\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=3em,initial text=, ->]
+    \tikzstyle{every state} = [ellipse, minimum size = 1.5em]
+    \path[use as bounding box] (-5.2,0.3) rectangle (5.2,-3.2);
+
+    \node[state] (init) {\texttt{x = 0; y = 0}};
+    \node<5->[state, below left = of init] (l) {\texttt{x = 1; y = 0}};
+    \node<6->[state, below right = of init] (r) {\texttt{x = 0; y = 1}};
+    \node<7->[state, below right = of l] (c) {\texttt{x = 1; y = 1}};
+
+    \path<5-> (init) edge node[above left] {\texttt{x := 1}} (l);
+    \path<6-> (init) edge node {\texttt{y := 1}} (r);
+    \path<7-> (l) edge node[below left] {\texttt{y := 1}} (c);
+    \path<8-> (r) edge node {\texttt{x := 1}} (c);
+\end{tikzpicture}
+
 ## Introducing DIVINE
 
 *   an explicit-state model checker
@@ -138,7 +162,7 @@ date: \today
 
     . . .
 
-*   all parts of the program, including the libraries it uses needs to be
+*   all parts of the program, including the libraries it uses, need to be
     translated to LLVM IR
 
     *   DIVINE handles the translation of user's program and links it to
@@ -151,9 +175,8 @@ date: \today
 
 *   DIVINE needs to store the state space
 
-*   states are essential snapshot of the memory of the program
-
-*   memory is organised as a graph
+*   states are essential snapshots of the memory of the program
+    *   memory is organised as a graph
 
 . . .
 
@@ -180,13 +203,13 @@ int main() {
 
 ## Efficiency of State Space Storage
 
-*   currently blocks of memory are stored reduplicated
+*   currently blocks of memory are stored deduplicated
 *   but minor change in a large block requires it to be stored whole again
 
     . . .
 
 *   there are compression methods available, the interesting part is using
-    applying them in both memory and time efficient way
+    them in both memory and time efficient way
 
 . . .
 
@@ -200,7 +223,7 @@ int main() {
 
 ## Efficient Exploration of State Space
 
-*   in the case of parallelism we need to explore all the different
+*   in the case of parallelism, we need to explore all the different
     interleavings to detect errors caused by data races
 
 . . .
@@ -238,8 +261,8 @@ int main() {
 *   it should be possible to combine *(dynamic) partial order reduction*
     techniques with DIVINE
 
-    *   these techniques allow exploration of only some of successors of a given
-        state if this subset is sufficient
+    *   these techniques allow exploration of only a subset of state's
+        successors if this subset is sufficient
 
 ## Integration With Static Analysis and Optimizations
 
@@ -251,13 +274,21 @@ int main() {
         . . .
 
     *   if interprocedural analysis is needed
+
+        . . .
+
     *   if it is necessary to reorder or replace instructions
+
+        . . .
+
     *   to simplify the executor
 
-## Safety of Optimizations
+. . .
 
-any optimization done by DIVINE has to be safe -- must not change verification
-outcome
+*   any optimizations done by DIVINE have to be safe -- must not change
+    verification outcome
 
-*   compiler optimizations are safe only for sequential programs
-*   we need optimizations safe for all programs
+    . . .
+
+    *   compiler optimizations are safe only for sequential programs
+    *   we need optimizations safe for all programs
