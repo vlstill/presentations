@@ -10,7 +10,7 @@ header-includes:
     - \usepackage{eulervm}
     - \setbeamersize{text margin left=1.7em, text margin right=1.7em}
 lang: english
-date: \today
+date: April 20, 2017
 ...
 
 ## The Problem Introduction
@@ -25,7 +25,7 @@ date: \today
 
 *   these methods have to be actually usable
 
-    *   minimal investment from the developers perspective
+    *   minimal investment from the developers' perspective
     *   gives useful answers most of the time
 
 ## Ways Towards Program Correctness
@@ -38,7 +38,7 @@ date: \today
         . . .
 
     *   well used by developers
-    *   cannot proof absence of errors
+    *   cannot prove absence of errors
     *   does not work well with nondeterministic programs
 
         . . .
@@ -69,7 +69,7 @@ date: \today
 *   symbolic execution
 
     *   often used for test case generation to increase coverage
-    *   requires program which terminate for all inputs to work well
+    *   requires programs which terminate for all inputs to work well
     *   mostly used for sequential programs with arbitrary input data
     *   detects violations of given property, strength depends on the property
     *   path explosion
@@ -105,7 +105,7 @@ date: \today
     . . .
 
 *   does this by exploring all possible states in which the program can be and
-    creating *state space graph*
+    by creating a *state space graph*
 
 . . .
 
@@ -213,7 +213,7 @@ int main() {
 
 . . .
 
-*   there is also possibility of optimizing the program in a way the state
+*   there is also possibility of optimizing the program in a way so that the state
     representation is smaller
 
     *   detecting unchanging global variables
@@ -239,7 +239,7 @@ int main() {
 . . .
 
 *   local actions can be anything
-    *   that does not interact which memory
+    *   that does not interact with memory
 
         . . .
 
@@ -253,7 +253,7 @@ int main() {
 ## Efficient Exploration of State Space II
 
 *   even with hiding of local actions, DIVINE explores state space eagerly
-    *   many interleaving can have same results because threads do not actually
+    *   many interleavings can have the same results because threads do not actually
         interact
 
     . . .
@@ -286,7 +286,7 @@ int main() {
 . . .
 
 *   any optimizations done by DIVINE have to be safe -- must not change
-    verification outcome
+    the verification outcome
 
     . . .
 
