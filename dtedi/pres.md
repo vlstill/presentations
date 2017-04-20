@@ -218,7 +218,8 @@ int main() {
 
     *   detecting unchanging global variables
     *   slicing-out provably unused variables
-    *   breaking static single assignment form of LLVM
+    *   relaxing static single assignment form of LLVM in the internal
+        representation
     *   …
 
 ## Efficient Exploration of State Space
