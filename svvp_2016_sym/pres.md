@@ -75,4 +75,39 @@ date: 27\. Dubna 2017
 
 ## Cíl 2: Integrace DIVINE a SymDIVINE
 
-*   SymDIVINE
+*   SymDIVINE přináší podporu pro vstupně-výstupně otevřené programy v C/C++
+    *   jedná se ale o prototypový nástroj sloužící primárně k demonstraci
+        použitelnosti techniky Contel-Explicit Data-Symbolic model checkingu
+    *   z dlouhodobého hlediska je nepraktické udržovat DIVINE i SymDIVINE
+
+. . .
+
+*   potřeba integrovat SymDIVINE do DIVINE bez zásadního zkomplikování jádra
+    DIVINE
+
+. . .
+
+*   myšlenka: zakódování manipulací se symbolickými daty do vstupního programu +
+    algoritmus schopný procházet symbolický stavový prostor
+
+## Cíl 2: Integrace DIVINE a SymDIVINE
+
+*   symbolická data = vstupy
+    *   lze reprezentovat pomocí formulí v bitvektorové logice
+    *   v SymDIVINE reprezentaci vytváří model checker
+    *   DIVINE instrumentuje program tak aby formuli vytvářel sám
+
+. . .
+
+*   využití SMT solveru
+    *   zjištění neprázdnosti stavu
+    *   porovnávání symbolických částí stavů
+
+. . .
+
+*   do DIVINE přidány:
+    *   interní formát reprezentace formulí
+    *   základní verze instrumentace/sybolizace programu
+    *   podpora pro označování části paměti za symbolickou
+        *   symbolická paměť porovnávána pomocí SMT solveru
+    *   podpora pro volání SMT solveru
