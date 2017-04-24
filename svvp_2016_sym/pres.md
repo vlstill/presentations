@@ -16,7 +16,7 @@ header-includes:
     - \usepackage{siunitx}
     - \usepackage{tabularx}
 lang: czech
-date: 27\. Dubna 2017
+date: 27\. dubna 2017
 ...
 
 ## Cíle projektu
@@ -36,7 +36,7 @@ date: 27\. Dubna 2017
 
 *   SymDIVINE posílá kvantifikované dotazy na SMT solver pro porovnávání
     symbolických stavů programu
-*   inkremetální tvorba stavů $\rightarrow$ podobné dotazy
+*   inkrementální tvorba stavů $\rightarrow$ podobné dotazy
 *   naivnímu využití cache dotazů brání kvantifikátory
 
 . . .
@@ -77,7 +77,7 @@ date: 27\. Dubna 2017
 
 *   SymDIVINE přináší podporu pro vstupně-výstupně otevřené programy v C/C++
     *   jedná se ale o prototypový nástroj sloužící primárně k demonstraci
-        použitelnosti techniky Contel-Explicit Data-Symbolic model checkingu
+        použitelnosti techniky Control-Explicit Data-Symbolic model checkingu
     *   z dlouhodobého hlediska je nepraktické udržovat DIVINE i SymDIVINE
 
 . . .
@@ -95,7 +95,7 @@ date: 27\. Dubna 2017
 *   symbolická data = vstupy
     *   lze reprezentovat pomocí formulí v bitvektorové logice
     *   v SymDIVINE reprezentaci vytváří model checker
-    *   DIVINE instrumentuje program tak aby formuli vytvářel sám
+    *   DIVINE instrumentuje program tak, aby formuli vytvářel sám
 
 . . .
 
@@ -107,7 +107,7 @@ date: 27\. Dubna 2017
 
 *   do DIVINE přidány:
     *   interní formát reprezentace formulí
-    *   základní verze instrumentace/sybolizace programu
+    *   základní verze instrumentace/symbolizace programu
     *   podpora pro označování části paměti za symbolickou
         *   symbolická paměť porovnávána pomocí SMT solveru
     *   podpora pro volání SMT solveru
