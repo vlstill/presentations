@@ -15,6 +15,7 @@ header-includes:
     - \usepackage{booktabs}
     - \usepackage{siunitx}
     - \usepackage{tabularx}
+    - \usetikzlibrary{shapes, arrows, shadows, positioning, calc, fit, backgrounds, decorations.pathmorphing}
 lang: czech
 date: 27\. dubna 2017
 ...
@@ -34,22 +35,55 @@ date: 27\. dubna 2017
 
 ## Cíl 1: Cache dotazů pro SymDIVINE
 
-*   SymDIVINE posílá kvantifikované dotazy na SMT solver pro porovnávání
-    symbolických stavů programu
+*   SymDIVINE generuje symbolické stavy programu
+    * kvantifikované dotazy na SMT solver pro rovnost stavů
+    * nekvantifikované dotazy na SMT solver pro prázdnost stavů
 *   inkrementální tvorba stavů $\rightarrow$ podobné dotazy
 *   naivnímu využití cache dotazů brání kvantifikátory
 
-. . .
+## Cíl 1: Cache dotazů pro SymDIVINE
 
-*   vyvinuta technika rozdělení stavů na datově nezávislé komponenty
-*   následně stačí porovnávat po komponentách
+*   technika rozdělení stavů na datově nezávislé komponenty
+
+\begin{figure}[!ht]
+\begin{center}
+\resizebox{0.7\textwidth}{!}{
+    \begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=1.5cm
+                       , semithick
+                       , scale=0.7
+                       , font=\sffamily
+                       , stateprog/.style={ rectangle, draw=black, very thick,
+                         minimum height=2em, minimum width = 10em, inner
+                         sep=6pt, text centered, node distance = 2em, align = left,  rounded corners }
+                       ]
+
+        \node[stateprog, label=Původní reprezentace] (p1)
+            {Program counter: x \\
+             $a < 42~\wedge $ \\
+             $a > 0~\wedge $ \\
+             $b = a + 4~\wedge $ \\
+             $c > 42$
+             };
+
+        \node[text centered, align = left, above right = -2.1em and 6em of p1] (pc)
+            {Program counter: x};
+        \node[stateprog, below = 0.5em of pc] (p2)
+            {$a < 42~\wedge $ \\
+             $a > 0~\wedge $ \\
+             $b = a + 4$};
+        \node[stateprog, below = 0.5em of p2] (p3)
+            {$c > 42$};
+
+        \node[stateprog, fit = (pc) (p2) (p3), label=Nová reprezentace] {};
+    \end{tikzpicture}
+    }
+\end{center}
+\end{figure}
+
+*   reprezentace pomocí datově nezávislých komponent
+*   porovnání po komponentách
     *   umožňuje cachovat dotazy na nezměněné komponenty
-    *   komponenty může být potřeba spojovat podle struktury obou stavů
-*   optimalizace nepřináší overhead
-
-. . .
-
-*   prezentace na MEMICS, článek v přípravě
+    *   komponenty je třeba spojovat podle struktury obou stavů
 
 ## Cíl 1: Cache dotazů pro SymDIVINE
 
@@ -72,6 +106,11 @@ date: 27\. dubna 2017
     \bottomrule
 \end{tabular}
 
+\bigskip
+
+*   prezentace na MEMICS
+*   prezentace v rámci soutěže SV-COMP
+*   publikace v přípravě
 
 ## Cíl 2: Integrace DIVINE a SymDIVINE
 
