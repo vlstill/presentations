@@ -18,6 +18,7 @@ header-includes:
     - \usetikzlibrary{shapes, arrows, shadows, positioning, calc, fit, backgrounds, decorations.pathmorphing}
 lang: czech
 date: 27\. dubna 2017
+aspectratio: 169
 ...
 
 ## Cíle projektu
@@ -87,6 +88,7 @@ date: 27\. dubna 2017
 
 ## Cíl 1: Cache dotazů pro SymDIVINE
 
+\center
 \begin{tabular}{lp{0.3cm}rrp{0.3cm}rrp{0.3cm}rrp{0.3cm}rr}
     \toprule
         &&
@@ -129,7 +131,7 @@ date: 27\. dubna 2017
 *   myšlenka: zakódování manipulací se symbolickými daty do vstupního programu +
     algoritmus schopný procházet symbolický stavový prostor
 
-TODO: Obrázek
+\includegraphics[width=\textwidth]{lart}
 
 ## Cíl 2: Integrace DIVINE a SymDIVINE
 
