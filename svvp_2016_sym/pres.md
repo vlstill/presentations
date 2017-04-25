@@ -29,8 +29,8 @@ date: 27\. dubna 2017
 . . .
 
 *   cíle projektu jsou
-    1.  navržení techniky pro efektivnější využívání SMT solveru v dotazech v
-        nástroji SymDIVINE za pomoci cache dotazů
+    1.  navržení techniky pro efektivnější využívání SMT solveru v\ dotazech
+        v\ nástroji SymDIVINE za pomoci cache dotazů
     2.  integrace DIVINE a SymDIVINE
 
 ## Cíl 1: Cache dotazů pro SymDIVINE
@@ -124,10 +124,12 @@ date: 27\. dubna 2017
 *   potřeba integrovat SymDIVINE do DIVINE bez zásadního zkomplikování jádra
     DIVINE
 
-. . .
+## Cíl 2: Integrace DIVINE a SymDIVINE
 
 *   myšlenka: zakódování manipulací se symbolickými daty do vstupního programu +
     algoritmus schopný procházet symbolický stavový prostor
+
+TODO: Obrázek
 
 ## Cíl 2: Integrace DIVINE a SymDIVINE
 
@@ -136,17 +138,13 @@ date: 27\. dubna 2017
     *   v SymDIVINE reprezentaci vytváří model checker
     *   DIVINE instrumentuje program tak, aby formuli vytvářel sám
 
-. . .
-
-*   využití SMT solveru
-    *   zjištění neprázdnosti stavu
-    *   porovnávání symbolických částí stavů
 
 . . .
 
 *   do DIVINE přidány:
-    *   interní formát reprezentace formulí
-    *   základní verze instrumentace/symbolizace programu
     *   podpora pro označování části paměti za symbolickou
         *   symbolická paměť porovnávána pomocí SMT solveru
+        *   využívá nového způsobu reprezentace haldy v DIVINE 4
+    *   interní formát reprezentace formulí
+    *   základní verze instrumentace/symbolizace programu
     *   podpora pro volání SMT solveru
