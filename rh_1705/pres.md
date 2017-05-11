@@ -10,6 +10,7 @@ header-includes:
     - \newcommand{\TODO}[1]{{\color{red}#1}}
     - \setbeamersize{text margin left=1.2em, text margin right=1.2em}
     - \newcommand{\redon}[2]{{\only<#1>{\color{red}}#2}}
+    - \usepackage{changepage}
     - \input{../names.tex}
 lang: czech
 date: 12\. května 2017
@@ -64,44 +65,43 @@ date: 12\. května 2017
 
 *   \redon{3}{průběžná práce na podpoře symbolické verifikace (\heno)}
 *   \redon{4}{modularizace DiOS (\honza)}
-*   \redon{5}{provolávání a záznam systémových volání v \texttt{divine run}, replay (\katka)}
-*   \redon{6}{testy, benchmarky (Vladimír Štill, \mornfall, …)}
+*   \redon{5}{záznam a přehrávání systémových volání (\katka)}
+*   \redon{6}{testy, benchmarky, evaluace (Vladimír Štill, \mornfall, …)}
 *   \redon{7}{monitory, LTL (\ted, \heno)}
-*   \redon{8}{počátek práce na procesech (\zuz)}
+*   \redon{8}{práce na procesech (\zuz)}
 
 ## Aktuální stav: publikace
 
 
-*   DiVM: Model Checking with LLVM and Graph Memory 
-    *   představení konceptu rozdělení verifikačního nástroje na virtuální stroj
-        \+ operační systém, grafová paměť
-    *   Petr Ročkai, Vladimír Štill, Ivana Černá, Jiří Barnat
+*   Petr Ročkai, Vladimír Štill, Ivana Černá, Jiří Barnat:\
+    **DiVM: Model Checking with LLVM and Graph Memory**
 
 . . .
 
-*   Using Off-the-Shelf Exception Support Components in C++ Verification
-    *   Vladimír Štill, Petr Ročkai, Jiří Barnat
+*   Vladimír Štill, Petr Ročkai, Jiří Barnat:\
+    **Using Off-the-Shelf Exception Support Components in C++ Verification**
 
 . . .
 
-*   Model Checking of C and C++ with DIVINE 4 
-    *   tool paper, celkový přehled DIVINE 4
-    *   primárně Vladimír Štill a Petr Ročkai
+*   **Model Checking of C and C++ with DIVINE 4**
 
 . . .
 
-*   From Model Checking to Runtime Verification and Back
-    *   provolávání systémových volání do hostitelského operačního systému
-    *   Katarína Kejstová, Petr Ročkai, Jiří Barnat
+*   Katarína Kejstová, Petr Ročkai, Jiří Barnat:\
+    **From Model Checking to Runtime Verification and Back**
+
+. . .
+
+*   Petr Ročkai, Jiří Barnat: **A Simulator for LLVM Bitcode**
 
 (vše odesláno)
 
 ## Aktuální stav: ostatní
 
-**návštěva konference ETAPS/TACAS**
+**účast na konferenci ETAPS/TACAS**
 
 *   prezentace SymDIVINE na SV-COMP (\honza)
-    *   starší nástroj na verifikaci se symbolickými daty
+    \bigskip
 
     . . .
 
@@ -159,7 +159,8 @@ date: 12\. května 2017
         (dios) edge (divm)
       ;
     \node[left = of divm.west] {hypercalls};
-    \node[right = of dios.east, align = left] {syscalls${}^*$};
+    \node[right = of dios.east, align = left]
+    {syscalls${}^*$\\\only<6->{\color{red}replay}};
 
     \draw[dashed, thin]
         (libs.north west) -- ++(-7em,0)
@@ -190,51 +191,52 @@ date: 12\. května 2017
         (libs) edge[out=0, in=0, looseness=1.7] (dios)
         (dios.east) edge[opacity=0.5] (dios.west)
         (dios) edge[->, out=180, in=180, looseness=1.7] (divm)
+      ;
+    \draw<3-5>[color=red, line width = 0.3em, dashed]
         (divm.west) edge[opacity=0.5] (divm.east)
         (divm) edge[->, out=0, in=0, looseness=1.7] (linux)
       ;
-    \node<3->[right = 3em of divm.south east, align = left, color=red] {\bf syscall\\passthrough};
+    \draw<6->[color=red, line width = 0.3em, dashed]
+        (divm.west) edge[opacity=0.5] (divm.center)
+      ;
+    \node<3-5>[right = 3em of divm.south east, align = left, color=red] {\bf syscall\\passthrough};
 
 \end{tikzpicture}
 \end{latex}
 
-\only<3->{\vspace{-1.25em}}
+\only<3-5>{\vspace{-1.25em}}
 
+\begin{adjustwidth}{-1em}{0em}
 \begin{itemize}
     \item  (*): systémová volání DIVINE + \only<1-2>{simulovaná POSIX systémová
-              volání}\only<3->{passthrough POSIX systémových volání}
-    \only<3->{
-        \item {\color{red} díky passthrough lze volat skutečná systémová volání
-        kernelu na kterém DIVINE běží}
-        \item tato systémová volání lze zaznamenávat
-        \item záznam lze později použít ve verify, sim, …
+              volání}\only<3->{\only<3-5>{provolávání}\only<6->{přehrávání} POSIX systémových volání}
+
+    \item<3-> \redon{3-5}{passthrough umožňuje volat skutečná systémová volání
+    kernelu na kterém DIVINE běží}
+    \only<4-5>{
+    \begin{itemize}
+        \item v run módu DIVINE (jeden běh)
+        \item<5> interakci se systémem lze nahrát
+    \end{itemize}
+    }
+    \only<6->{
+    \begin{itemize}
+        \item zaznamenanou interakci se systémem lze přehrát
+        \item<7-> přehrávání funguje i \texttt{verify}, \texttt{sim}
+        \item<8-> může verifikovat běhy které mají stejné (podobné) interakce
+    \end{itemize}
     }
 \end{itemize}
-
-## Syscall Passthrough
-
-*   DIVINE může být spuštěn ve třech základních módech
-    *   `verify` -- prověřuje všechny možné běhy systému (všechny možnosti
-        nedeterministických voleb, plánování vláken)
-    *   `run` -- spouští jeden (náhodný) běh
-    *   `sim` -- interaktivně prochází stavový prostor podle instrukcí
-        uživatele nebo podle požadovaných voleb z verify
-
-. . .
-
-*   `verify` mód nemůže interagovat se systémem
-    *   systémová volání jsou simulovaná
-*   `run` mód může nyní buď simulovat systémová volání, nebo skutečně
-    komunikovat s hostitelským systémem (passthrough)
-    *   při komunikaci se systémem může zaznamenávat systémová volání
-
-    . . .
-
-*   zaznamenaná systémová volání lze „přehrát“ ve `verify`
-    *   a umožnit další běhy, které interagují se systémem stejně
-    *   v plánu: mezi systémovými voláními je částečné uspořádání, některá lze
-        prohazovat
+\end{adjustwidth}
 
 ## Plány
 
+*   verifikace se symbolickými daty, abstrakce
 
+*   vylepšování simulátoru, propojení s DiOS
+
+*   rozšiřování DiOS: procesy, konfigurovatelnost pro různé módy verifikace
+
+*   release-ready verze syscall passthrough
+
+*   verifikace LTL vlastností
