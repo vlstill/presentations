@@ -35,7 +35,7 @@ date: 12\. května 2017
     \node[state, shaded, below = 0em of libs.south west, anchor = north west]
         (dios) {\redon{2,4-5,8}{DiOS}};
     \node[state, below = 0em of dios.south west, anchor = north west]
-        (divm) {\redon{2}{DiVM}};
+        (divm) {\redon{2,5}{DiVM}};
     \node[state, below = 0em of divm.south west, anchor = north west]
         (alg) {\redon{2,7}{Verification core}};
 
@@ -212,7 +212,7 @@ date: 12\. května 2017
               volání}\only<3->{\only<3-5>{provolávání}\only<6->{přehrávání} POSIX systémových volání}
 
     \item<3-> \redon{3-5}{passthrough umožňuje volat skutečná systémová volání
-    kernelu na kterém DIVINE běží}
+    kernelu, na kterém DIVINE běží}
     \only<4-5>{
     \begin{itemize}
         \item v run módu DIVINE (jeden běh)
@@ -222,8 +222,8 @@ date: 12\. května 2017
     \only<6->{
     \begin{itemize}
         \item zaznamenanou interakci se systémem lze přehrát
-        \item<7-> přehrávání funguje i \texttt{verify}, \texttt{sim}
-        \item<8-> může verifikovat běhy které mají stejné (podobné) interakce
+        \item<7-> přehrávání funguje i ve \texttt{verify} a \texttt{sim}
+        \item<8-> může verifikovat běhy, které mají stejné (podobné) interakce
     \end{itemize}
     }
 \end{itemize}
