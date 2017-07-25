@@ -17,54 +17,6 @@ date: 26th July 2017
 
 ## DIVINE -- Verification of C++ programs
 
-\begin{latex}
-\medskip
-\makebox[\textwidth][c]{
-\footnotesize
-\begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
-                   , semithick
-                   , style={ node distance = 2em }
-                   , state/.style={ rectangle, draw=black, very thick,
-                     minimum height=1.7em, minimum width = 4.4em, inner
-                     sep=2pt, text centered, node distance = 2em }
-                   ]
-  \node[state, minimum width = 6em] (code) {C++ code};
-  \node[state, minimum width = 10.4em, right = 13.6em of code] (prop) {property and options};
-
-  \node[state, below = 2.7em of code, rounded corners] (clang) {compiler};
-  \node[state, below = 1.3em of clang.south west, anchor = north west] (runtime) {runtime};
-  \node[state, right = of clang] (llvm) {\llvm IR};
-  \node[state, right = of llvm, rounded corners, minimum width = 8em] (lart) {instrumentation};
-  \node[state, right = of lart] (illvm) {\divm IR};
-  \node[state, below = 1.3em of illvm.south west, anchor = north west, rounded corners, minimum width = 8em] (verifier) {verification core};
-  \node[above = 0.5em of lart] (pverify) {};
-
-  \node[state, below = 1.6em of verifier.south east] (valid) {\color{green!40!black}Valid};
-  \node[state, below = 1.6em of verifier.south west, minimum width = 8em] (ce) {\color{red}Counterexample};
-
-  \begin{pgfonlayer}{background}
-      \node[state, fit = (pverify) (clang) (runtime) (llvm) (lart) (illvm) (verifier),
-            inner sep = 0.8em, thick, rounded corners, dashed] (verify) {};
-  \end{pgfonlayer}
-
-  \node[below = 0.2em] at (verify.north) {\texttt{divine verify}};
-
-  \path (prop.348) edge[|*] (verifier.north)
-        (prop.192) edge[|*] (lart.north)
-        (code) edge (clang)
-        (runtime) edge (clang)
-        (clang) edge (llvm)
-        (llvm) edge (lart)
-        (lart) edge (illvm)
-        (illvm) edge[|*] (verifier.north)
-        (verifier) edge (valid) edge (ce)
-        ;
-\end{tikzpicture}
-}
-\end{latex}
-
-## DIVINE -- Verification of C++ programs
-
 **DIVINE is a tool for testing and verification of C/C++ programs**
 
 *   memory safety, assertion safety, parallelism errors
@@ -79,13 +31,61 @@ date: 26th July 2017
 
 \bigskip
 
-**Contribution**
+**Contribution of This Work**
 
 *   full support for C++ exceptions
 
-*   with minimal changes to the verification core
+*   with minimal changes to the verification core of DIVINE
 
 *   re-using existing implementation of exception matching in the C++ runtime
+
+## DIVINE -- Verification of C++ programs
+
+\begin{latex}
+\medskip
+\makebox[\textwidth][c]{
+\footnotesize
+\begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
+                   , semithick
+                   , style={ node distance = 2em }
+                   , state/.style={ rectangle, draw=black, very thick,
+                     minimum height=1.7em, minimum width = 4.4em, inner
+                     sep=2pt, text centered, node distance = 2em }
+                   ]
+  \node[state, minimum width = 6em] (code) {C++ code};
+  \node[state, minimum width = 10.4em, right = 13.6em of code] (prop) {property and options};
+
+  \node[state, below = 3em of code, rounded corners] (clang) {compiler};
+  \node[state, below = 1.5em of clang.south west, anchor = north west] (runtime) {runtime};
+  \node[state, right = of clang] (llvm) {\llvm IR};
+  \node[state, right = of llvm, rounded corners, minimum width = 8em] (lart) {instrumentation};
+  \node[state, right = of lart] (illvm) {\divm IR};
+  \node[state, below = 1.5em of illvm.south west, anchor = north west, rounded corners, minimum width = 8em] (verifier) {verification core};
+  \node[above = 0.5em of lart] (pverify) {};
+
+  \node[state, below = 2em of verifier.south east] (valid) {\color{green!40!black}Valid};
+  \node[state, below = 2em of verifier.south west, minimum width = 8em] (ce) {\color{red}Counterexample};
+
+  \begin{pgfonlayer}{background}
+      \node[state, fit = (pverify) (clang) (runtime) (llvm) (lart) (illvm) (verifier),
+            inner sep = 0.8em, thick, rounded corners, dashed] (verify) {};
+  \end{pgfonlayer}
+
+  \node[below = 0.2em] at (verify.north) {DIVINE};
+
+  \path (prop.348) edge[|*] (verifier.north)
+        (prop.192) edge[|*] (lart.north)
+        (code) edge (clang)
+        (runtime) edge (clang)
+        (clang) edge (llvm)
+        (llvm) edge (lart)
+        (lart) edge (illvm)
+        (illvm) edge[|*] (verifier.north)
+        (verifier) edge (valid) edge (ce)
+        ;
+\end{tikzpicture}
+}
+\end{latex}
 
 ## Motivation
 
@@ -161,7 +161,7 @@ int main() {
   \node<7>[state, above = of f6] (dX) {\texttt{X::\textasciitilde X:1}};
   \node<8>[state, anchor = south] at (10em, 0em) (main14) {\texttt{main:14}};
 
-  \node<5-7> at (10em, 19em) {unwinding};
+  \node<5-7> at (10em, 10em) {\textbf{unwinding}};
 
   \draw<1>(2em, 5em) -- (-9em, 5em);
   \draw<2>(2em, 12.5em) -- (-10em, 12.5em);
@@ -222,7 +222,7 @@ int main() {
 
     . . .
 
-*   \textbf{\color{paradisegreen}green} components are reused
+*   \textbf{\color{paradisegreen}green} components are re-used in DIVINE
 
 ## Analyzing C++ Program with DIVINE
 
@@ -261,7 +261,7 @@ int main() {
         ;
 \end{tikzpicture}
 
-DIVINE/DiVM-specific components
+**DIVINE/DiVM-specific components**
 
 *   LLVM-based preprocessing
 
@@ -284,8 +284,6 @@ DIVINE/DiVM-specific components
     . . .
 
 *   metadata format depends on the implementation of the C++ runtime library
-
-    *   in our case `libc++abi`, DWARF metadata
 
     . . .
 
