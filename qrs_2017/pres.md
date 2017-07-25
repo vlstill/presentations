@@ -1,6 +1,7 @@
 ---
 vim: spell spelllang=en tw=80 fo+=t
-title: Using Off-the-Shelf Exception Support Components in C++ Verification
+title: Using Off-the-Shelf Exception Support Components\newline
+       in C++ Verification
 author:
     - \textbf{Vladimír Štill}
     - Petr Ročkai
@@ -15,7 +16,7 @@ lang: english
 date: 26th July 2017
 ...
 
-## DIVINE -- Verification of C++ programs
+## DIVINE -- Verification of C++ Programs
 
 **DIVINE is a tool for testing and verification of C/C++ programs**
 
@@ -31,7 +32,7 @@ date: 26th July 2017
 
 \bigskip
 
-**Contribution of This Work**
+**Contribution of this Work**
 
 *   full support for C++ exceptions
 
@@ -39,7 +40,7 @@ date: 26th July 2017
 
 *   re-using existing implementation of exception matching in the C++ runtime
 
-## DIVINE -- Verification of C++ programs
+## DIVINE -- Verification of C++ Programs
 
 \begin{latex}
 \medskip
@@ -106,7 +107,7 @@ date: 26th July 2017
 *   using LLVM and clang helps a lot for C/C++ support
 
 *   DIVINE also re-uses C and C++ standard libraries
-*   allows for more precise verification then re-implementing C++ support
+*   more precise verification then with re-implementation of C++ support
 
 . . .
 
@@ -271,7 +272,7 @@ int main() {
 
     . . .
 
-*   approximately 700 lines of new modular code
+*   approximately 700 lines of new modular C++ code
 
 ## LLVM Transformation
 
@@ -298,12 +299,18 @@ int main() {
 
 *   depends on the platform, calling conventions (e.g. Linux on `x86`)
 
+    . . .
+
 *   new unwinder for DiVM
+
+    . . .
 
 *   uses metadata from the transformation
 
 *   provides metadata for the `libc++abi` callbacks which search for the location to
     restore control flow to
+
+    . . .
 
 *   would also work with other languages
 
@@ -318,8 +325,8 @@ int main() {
 
     . . .
 
-*   minimal overhead: $2.6\,\%$ (compared to an older style of implementation which
-    required changes to the verification core)
+*   minimal overhead: $2.6\,\%$ time overhead compared to an older style of
+    implementation which required changes to the verification core
 
 \center\
 \
