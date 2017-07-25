@@ -10,21 +10,16 @@ header-includes:
     - \usepackage{sansmathfonts}
     - \newcommand{\TODO}[1]{{\color{red}#1}}
     - \newcommand{\redon}[2]{{\only<#1>{\color{red}}#2}}
+    - \setbeamersize{text margin left=1.2em, text margin right=1.2em}
 lang: english
 date: 26th July 2017
 ...
 
-## Introduction -- DIVINE
-
-DIVINE is a tool for testing and verification of C and C++ programs
-
-*   memory safety, assertion safety, parallelism errors
-*   easy nondeterminism, error injection
-*   aims at full support for C and C++, partial support for POSIX
-*   using clang/LLVM compiler infrastructure
+## DIVINE -- Verification of C++ programs
 
 \begin{latex}
-\center
+\medskip
+\makebox[\textwidth][c]{
 \footnotesize
 \begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
                    , semithick
@@ -65,39 +60,119 @@ DIVINE is a tool for testing and verification of C and C++ programs
         (verifier) edge (valid) edge (ce)
         ;
 \end{tikzpicture}
+}
 \end{latex}
+
+## DIVINE -- Verification of C++ programs
+
+**DIVINE is a tool for testing and verification of C/C++ programs**
+
+*   memory safety, assertion safety, parallelism errors
+
+*   easy error injection
+
+*   full support for C and C++, partial support for POSIX
+
+*   using clang/LLVM compiler infrastructure
 
 . . .
 
-\vspace{-\bigskipamount}
+\bigskip
 
-*   the contribution of this paper is full support for C++ exceptions
+**Contribution**
+
+*   full support for C++ exceptions
+
+*   with minimal changes to the verification core
+
+*   re-using existing implementation of exception matching in the C++ runtime
 
 ## Motivation
 
 **C++ exceptions**
 
-*   exceptions are ubiquitous in real-world C++
-*   C++ can be used without exceptions, but a lot of code uses them
-*   behavior of some functionality changes if exceptions are disabled (`new`{.cpp})
-*   exceptions require runtime support, cannot be solved by the compiler itself
+*   ubiquitous in real-world C++
+
+*   disabling exceptions can change behaviour (`new`{.cpp})
+
+*   runtime support required, cannot be handled by the compiler itself
 
 . . .
+
+\bigskip
 
 **Off-the-Self Components**
 
 *   using LLVM and clang helps a lot for C/C++ support
+
 *   DIVINE also re-uses C and C++ standard libraries
+*   allows for more precise verification then re-implementing C++ support
 
 . . .
 
 *   exceptions support is complex
+
 *   re-implementation would risk imprecisions, would be large, or require
     changes to the verification core
 
 ## How Exceptions Work
 
-TODO
+\begin{columns}
+\begin{column}{0.40\textwidth}
+
+```{.cpp .numberLines}
+X::~X() { }
+void g() {
+  throw std::exception();
+}
+void f() {
+  X x;
+  g();
+}
+
+int main() {
+  try {
+    f();
+  } catch ( ... ) {
+    /* ... */
+  }
+}
+```
+
+\end{column}
+\begin{column}{0.50\textwidth}
+
+\begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
+                   , semithick
+                   , style={ node distance = 2em }
+                   , state/.style={ rectangle, draw=black, very thick,
+                     minimum height = 2em, minimum width = 10em, inner
+                     sep=2pt, text centered, node distance = 0em }
+                   ]
+
+  \useasboundingbox (0,0) rectangle (15em, 20em);
+
+  \node<1-7>[state, anchor = south] at (10em, 0em) (main) {\texttt{main:12}};
+  \node<2>[state, above = of main] (f6) {\texttt{f:6}};
+  \node<3-5>[state, above = of main] (f7) {\texttt{f:7}};
+  \node<4-5>[state, above = of f6] (g3) {\texttt{g:3}};
+  \node<5>[state, above = of g3] (throw) {\texttt{throw}};
+  \node<6-7>[state, above = of main] (f8) {\texttt{f:8} (cleanup)};
+  \node<7>[state, above = of f6] (dX) {\texttt{X::\textasciitilde X:1}};
+  \node<8>[state, anchor = south] at (10em, 0em) (main14) {\texttt{main:14}};
+
+  \node<5-7> at (10em, 19em) {unwinding};
+
+  \draw<1>(2em, 5em) -- (-9em, 5em);
+  \draw<2>(2em, 12.5em) -- (-10em, 12.5em);
+  \draw<3>(2em, 11.2em) -- (-10em, 11.2em);
+  \draw<4>(2em, 16.3em) -- (0em, 16.3em);
+  \draw<6>(2em, 10em) -- (-12em, 10em);
+  \draw<7>(2em, 18.8em) -- (-7em, 18.8em);
+  \draw<8>(2em, 2.5em) -- (-6em, 2.5em);
+\end{tikzpicture}
+\end{column}
+\end{columns}
 
 ## Running C++ Program
 
@@ -108,75 +183,145 @@ TODO
                      minimum height=1.7em, minimum width = 4.4em, inner
                      sep=2pt, text centered, node distance = 2em }
                    ]
-  \node[state, minimum width = 5em] (code) {C++ code};
-  \node[state, minimum width = 5em, right = 1em of code] (libcxx) {libc++};
-  \node[state, minimum width = 5em, right = 1em of libcxx] (libcxxabi) {libc++abi};
+  \node[state, minimum width = 5em, onslide = {<3> fill = paradisegreen}] (code) {\only<3>{\color{white}}C++ code};
 
-  \node[state, below = 2.8em of code, rounded corners, below = of libcxx] (clang) {clang};
+  \node[state, below = of code, rounded corners, onslide = {<3> fill = paradisegreen}] (clang) {\only<3>{\color{white}}clang};
 
-  \node[state, right = of clang] (bc) {bitcode};
-  \node[state, rounded corners, right = of bc] (llvm) {LLVM};
-  \node[state, below = of llvm, minimum width = 7em] (machinecode) {Machine Code};
+  \node[state, right = of clang, onslide = {<3> fill = paradisegreen}] (bc) {\only<3>{\color{white}}bitcode};
+
+  \node[state, rounded corners, right = of bc, minimum width = 10em] (llvm) {LLVM + linker};
+
+  \node[state, minimum width = 5em, above = of llvm, onslide = {<3> fill = paradisegreen}] (libcxxabi) {\only<3>{\color{white}}libc++abi};
+  \node[state, minimum width = 5em, left = 1em of libcxxabi, onslide = {<3> fill = paradisegreen}] (libcxx) {\only<3>{\color{white}}libc++};
+  \node[state, minimum width = 5em, right = 1em of libcxxabi] (libunwind) {libunwind};
+
+  \node[state, below = of llvm, minimum width = 7em] (machinecode) {Executable};
+  \node[state, below = of machinecode, minimum width = 7em] (machine) {Machine + OS};
 
   \path (code) edge (clang)
-        (libcxx.south) edge (clang)
-        (libcxxabi) edge (clang)
+        (libcxx.south) edge (llvm)
+        (libcxxabi) edge (llvm)
+        (libunwind) edge (llvm)
         (clang) edge (bc)
         (bc) edge (llvm)
         (llvm) edge (machinecode)
+        (machinecode) edge[dashed] (machine)
+        (libcxxabi) edge[dashed, red, out = 45, in = 135, onslide={<1>
+        color=white}] (libunwind)
+        (libunwind) edge[dashed, red, out = 270, in = 0, onslide={<1> color=white}] (machine)
         ;
 \end{tikzpicture}
 
-TODO
+*   the code is compiled and linked to the standard library (`libc++`), runtime
+    library (`libc++abi`), and the unwinder (`libunwind`)
+
+    . . .
+
+*   the runtime library \text{\color{red}depends} on the unwinder which
+    \text{\color{red}depend} on the machine and OS
+
+    . . .
+
+*   \textbf{\color{paradisegreen}green} components are reused
 
 ## Analyzing C++ Program with DIVINE
 
-TODO
+\begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
+                   , semithick
+                   , style={ node distance = 2em }
+                   , state/.style={ rectangle, draw=black, very thick,
+                     minimum height=1.7em, minimum width = 4.4em, inner
+                     sep=2pt, text centered, node distance = 2em }
+                   ]
+  \node[state, minimum width = 5em] (code) {C++ code};
 
-## Contribution
+  \node[state, below = of code, rounded corners] (clang) {clang};
 
-*   analysis of existing implementations and identification of re-usable
-    components
-*   implementation of DiVM-specific components
-    *   LLVM-based preprocessing
-    *   DiVM-based implementation of `libunwind`
-    *   approximately 700 lines of new modular code
+  \node[state, right = of clang] (bc) {bitcode};
+
+  \node[state, rounded corners, right = of bc, minimum width = 10em, onslide = {<1,3> fill=paradisegreen}] (llvm) {\only<1,3>{\color{white}}LLVM instrumentation};
+
+  \node[state, minimum width = 5em, above = of llvm] (libcxxabi) {libc++abi};
+  \node[state, minimum width = 5em, left = 1em of libcxxabi] (libcxx) {libc++};
+  \node[state, minimum width = 5em, right = 1em of libcxxabi, onslide = {<2,3> fill=paradisegreen}] (libunwind) {\only<2,3>{\color{white}}libunwind};
+
+  \node[state, below = of llvm, minimum width = 7em] (machinecode) {bitcode};
+  \node[state, below = of machinecode, minimum width = 7em] (machine) {DiVM};
+
+  \path (code) edge (clang)
+        (libcxx.south) edge (llvm)
+        (libcxxabi) edge (llvm)
+        (libunwind) edge (llvm)
+        (clang) edge (bc)
+        (bc) edge (llvm)
+        (llvm) edge (machinecode)
+        (machinecode) edge[dashed] (machine)
+        (libcxxabi) edge[dashed, red, out = 45, in = 135] (libunwind)
+        (libunwind) edge[dashed, red, out = 270, in = 0] (machine)
+        ;
+\end{tikzpicture}
+
+DIVINE/DiVM-specific components
+
+*   LLVM-based preprocessing
+
+    . . .
+
+*   DiVM-based implementation of `libunwind`
+
+    . . .
+
+*   approximately 700 lines of new modular code
 
 ## LLVM Transformation
 
 *   exceptions require metadata about stack frames, catch blocks and cleanups
     for destructors
-*   normally, metadata are generated for the machine code, we need metadata
-    describing LLVM bitcode
-*   metadata are specific for given implementation of C++ runtime library
-    *   in our case `libc++abi`
+
+    *   normally describe the machine code
+    *   DIVINE needs metadata for LLVM bitcode
+
+    . . .
+
+*   metadata format depends on the implementation of the C++ runtime library
+
+    *   in our case `libc++abi`, DWARF metadata
+
+    . . .
+
 *   output of the transformation is LLVM bitcode with additional metadata stored
     in global constants
+
 *   C++ specific encoding of catch and cleanup locations
 
 ## The Unwinder (`libunwind`)
 
-*   unwinder is used to manipulate execution stack
-*   dependent on the platform, calling conventions (e.g. Linux on `x86`)
-*   our unwinder is for DiVM
+*   used to manipulate the execution stack
+
+*   depends on the platform, calling conventions (e.g. Linux on `x86`)
+
+*   new unwinder for DiVM
+
 *   uses metadata from the transformation
-*   provides metadata for the `libc++abi` callbacks which search for location to
+
+*   provides metadata for the `libc++abi` callbacks which search for the location to
     restore control flow to
+
 *   would also work with other languages
 
-## Evaluation
-
-*   substantial improvement in verification fidelity
-*   $2.6\,\%$ slowdown compared to DIVINE 3 style of implementation which
-    requires changes to the verification core
-
-TODO
-
-## Conclusion
+## Evaluation & Conclusion
 
 *   reusable and modular implementation of C++ exceptions
+*   substantial improvement in verification fidelity
+
+    . . .
+
 *   minimal investment: $\sim 700$ lines of code
-*   minimal overhead: $2.6\,\%$
+
+    . . .
+
+*   minimal overhead: $2.6\,\%$ (compared to an older style of implementation which
+    required changes to the verification core)
 
 \center\
 \
