@@ -118,6 +118,18 @@ DIVINE je nástroj na analýzu programů v C a C++
 }
 \end{latex}
 
-## bla
+## Jádro DIVINE
 
-a
+TODO
+
+## Knihovny, kompilace, DiOS
+
+TODO
+
+## Instrumentace -- memory modely
+
+TODO
+
+## Instrumentace -- abstraktní a symbolická verifikace
+
+TODO
