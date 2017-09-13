@@ -1,0 +1,15 @@
+digraph { node [ fontname = Courier ]
+
+rankdir=LR
+
+n1 [ shape=rectangle label=".begin:\l    type:    Node*\l.end:\l    type:    Node*\l" ]
+n2 [ shape=rectangle label=".val:\l    type:    int\l    value:   [i32 2 d]\l.prev:\l    type:    Node*\l.next:\l    type:    Node*\l" ]
+n3 [ shape=rectangle label=".val:\l    type:    int\l    value:   [i32 1 d]\l.prev:\l    type:    Node*\l.next:\l    type:    Node*\l" ]
+n3 -> n2 [ label="prev:deref" ]
+n4 [ shape=rectangle label=".val:\l    type:    int\l    value:   [i32 3 d]\l.prev:\l    type:    Node*\l.next:\l    type:    Node*\l" ]
+n4 -> n3 [ label="prev:deref" ]
+n3 -> n4 [ label="next:deref" ]
+n2 -> n3 [ label="next:deref" ]
+n1 -> n2 [ label="begin:deref" ]
+n1 -> n4 [ label="end:deref" ]
+}

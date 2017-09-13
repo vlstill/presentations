@@ -8,7 +8,7 @@ header-includes:
     - \newcommand{\TODO}[1]{{\color{red}#1}}
     - \newcommand{\redon}[2]{{\only<#1>{\color{red}}#2}}
     - \setbeamersize{text margin left=1.2em, text margin right=1.2em}
-lang: english
+lang: czech
 date: 16\. září 2017
 ...
 
@@ -118,13 +118,81 @@ DIVINE je nástroj na analýzu programů v C a C++
 }
 \end{latex}
 
-## Jádro DIVINE
+## Jádro DIVINE: požadavky
 
-TODO
+*   DIVINE používá vlastní interpret LLVM
+    *   DIVINE Virtual Machine = DiVM
+
+. . .
+
+*   interpret musí být velmi striktní
+    *   kontrola přístupu k paměti, …
+*   také musí být pokud možno rychlý
+*   musí umožnit uložit snapshot stavu programu
+*   musí umožnit spustit vše potřebné pro běh programu
+
+## Jádro DIVINE: DiVM
+
+*   LLVM IR je nejprve přeložen do interní reprezentace: DiVM IR
+*   přidává k LLVM IR: alokace paměti, nízkoúrovňová manipulace zásobníku,
+    hlášení chyb, …
+*   DiVM pracuje nad pamětí reprezentovanou jako graf
+
+![\ Paměť jako graf](linklist.pdf)
+
+## Knihovny
+
+*	programy nejsou uzavřené, používají externí hlavičnové soubory, externí
+    knihovny
+
+    . . .
+
+*   používat systémové hlavičkové soubory je nebezpečné:
+
+    . . .
+
+    ```{.bash}
+    $ ./symbiotic mem_heap_bug01.c
+    cc: /usr/include/stdlib.h:33:10: fatal error:
+        'stddef.h' file not found
+    cc: 1 warning and 1 error generated.
+    ```
+
+    . . .
+
+*   proto si s sebou DIVINE nese knihovny
+    *   standardní knihovny C a C++
+    *   POSIX threads
 
 ## Knihovny, kompilace, DiOS
 
-TODO
+*   DIVINE překládá C/C++ soubory pomocí integrovaného kompilátoru
+    *   clang jako knihovna
+*   knihovny pro použití s DIVINE jsou přeloženy při překladu DIVINE
+*   kompilátor je přilinkuje k programu
+
+. . .
+
+*   dále je třeba poskytnout programu plánování vláken, procesů, případně
+    simulaci práce se soubory
+
+    . . .
+
+*   to vše v DIVINE zajišťuje DiOS (DIVINE Operating System)
+
+## Používání DIVINE
+
+*   `divine verify file.cpp`
+*   `divine check file.cpp`
+    *   méně striktní režim (neselhává alokace paměti, …)
+
+. . .
+
+*   ovlivnění kompilace:
+
+    *   `divine verify -std=c++14 -Idir file.cpp`
+    *   `-std=`, `-I`, `-l`, přímo, další přepínače přes -C
+    *   `divine verify -C,-O3 file.cpp`
 
 ## Instrumentace -- memory modely
 
