@@ -180,10 +180,10 @@ DIVINE je nástroj na analýzu programů v C a C++
 
 *   to vše v DIVINE zajišťuje DiOS (DIVINE Operating System)
 
-## Používání DIVINE
+## Používání DIVINE: verifikace
 
-*   `divine verify file.cpp`
-*   `divine check file.cpp`
+*   `divine verify file.cpp [args…]`
+*   `divine check file.cpp [args…]`
     *   méně striktní režim (neselhává alokace paměti, …)
 
 . . .
@@ -193,6 +193,44 @@ DIVINE je nástroj na analýzu programů v C a C++
     *   `divine verify -std=c++14 -Idir file.cpp`
     *   `-std=`, `-I`, `-l`, přímo, další přepínače přes -C
     *   `divine verify -C,-O3 file.cpp`
+
+. . .
+
+*   oddělená kompilace a verifikace
+
+    *   `divine cc -almost-any-clang-flags file1.cpp file2.cpp`
+    *   `divine verify file1.bc`
+
+## Používání DIVINE: simulátor
+
+*   `divine sim file.cpp`
+
+    *   pro krokování programu od začátku
+
+*   `divine sim --load-report file.report.????`
+
+    *   načtení reportu z `verify`/`check`
+    *   automaticky skočí před chybu
+    *   na chybu se obvykle lze dostat přes příkaz `stepa`
+
+## Používání DIVINE: základní příkazy simulátoru
+
+*   `up`/`down` -- skákání po zásobníku
+*   `show VAR` -- výpis hodnoty
+    *   `show .localvar`
+    *   `show $globals.globalvar`
+*   `backtrace`
+    *   `backtrace $state` pro všechna vlákna
+*   `step [--over] [--out]` -- krokování po „příkazu“
+*   `stepi [--over] [--out]` -- krokování po instrukci
+*   `stepa [--over] [--out]` -- krokování po atomickém kroku
+*   `thread pid:tid` -- výběr vlákna
+*   `rewind #stav` -- návrat do předchozího stavu
+*   `start` -- skok na začátek `main`
+*   `break file:line`
+*   `break function`
+*   `draw VAR`
+
 
 ## Instrumentace -- memory modely
 
