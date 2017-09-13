@@ -22,7 +22,7 @@ sub nonbreak
 sub env2pd
 {
     my $env = shift;
-    $text =~ s,\\(begin|end){$env},\\pandoc$1\\$env,gsm;
+    $text =~ s,\\(begin|end)\{$env\},\\pandoc$1\\$env,gsm;
 };
 
 sub pd2env
