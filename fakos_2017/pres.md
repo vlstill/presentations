@@ -5,7 +5,6 @@ author:
     - Vladimír Štill
 header-includes:
     - \usepackage{divine}
-    - \usepackage{sansmathfonts}
     - \newcommand{\TODO}[1]{{\color{red}#1}}
     - \newcommand{\redon}[2]{{\only<#1>{\color{red}}#2}}
     - \setbeamersize{text margin left=1.2em, text margin right=1.2em}
