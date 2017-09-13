@@ -210,6 +210,7 @@ DIVINE je nástroj na analýzu programů v C a C++
 *   `divine sim --load-report file.report.????`
 
     *   načtení reportu z `verify`/`check`
+    *   jméno reportu je na konci výpisu z verifikace
     *   automaticky skočí před chybu
     *   na chybu se obvykle lze dostat přes příkaz `stepa`
 
@@ -232,9 +233,28 @@ DIVINE je nástroj na analýzu programů v C a C++
 *   `draw VAR`
 
 
-## Instrumentace -- memory modely
+# Instrumentace -- paměťové modely
 
-TODO
+## Paměťový model
+
+*   při běhu paralelních programů vstupují do hry specifika chování daného
+    hardware
+
+    *   přeuspořádávání instrukcí a cache paměti způsobují, že paměťové efekty
+        vlákna nemusí být vidět v očekávaném pořadí
+    *   Intel `x86` umí „jen“ pozdržovat zápisy, ale zachovává jejich pořadí
+    *   ARM umí přeuspořádat téměř libovolné nezávislé a některé závislé operace
+
+*   kompilátor rovněž může přeuspořádávat operace
+
+## Jak na paměťový model
+
+*   verifikační nástroje často neberou ohled na paměťový model
+*   v DIVINE používáme instrumentaci k zohlednění paměťového modelu
+
+. . .
+
+*   čtení a zápisy nahrazeny za funkce které simulují zpožďování operací
 
 ## Instrumentace -- abstraktní a symbolická verifikace
 
