@@ -239,6 +239,14 @@ DIVINE je nástroj na analýzu programů v C a C++
     *   `setup --xterm src`
     *   `setup --sticky "source --output-to src --clear-screen" --pygmentize`
 
+\bigskip
+
+**DEMO:**
+
+*   `ssh login@arke`
+*   `source /var/obj/divine-fakos`
+*   `git clone https://github.com/vlstill/presentations.git`
+*   `cd presentations/fakos_2017/demo`
 
 # Instrumentace -- paměťové modely
 
