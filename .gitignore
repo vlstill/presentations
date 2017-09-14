@@ -136,3 +136,4 @@ sympy-plots-for-*.tex/
 *.bc
 *.o
 *.bin
+*.report.*
