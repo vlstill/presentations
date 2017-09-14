@@ -247,6 +247,51 @@ DIVINE je nástroj na analýzu programů v C a C++
 
 *   kompilátor rovněž může přeuspořádávat operace
 
+*   programátor musí správně využívat synchronizaci aby zabránil problémům s
+    relaxovanou pamětí
+
+    *   `std::atomic` v C++
+
+## Paměťový model a C++ {.t}
+
+\only<1-2>{\texttt{\textbf{int} x = 0, y = 0;}}
+\only<3>{\texttt{\textbf{volatile int} x = 0, y = 0;}}
+\only<4>{\texttt{\textbf{std::atomic< int >} x = 0, y = 0;}}
+
+```{.cpp}
+void thread1() { x = 1; y = 2; }
+void thread2() {
+    while ( y == 0 ) { }
+    cout << "y = " << y << endl;
+    cout << "x = " << x << endl;
+}
+```
+
+Dosažitelné $x = 0 \land y = 2$? \only<2-3>{\color{red}ano}\only<4->{\color{paradisegreen}ne}
+
+
+\only<2>{
+\begin{itemize}
+    \item nedefinované chování -- může dělat cokoli
+    \item \texttt{thread2} může přečíst \texttt{y} jen jednou
+\end{itemize}
+}
+\only<3>{
+\begin{itemize}
+\item opět nedefinované chování
+\item na většině kompilátorů zajistí, že se \texttt{y} přečte v každé iteraci cyklu
+\item to však na některých platformách nestačí k zajištění korektnosti
+(ARM/POWER)
+\end{itemize}
+}
+\only<4>{
+\begin{itemize}
+\item garance atomického přístupu k \texttt{x}, \texttt{y}
+\item \texttt{y} načteno v každé iteraci cyklu
+\item procesor nesmí přeuspořádat atomické zápisy
+\end{itemize}
+}
+
 ## Jak na paměťový model
 
 *   verifikační nástroje často neberou ohled na paměťový model
@@ -255,6 +300,84 @@ DIVINE je nástroj na analýzu programů v C a C++
 . . .
 
 *   čtení a zápisy nahrazeny za funkce které simulují zpožďování operací
+    *   zpožďování zápisů pomocí store bufferů
+    *   předbíhání zápisů je komplikovanější
+
+## Zpožďování zápisů
+
+```{.cpp}
+int x = 0, y = 0;
+```
+
+\begin{minipage}[t]{0.45\textwidth}
+
+```{.cpp}
+void thread0() {
+    y = 1;
+    cout << "x = " << x;
+}
+```
+
+\end{minipage}\hfill\begin{minipage}[t]{0.45\textwidth}
+
+```{.cpp}
+void thread1() {
+    x = 1;
+    cout << "y = " << y;
+}
+```
+
+\end{minipage}
+
+\bigskip\pause
+
+\begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
+                   , semithick
+                   , scale=0.65
+                   ]
+  \draw [-] (-10,0) -- (-6,0) -- (-6,-2) -- (-10,-2) -- (-10,0);
+  \draw [-] (-10,-1) -- (-6,-1);
+  \draw [-] (-8,0) -- (-8,-2);
+  \node () [anchor=west] at (-10,0.5) {main memory};
+  \node () [anchor=west] at (-10,-0.5)  {\texttt{0x04}};
+  \node () [anchor=west] at (-8,-0.5)  {\texttt{0x08}};
+  \node () [anchor=west] at (-10,-1.5)  {\texttt{x = 0}};
+  \node () [anchor=west] at (-8,-1.5)  {\texttt{y = 0}};
+
+  \node () [anchor=west] at (-10,-3.5) {store buffer for thread 0};
+  \node () [anchor=west] at (0,-3.5) {store buffer for thread 1};
+
+  \draw [-] (-10,-4) -- (-4, -4) -- (-4,-5) -- (-10,-5) -- (-10,-4);
+  \draw [-] (0,-4) -- (6, -4) -- (6,-5) -- (0,-5) -- (0,-4);
+  \draw [-] (-8,-4) -- (-8,-5);
+  \draw [-] (-6,-4) -- (-6,-5);
+  \draw [-] (2,-4) -- (2,-5);
+  \draw [-] (4,-4) -- (4,-5);
+
+  \node<3-> () [anchor=west] at (-10,-4.5)  {\texttt{0x08}};
+  \node<3-> () [anchor=west] at (-8,-4.5)  {\texttt{1}};
+  \node<3-> () [anchor=west] at (-6,-4.5)  {\texttt{32}};
+
+  \node<5-> () [anchor=west] at (0,-4.5)  {\texttt{0x04}};
+  \node<5-> () [anchor=west] at (2,-4.5)  {\texttt{1}};
+  \node<5-> () [anchor=west] at (4,-4.5)  {\texttt{32}};
+
+  \node () [] at (-4, 0.5) {thread 0};
+  \draw [->] (-4,0) -- (-4,-2);
+  \node () [anchor=west, onslide={<3> font=\bf, color=red}] at (-3.5, -0.5) {\texttt{store y 1;}};
+  \node () [anchor=west, onslide={<4> font=\bf, color=red}] at (-3.5, -1.5) {\texttt{load x;}};
+
+  \node () [] at (2, 0.5) {thread 1};
+  \draw [->] (2,0) -- (2,-2);
+  \node () [anchor=west, onslide={<5> font=\bf, color=red}] at (2.5, -0.5) {\texttt{store x 1;}};
+  \node () [anchor=west, onslide={<6> font=\bf, color=red}] at (2.5, -1.5) {\texttt{load y;}};
+
+  \draw<3-> [->, dashed] (-0.5,-0.5) to[in=0, out=0] (-4,-4.5);
+  \draw<4-> [->, dashed] (-9,-2) to[in=0, out=-90, out looseness=0.7] (-1.3,-1.5);
+  \draw<5-> [->, dashed] (5.5,-0.5) to[in=0, out=0] (6,-4.5);
+  \draw<6-> [->, dashed] (-7,-2) to[in=0, out=-90, out looseness=0.5] (4.7,-1.5);
+
+\end{tikzpicture}
 
 ## Instrumentace -- abstraktní a symbolická verifikace
 
