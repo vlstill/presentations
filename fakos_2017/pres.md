@@ -59,7 +59,7 @@ DIVINE je nástroj na analýzu programů v C a C++
   \node[above = 0.5em of lart] (pverify) {};
 
   \node[state, below = 2em of verifier.south east] (valid) {\color{green!40!black}Valid};
-  \node[state, below = 2em of verifier.south west, minimum width = 8em, onslide = {<5> fill = paradisegreen!80}] (ce) {\color{red}Counterexample};
+  \node[state, below = 2em of verifier.south west, minimum width = 8em, onslide = {<5> fill = paradisegreen!80}] (ce) {\only<1-4>{\color{red}}Counterexample};
 
   \begin{pgfonlayer}{background}
       \node[state, fit = (pverify) (clang) (runtime) (llvm) (lart) (illvm) (verifier),
@@ -84,7 +84,7 @@ DIVINE je nástroj na analýzu programů v C a C++
 \bigskip
 \only<1>{
     \begin{itemize}
-        \item DIVINE je postavený nad LLVM: využívá kompilátoru clang a
+        \item DIVINE je postavený nad LLVM: využívá kompilátor clang a
         analyzuje LLVM bitkód
     \end{itemize}
 }
@@ -99,7 +99,7 @@ DIVINE je nástroj na analýzu programů v C a C++
     \begin{itemize}
         \item část instrumentace je nutná pro chod DIVINE: sledování přístupu k
         paměti, detekce cyklů v control flow.
-        \item část zajišťuje rozšiřuje funkcionalitu: symbolická verifikace,
+        \item část rozšiřuje funkcionalitu: symbolická verifikace,
               memory modely
     \end{itemize}
 }
@@ -136,7 +136,7 @@ DIVINE je nástroj na analýzu programů v C a C++
 *   LLVM IR je nejprve přeložen do interní reprezentace: DiVM IR
 *   přidává k LLVM IR: alokace paměti, nízkoúrovňová manipulace zásobníku,
     hlášení chyb, …
-*   DiVM pracuje nad pamětí reprezentovanou jako graf
+*   DiVM pracuje s pamětí reprezentovanou jako graf
 
 ![\ Paměť jako graf](linklist.pdf)
 
@@ -147,7 +147,7 @@ DIVINE je nástroj na analýzu programů v C a C++
 
     . . .
 
-*   používat systémové hlavičkové soubory je nebezpečné:
+*   používat systémové hlavičkové soubory je nebezpečné
 
     . . .
 
@@ -168,13 +168,13 @@ DIVINE je nástroj na analýzu programů v C a C++
 
 *   DIVINE překládá C/C++ soubory pomocí integrovaného kompilátoru
     *   clang jako knihovna
-*   knihovny pro použití s DIVINE jsou přeloženy při překladu DIVINE
+*   knihovny jsou přeloženy při překladu DIVINE
 *   kompilátor je přilinkuje k programu
 
 . . .
 
 *   dále je třeba poskytnout programu plánování vláken, procesů, případně
-    simulaci práce se soubory
+    simulaci práce se soubory, …
 
     . . .
 
@@ -226,11 +226,18 @@ DIVINE je nástroj na analýzu programů v C a C++
 *   `stepi [--over] [--out]` -- krokování po instrukci
 *   `stepa [--over] [--out]` -- krokování po atomickém kroku
 *   `thread pid:tid` -- výběr vlákna
+
+## Používání DIVINE: další příkazy simulátoru
+
 *   `rewind #stav` -- návrat do předchozího stavu
 *   `start` -- skok na začátek `main`
 *   `break file:line`
 *   `break function`
 *   `draw VAR`
+
+*   přidání okna se zdrojovým kódem
+    *   `setup --xterm src`
+    *   `setup --sticky "source --output-to src --clear-screen" --pygmentize`
 
 
 # Instrumentace -- paměťové modely
