@@ -190,8 +190,8 @@ DIVINE je nástroj na analýzu programů v C a C++
 
 *   ovlivnění kompilace:
 
-    *   `divine verify -std=c++14 -Idir file.cpp`
-    *   `-std=`, `-I`, `-l`, přímo, další přepínače přes -C
+    *   `divine verify -std=c++14 file.cpp`
+    *   `-std=`, `-l`, přímo, další přepínače přes -C
     *   `divine verify -C,-O3 file.cpp`
 
 . . .
