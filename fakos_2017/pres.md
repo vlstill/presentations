@@ -393,7 +393,3 @@ void thread1() {
   \draw<6-> [->, dashed] (-7,-2) to[in=0, out=-90, out looseness=0.5] (4.7,-1.5);
 
 \end{tikzpicture}
-
-## Instrumentace -- abstraktní a symbolická verifikace
-
-TODO
