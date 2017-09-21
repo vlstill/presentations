@@ -5,7 +5,7 @@ use warnings;
 
 use IPC::Open2;
 
-my @envs = ( "figure", "columns", "column", "minipage" );
+my @envs = ( "figure", "columns", "column", "minipage", "wrap" );
 my @groups = ( "caption" );
 my @words = ();
 my @nonbreak = ( "ref", "cite" );
