@@ -55,7 +55,7 @@ reworking:
 
 *   Petr Ročkai, Jiří Barnat: **A Simulator for LLVM Bitcode**
 
-## Current Status: New Features
+## Current Status: New Features I
 
 DIVINE Operating System (DiOS)
 
@@ -77,7 +77,7 @@ Relaxed Memory Models
 *   resurrected and refactored implementation
 *   work on efficiency
 
-. . .
+## Current Status: New Features II
 
 Simulator
 
@@ -85,9 +85,32 @@ Simulator
 
 . . .
 
+Algorithms
+
+*   more robust counterexample format
+*   `divine run` can output stream of executed instructions
+
+. . .
+
 Core
 
 *   improved state space reduction
+
+## Planned Publications
+
+*   **DiOS: A Lightweight Approach to Verifying POSIX-Based Programs**
+
+. . .
+
+*   **A Semi-Dynamic State Space Reduction for C/C++ Programs**
+
+. . .
+
+*   **Symbolic Computation via Program Transforms**
+
+. . .
+
+*   **Verification of Concurrent C++ Programs with Realistic Memory Models**
 
 ## Runtime Verification
 
@@ -104,6 +127,11 @@ Core
 . . .
 
 *   in future we want to allow reordering of independent syscalls
+
+. . .
+
+*   also possibility to replace replies of some syscalls with
+    symbolic/nondeterministic values
 
 
 ## Relaxed Memory Models: Motivation
