@@ -12,6 +12,25 @@ lang: czech
 date: 16\. září 2017
 ...
 
+## DIVINE tým
+
+\begin{tabularx}{\textwidth}{XXXXX}
+\includegraphics{divine/jirik} &
+\includegraphics{divine/mornfall} &
+\includegraphics{divine/vlada} &
+\includegraphics{divine/honza_m} &
+\includegraphics{divine/heno}
+
+\\
+
+\includegraphics{divine/zuzka} &
+\includegraphics{divine/katka} &
+\includegraphics{divine/tadeas} &
+\includegraphics{divine/honza_h} &
+\includegraphics{divine/adam}
+\end{tabularx}
+
+
 ## DIVINE: analýza programů v C++
 
 DIVINE je nástroj na analýzu programů v C a C++
