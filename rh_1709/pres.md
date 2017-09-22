@@ -106,7 +106,7 @@ Core
 
 . . .
 
-*   **Symbolic Computation via Program Transforms**
+*   **Symbolic Computation via Program Transformations**
 
 . . .
 
