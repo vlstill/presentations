@@ -13,7 +13,7 @@ header-includes:
     - \newenvironment{wrap}[1]{#1}{}
     - \newcommand{\gray}{}%\setbeamercolor{item}{fg=gray}\setbeamercolor{normal text}{fg=gray}}
 lang: english
-date: 22th September 2017
+date: 22nd September 2017
 ...
 
 ## DIVINE: Analysis of C++ Programs
@@ -89,9 +89,22 @@ Core
 
 *   improved state space reduction
 
-## Plans: Runtime Verification
+## Runtime Verification
 
--   TODO
+*   currently we can record and replay syscall interatction
+
+. . .
+
+*   replay can explore further runs
+
+. . .
+
+*   but syscall ordering has to match
+
+. . .
+
+*   in future we want to allow reordering of independent syscalls
+
 
 ## Relaxed Memory Models: Motivation
 
@@ -168,11 +181,12 @@ main idea: transform the program to encode symbolic/abstracted data
 
     *   finalizing the initial implementation
 
+    *   testing and benchmarking
+
     *   support for functions, data structures
 
     *   but no dynamic memory and aliased pointers
 
-    *   testing and benchmarking
 
     . . .
 
