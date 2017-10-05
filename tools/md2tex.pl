@@ -103,4 +103,6 @@ $text =~ s/\\begin\{enumerate\}\[<\+->\]/\\begin{enumerate}/g;
 $text =~ s/\\begin\{frame\}\{/\\begin{frame}\[fragile\]{/g;
 $text =~ s/numbers=left/numbers=left,numbersep=5pt/g;
 
+$text =~ s/\\pause\s*\\end\{block\}/\\end{block}\n\\pause/gsm;
+
 print $text;
