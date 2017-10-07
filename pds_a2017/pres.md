@@ -3,6 +3,7 @@ vim: spell spelllang=en tw=80 fo+=t
 title: "Acceleration of Abstract Interpretation, Widening and Nowrrowing"
 author:
     - Vladimír Štill
+classoption: fleqn
 header-includes:
     - \usepackage{divine}
     - \usepackage{sansmathfonts}
@@ -15,8 +16,8 @@ header-includes:
     - \usetikzlibrary{arrows.meta}
     - \usepackage{tikz-cd}
     - \usetikzlibrary{arrows}
-    - \newcommand{\gs}[4]{\begin{tikzcd}A \arrow[shift left=2pt]{r}{\alpha} \pgfmatrixnextcell B \arrow[shift left=2pt]{l}{\gamma}\end{tikzcd}}
-    - \newcommand{\gsac}{\gs{A}{C}{\alpha}{\gamma}}
+    - \newcommand{\gc}[4]{\begin{tikzcd}#1 \arrow[shift left=2pt]{r}{#3} \pgfmatrixnextcell{}#2 \arrow[shift left=2pt]{l}{#4}\end{tikzcd}}
+    - \newcommand{\gcac}{\gc{A}{C}{\alpha}{\gamma}}
     - \DeclareMathOperator{\lfp}{lfp}
     - \DeclareMathOperator{\ite}{ite}
     - |
@@ -73,7 +74,7 @@ date: 9th October 2017
 *   functions $\alpha \colon C \rightarrow A$, $\gamma \colon A \rightarrow C$ such that
     $\forall c \in C, \forall a \in A : \alpha(c) \le a \Leftrightarrow c \le \gamma(a)$
 
-*   also $\gsac$
+*   also $\gcac$
 
 ## Abstracting an Iterative Computation I
 
@@ -319,13 +320,66 @@ def foo():
 
     *   it is not always possible to reach the least fixed point by widening + narrowing
 
-## XXX
+## Is Widening Necessary?
 
-can problem be always restated with finite abstraction?
+*   only if the abstract domain contains infinite (or too long) ascending
+    sequences
 
-. . .
+    . . .
 
-*   no (proved in \cite{Cousot1992})
+*   can the problem be always restated with finite abstraction? \pause no \pause
+
+    *   suppose we have a class of programs which differ in a range of a variable
+        computed by widening + narrowing
+
+        . . .
+
+    *   the finite abstraction would need to contain all these ranges
+
+        . . .
+
+    *   if the class of programs is infinite, there is no finite abstraction as
+        precise as widening + narrowing approach
+
+        . . .
+
+    *   the bounds might not be derivable from the program text
+    *   more in \cite{Cousot1992}
+
+
+## How to Design Widening and Narrowing? I
+
+*   want to define $\wid, \nar : L \times L \rightarrow L$
+*   use a finite lattice $\widehat{L}$, such that
+    $\gc{L}{\widehat{L}}{\alpha}{\gamma}$:
+    \begin{align*}
+        x \wid y &= \gamma(\sup\{\alpha(x), \alpha(y)\}) \\
+        x \nar y &= \inf\{x, \gamma(\alpha(y)\}
+    \end{align*}
+
+## How to Design Widening and Narrowing? II
+
+*   choose a specific thresholds and accelerate unstable bounds to nearest such
+    threshold
+
+    . . .
+
+    -   e.g. $\{-\infty, 0, +\infty\}$ for intervals:
+        \begin{align*}
+            [l_0, u_0] \wid [l_1, u_1] = [&\ite(0 \le l_1 < l_0, 0, \ite(l_1 < l_0, -\infty, l_0)), \\
+                                          &\ite(u_0 < u_1 \le 0, 0, \ite(u_0 < u_1, +\infty, u_0)) ] \\
+          \visible<3->{
+            [l_0, u_0] \nar [l_1, u_1] = [&\ite((l_0 \le 0 \le l_1) \lor (l_0 = -\infty), l_1, l_0), \\
+                                          &\ite((u_1 \le 0 \le u_0) \lor (l_0 = +\infty), u_1, u_0) ]
+          }
+        \end{align*}
+
+## Final notes on Widening and Narrowing
+
+*   it is also possible to generalize widening (and narrowing) to work on more
+    previous values
+*   or all previous values
+    *   *set widening*/*set narrowing*
 
 ## Biblography {.allowpagebreaks}
 
