@@ -104,5 +104,6 @@ $text =~ s/\\begin\{frame\}\{/\\begin{frame}\[fragile\]{/g;
 $text =~ s/numbers=left/numbers=left,numbersep=5pt/g;
 
 $text =~ s/\\pause\s*\\end\{block\}/\\end{block}\n\\pause/gsm;
+$text =~ s/\n\s*(\n\s+\\begin\{align)/\1/gm;
 
 print $text;
