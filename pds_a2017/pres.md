@@ -39,6 +39,8 @@ header-includes:
         \addbibresource{pres.bib}
     - \newcommand{\wid}{\mathbin{\triangledown}}
     - \newcommand{\nar}{\mathbin{\vartriangle}}
+    - \newcommand{\Z}{\mathbb{Z}}
+    - \newcommand{\widehatt}[1]{\widehat{\widehat{{#1}}}}
 	- \usetikzlibrary{shapes,backgrounds,positioning,calc}
     - \usepackage{mathdots}
 lang: english
@@ -266,8 +268,56 @@ but infinite abstract domains are useful
 ## Widening and Narrowing Example
 
 ```{.python}
-
+def foo():
+    i = 1
+    while i <= 100:
+        i = i + 1
 ```
+
+*   possible values of `i` at the beginning of the cycle?
+
+    . . .
+
+*   least fixed point of `f`:
+    $$X = f(X) = (\{1\} \cup \{ i + 1 \mid i \in X \}) \cap \{ i \in \Z \mid i \le 100 \}$$
+
+    . . .
+
+*   with widening:
+    \begin{align*}
+        X &= f^\#(X) = ([1,1] \sqcup (X \oplus [1,1])) \sqcap [-\infty, 100] \\
+        \widehat{X}_0 &= \bot \\
+        \widehat{X}_1 &= \only<-7>{\only<-3>{\widehat{X}_0}\only<4->{\bot} \wid \only<-6>{(}\only<-5>{(}[1,1] \only<-5>{\sqcup \only<-4>{(\only<-3>{\widehat{X}_0}\only<4->{\bot} \oplus [1,1])}\only<5>{\bot}}\only<-5>{)}\only<-6>{ \sqcap [-\infty, 100]}\only<-6>{)}}\only<8->{[1,1]} \\
+      \visible<9->{
+        \widehat{X}_2 &= \only<-14>{\only<14>{\color{red}}\only<9>{\widehat{X}_1}\only<10->{[1,1]} \wid \only<-12>{(\only<-11>{([1,1] \sqcup \only<-10>{(\only<9>{\widehat{X}_1}\only<10->{[1,1]} \oplus [1,1])}\only<11->{[2,2]})}\only<12->{[1,2]} \sqcap [-\infty, 100])}\only<13->{[1,2]}}\only<15->{[1,+\infty]} \\
+      }
+      \visible<16->{
+        \widehat{X}_3 &= \widehat{X}_2 = [1, +\infty]
+      }
+    \end{align*}
+
+## Widening and Narrowing Example
+
+```{.python}
+def foo():
+    i = 1
+    while i <= 100:
+        i = i + 1
+```
+
+*   improve precision with narrowing:
+    \begin{align*}
+        \widehatt{X}_0 &= \widehat{X} = [1, +\infty] \\
+      \visible<2->{
+        \widehatt{X}_1 &= \only<-4>{\only<-2>{\widehatt{X}_0}\only<3->{[1, +\infty]} \nar \only<-3>{(([1,1] \sqcup (\only<-2>{\widehatt{X}_0}\only<3->{[1,+\infty]} \oplus [1,1])) \sqcap [-\infty, 100])}\only<4->{[1,100]}}\only<5->{[1,100]} \\
+      }
+      \visible<6->{
+        \widehatt{X}_2 &= \widehatt{X}_1 = [1,100]
+      }
+    \end{align*}
+    \onslide<7->
+
+    *   it is not always possible to reach the least fixed point by widening + narrowing
 
 ## XXX
 
