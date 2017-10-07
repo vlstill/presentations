@@ -229,38 +229,45 @@ but infinite abstract domains are useful
 
 ## Widening and Narrowing in a Diagram
 
-\center\vspace*{-1.4em}
+\center\vspace*{1.8em}
 \begin{tikzpicture}[node distance = 1cm]
 	\tikzset{venn/.style={draw,minimum width=1.5cm}}
 
-	\node<8-> [venn, onslide = {<8-8> fill=red}, onslide = {<9-> fill=paradisegreen}, ellipse, minimum height=8cm, minimum width=12cm] (x) at (0, 0) {};
-	\node<10-> [venn, onslide = {<10-> fill=paradisegreen}, ellipse, minimum height=7.2cm, minimum width=10.8cm] (nx1) at (0, 0) {};
-	\node<11-> [venn, onslide = {<11-> fill=paradisegreen}, ellipse, minimum height=5.4cm, minimum width=8.1cm] (nx) at (0, 0) {};
-	\node<4-> [venn, onslide = {<4-4> fill=blue}, ellipse, minimum height=5cm, minimum width=7.5cm] (lfpf) at (0, 0) {};
-	\node<7-> [venn, onslide = {<7-8> fill=red}, ellipse, minimum height=3.6cm, minimum width=5.4cm] (x2) at (0, 0) {};
-	\node<3-> [venn, onslide = {<3-4> fill=blue}, ellipse, minimum height=3cm, minimum width=4.5cm] (ffb) at (0, 0) {};
-	\node<6-> [venn, onslide = {<6-8> fill=red}, ellipse, minimum height=2.3cm, minimum width=3.5cm] (x1) at (0, 0) {};
-	\node<2-> [venn, onslide = {<2-4> fill=blue}, ellipse, minimum height=2cm, minimum width=3cm] (fb) at (0, 0) {};
-	\node<1-> [venn, onslide = {<1-4> fill=blue}, onslide = {<5-5> fill=red}, ellipse, minimum height=1cm] (b) at (0, 0) {};
+    \useasboundingbox[minimum height=8cm, minimum width=12cm] (0, 0);
+	\node<8-> [venn, onslide = {<8-8> fill=red!70!white}, onslide = {<9> fill=paradisegreen!70!white}, onslide = {<10-> fill=paradisegreen!30!white}, ellipse, minimum height=8cm, minimum width=12cm] (x) at (0, 0) {};
+	\node<10-> [venn, onslide = {<10> fill=paradisegreen!70!white, onslide = {<11-> fill=paradisegreen!30!white}}, ellipse, minimum height=7.2cm, minimum width=10.8cm] (nx1) at (0, 0) {};
+	\node<11-> [venn, onslide = {<11> fill=paradisegreen!70!white}, ellipse, minimum height=5.4cm, minimum width=8.1cm] (nx) at (0, 0) {};
+	\node<4-> [venn, onslide = {<4-4> fill=blue!50!white}, onslide = {<9-> dashed}, ellipse, minimum height=5cm, minimum width=7.5cm] (lfpf) at (0, 0) {};
+	\node<7-8> [venn, onslide = {<7-8> fill=red!70!white}, ellipse, minimum height=3.6cm, minimum width=5.4cm] (x2) at (0, 0) {};
+	\node<3-8> [venn, onslide = {<3-4> fill=blue!50!white}, onslide = {<5-> dotted}, ellipse, minimum height=3cm, minimum width=4.5cm] (ffb) at (0, 0) {};
+	\node<6-8> [venn, onslide = {<6-8> fill=red!70!white}, ellipse, minimum height=2.3cm, minimum width=3.5cm] (x1) at (0, 0) {};
+	\node<2-8> [venn, onslide = {<2-4> fill=blue!50!white}, onslide = {<5-> dotted}, ellipse, minimum height=2cm, minimum width=3cm] (fb) at (0, 0) {};
+	\node<1-8> [venn, onslide = {<1-4> fill=blue!50!white}, onslide = {<7-> dotted}, onslide = {<5-5> fill=red!70!white}, ellipse, minimum height=1cm] (b) at (0, 0) {};
 
 
 
-	\node at (b) {$\bot\visible<5->{ = \widehat{x}_0}$};
-	\node<2->[yshift=-0.8em] at (fb.north) {$f^\#(\bot)$};
-	\node<3->[yshift=-0.8em] at (ffb.north) {$f^\#(f^\#(\bot))$};
+	\node<-8> at (b) {$\bot\visible<5->{ = \widehat{x}_0}$};
+	\node<2-4>[yshift=-0.8em] at (fb.north) {$f^\#(\bot)$};
+	\node<3-4>[yshift=-0.8em] at (ffb.north) {$f^\#(f^\#(\bot))$};
 	\node<4->[yshift=-0.8em] at (lfpf.north) {$\lfp(f^\#)$};
-	\node<4->[yshift=-1.7em] at (lfpf.north) {$\vdots$};
+	\node<4-4>[yshift=-1.7em] at (lfpf.north) {$\vdots$};
 
-    \node<6->[yshift=-0.8em] at (x1.north west) {$\widehat{x}_1$};
-    \node<7->[yshift=-0.8em] at (x2.north west) {$\widehat{x}_2$};
+    \node<6-8>[yshift=-0.8em] at (x1.north west) {$\widehat{x}_1$};
+    \node<7-8>[yshift=-0.8em] at (x2.north west) {$\widehat{x}_2$};
     \node<8->[yshift=-0.8em] at (x.north west) {$\widehat{x}$};
-    \node<8->[yshift=-1.7em, xshift=1.7em] at (x.north west) {$\ddots$};
+    \node<8-8>[yshift=-1.7em, xshift=1.7em] at (x.north west) {$\ddots$};
 
     \node<9->[yshift=-0.8em] at (x.north east) {$\widehat{\widehat{x}}_0$};
     \node<10->[yshift=-0.8em] at (nx1.north east) {$\widehat{\widehat{x}}_1$};
     \node<11->[yshift=-0.8em] at (nx.north east) {$\widehat{\widehat{x}}$};
     \node<11->[yshift=0.5em, xshift=1.3em] at (nx.north east) {$\iddots$};
 \end{tikzpicture}
+
+## Widening and Narrowing Example
+
+```{.python}
+
+```
 
 ## XXX
 
