@@ -50,21 +50,27 @@ date: 9th October 2017
 
 ## Refresh I
 
-### Partially Ordered Set (poset)
+\begin{block}{Partially Ordered Set (poset)}
 
 *   $(P, \sqsubseteq)$, $P \neq \emptyset$
 *   $\sqsubseteq$ is a binary relation which is reflexive, anti-symmetric, and
     transitive
 
+\end{block}
+
 . . .
 
-### Lattice
+\bigskip
+
+\begin{block}{Lattice}
 
 *   let $(P, \sqsubseteq)$ be a poset
 *   if $\inf(x, y)$ and $\sup(x, y)$ exists for all $x, y \in P$, then $(P,
     \sqsubseteq)$ is a *lattice*
 *   if $\inf(X)$, $\sup(X)$ exists for all $X \subseteq P$, then $(P,
     \sqsubseteq)$ is a *complete lattice*
+
+\end{block}
 
 ## Refresh II
 
