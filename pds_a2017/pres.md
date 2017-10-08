@@ -1,6 +1,6 @@
 ---
 vim: spell spelllang=en tw=80 fo+=t
-title: "Acceleration of Abstract Interpretation, Widening and Nowrrowing"
+title: "Acceleration of Abstract Interpretation:\\newline Widening and Nowrrowing"
 author:
     - Vladimír Štill
 classoption: fleqn
@@ -72,7 +72,7 @@ date: 9th October 2017
 
 *   let $(C, \le)$ and $(A, \sqsubseteq)$ be complete lattices
 *   functions $\alpha \colon C \rightarrow A$, $\gamma \colon A \rightarrow C$ such that
-    $\forall c \in C, \forall a \in A : \alpha(c) \le a \Leftrightarrow c \le \gamma(a)$
+    $\forall c \in C, \forall a \in A : \alpha(c) \sqsubseteq a \Leftrightarrow c \le \gamma(a)$
 
 *   also $\gcac$
 
@@ -80,13 +80,21 @@ date: 9th October 2017
 
 *   complete lattice $(C, \le)$
 *   suppose we have a monotone function $f \colon C \rightarrow C$
+
+    . . .
+
 *   we want to calculate (overapproximation of) smallest fixpoint of $f$
-
-    $$\lfp(f) = \inf\{ c \in C \mid c = f(c) \} $$
-
-    $$\lfp(f) \le \gamma(\lfp(f^\#)) = \inf\{ \gamma(a) \mid a \in A, a = f^\#(a) \} $$
+    \begin{align*}
+        \lfp(f) &= \inf\{ c \in C \mid c = f(c) \} \\
+        \visible<+(1)->{
+        \lfp(f) &\le \gamma(\lfp(f^\#)) \visible<+(1)->{= \inf\{ \gamma(a) \mid a \in A, a = f^\#(a) \}}
+        }
+    \end{align*}
+    \onslide<3->
 
     *   where $f^\# \colon A \rightarrow A$ approximates $f$
+
+    . . .
 
 *   if $A$ is finite or has no infinite strictly ascending chains:
 
@@ -162,6 +170,8 @@ but infinite abstract domains are useful
         \widehat{x}_{i + 1} &= \widehat{x}_i \wid f^\#(\widehat{x}_i)
     \end{align*}
 
+    . . .
+
 *   example of $\wid$ (intervals):
     \begin{align*}
         \bot \wid x &= x \\
@@ -212,12 +222,16 @@ but infinite abstract domains are useful
 
 *   iterative improving of precision of $\widehat{x} \sqsupseteq \lfp(f^\#)$:
     \begin{align*}
-        \widehat{\widehat{x}}_0 &= \widehat{x} \\
-        \widehat{\widehat{x}}_{i + 1} &= \widehat{\widehat{x}}_i \nar f^\#(\widehat{\widehat{x}}_i)
+        \widehatt{x}_0 &= \widehat{x} \\
+        \widehatt{x}_{i + 1} &= \widehatt{x}_i \nar f^\#(\widehatt{x}_i)
     \end{align*}
 
-*   obtains $\widehat{\widehat{x}}$ such that: $\lfp(f^\#) \sqsubseteq
-    \widehat{\widehat{x}} \sqsubseteq \widehat{x}$
+    . . .
+
+*   obtains $\widehatt{x}$ such that: $\lfp(f^\#) \sqsubseteq
+    \widehatt{x} \sqsubseteq \widehat{x}$
+
+    . . .
 
 *   example of $\nar$ (intervals):
     \begin{align*}
@@ -284,15 +298,19 @@ def foo():
 
     . . .
 
-*   with widening:
+*   with widening, on intervals:
     \begin{align*}
         X &= f^\#(X) = ([1,1] \sqcup (X \oplus [1,1])) \sqcap [-\infty, 100] \\
+        \visible<4->{
         \widehat{X}_0 &= \bot \\
-        \widehat{X}_1 &= \only<-7>{\only<-3>{\widehat{X}_0}\only<4->{\bot} \wid \only<-6>{(}\only<-5>{(}[1,1] \only<-5>{\sqcup \only<-4>{(\only<-3>{\widehat{X}_0}\only<4->{\bot} \oplus [1,1])}\only<5>{\bot}}\only<-5>{)}\only<-6>{ \sqcap [-\infty, 100]}\only<-6>{)}}\only<8->{[1,1]} \\
-      \visible<9->{
-        \widehat{X}_2 &= \only<-14>{\only<14>{\color{red}}\only<9>{\widehat{X}_1}\only<10->{[1,1]} \wid \only<-12>{(\only<-11>{([1,1] \sqcup \only<-10>{(\only<9>{\widehat{X}_1}\only<10->{[1,1]} \oplus [1,1])}\only<11->{[2,2]})}\only<12->{[1,2]} \sqcap [-\infty, 100])}\only<13->{[1,2]}}\only<15->{[1,+\infty]} \\
+        }
+        \visible<5->{
+        \widehat{X}_1 &= \only<-9>{\only<-5>{\widehat{X}_0}\only<6->{\bot} \wid \only<-8>{(}\only<-7>{(}[1,1] \only<-7>{\sqcup \only<-6>{(\only<-5>{\widehat{X}_0}\only<6->{\bot} \oplus [1,1])}\only<7>{\bot}}\only<-7>{)}\only<-8>{ \sqcap [-\infty, 100]}\only<-8>{)}}\only<10->{[1,1]} \\
+        }
+      \visible<11->{
+        \widehat{X}_2 &= \only<-16>{\only<16>{\color{red}}\only<11>{\widehat{X}_1}\only<12->{[1,1]} \wid \only<-14>{(\only<-13>{([1,1] \sqcup \only<-12>{(\only<11>{\widehat{X}_1}\only<12->{[1,1]} \oplus [1,1])}\only<13->{[2,2]})}\only<14->{[1,2]} \sqcap [-\infty, 100])}\only<15->{[1,2]}}\only<17->{[1,+\infty]} \\
       }
-      \visible<16->{
+      \visible<18->{
         \widehat{X}_3 &= \widehat{X}_2 = [1, +\infty]
       }
     \end{align*}
