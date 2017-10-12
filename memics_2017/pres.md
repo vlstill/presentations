@@ -9,11 +9,13 @@ author:
 header-includes:
     - \usepackage{divine}
     - \usepackage{sansmathfonts}
+    - \usepackage[mathlf,textlf]{MyriadPro}
+    - \usepackage[small]{eulervm}
     - \newcommand{\TODO}[1]{{\color{red}#1}}
     - \newcommand{\redon}[2]{{\only<#1>{\color{red}}#2}}
     - \setbeamersize{text margin left=1.2em, text margin right=1.2em}
 lang: english
-date: 26th July 2017
+date: 13th October 2017
 ...
 
 ## DIVINE -- Verification of C++ Programs
