@@ -1,6 +1,6 @@
 ---
 vim: spell spelllang=en tw=80 fo+=t
-title: "Acceleration of Abstract Interpretation:\\newline Widening and Nowrrowing"
+title: "Acceleration of Abstract Interpretation:\\newline Widening and Narrowing"
 author:
     - Vladimír Štill
 classoption: fleqn
