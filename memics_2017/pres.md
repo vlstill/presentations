@@ -22,9 +22,15 @@ date: 13th October 2017
 
 **DIVINE is a tool for testing and verification of C/C++ programs**
 
+*   help with discovery of hard to find bugs
+
+    . . .
+
 *   memory safety, assertion safety, parallelism errors
 
 *   easy error injection
+
+    . . .
 
 *   full support for C and C++, partial support for POSIX
 
@@ -96,7 +102,11 @@ date: 13th October 2017
 
 *   ubiquitous in real-world C++
 
+    . . .
+
 *   disabling exceptions can change behaviour (`new`{.cpp})
+
+    . . .
 
 *   runtime support required, cannot be handled by the compiler itself
 
@@ -108,7 +118,12 @@ date: 13th October 2017
 
 *   using LLVM and clang helps a lot for C/C++ support
 
+    . . .
+
 *   DIVINE also re-uses C and C++ standard libraries
+
+    . . .
+
 *   more precise verification then with re-implementation of C++ support
 
 . . .
@@ -179,6 +194,7 @@ int main() {
 
 ## Running C++ Program
 
+\begin{latex}\makebox[\textwidth][c]{
 \begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
                    , semithick
                    , style={ node distance = 2em }
@@ -214,6 +230,9 @@ int main() {
         (libunwind) edge[dashed, red, out = 270, in = 0, onslide={<1> color=white}] (machine)
         ;
 \end{tikzpicture}
+}
+\vspace{-2ex}
+\end{latex}
 
 *   the code is compiled and linked to the standard library (`libc++`), runtime
     library (`libc++abi`), and the unwinder (`libunwind`)
@@ -229,6 +248,7 @@ int main() {
 
 ## Analyzing C++ Program with DIVINE
 
+\begin{latex}\makebox[\textwidth][c]{
 \begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
                    , semithick
                    , style={ node distance = 2em }
@@ -263,6 +283,9 @@ int main() {
         (libunwind) edge[dashed, red, out = 270, in = 0] (machine)
         ;
 \end{tikzpicture}
+}
+\vspace{-2ex}
+\end{latex}
 
 **DIVINE/DiVM-specific components**
 
@@ -314,11 +337,22 @@ int main() {
 
     . . .
 
+*   implements the same interface as platform unwinder
+
+    . . .
+
 *   would also work with other languages
 
 ## Evaluation & Conclusion
 
-*   reusable and modular implementation of C++ exceptions
+*   reusing C++ runtime library means full support for C++ exceptions
+
+    . . .
+
+*   exception search and type matching fully reused
+
+    . . .
+
 *   substantial improvement in verification fidelity
 
     . . .
@@ -330,8 +364,7 @@ int main() {
 *   minimal overhead: $2.6\,\%$ time overhead compared to an older style of
     implementation which required changes to the verification core
 
-\center\
-\
+\center\bigskip{}
 [`divine.fi.muni.cz`](https://divine.fi.muni.cz)\
 `paradise-fi/divine` on [GitHub](https://github.com/paradise-fi/divine)\
 \
