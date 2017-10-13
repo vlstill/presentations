@@ -46,7 +46,7 @@ date: 13th October 2017
 
 *   with minimal changes to the verification core of DIVINE
 
-*   re-using existing implementation of exception matching in the C++ runtime
+*   re-using existing implementation of exception matching
 
 ## DIVINE -- Verification of C++ Programs
 
@@ -331,6 +331,8 @@ int main() {
     . . .
 
 *   uses metadata from the transformation
+
+    . . .
 
 *   provides metadata for the `libc++abi` callbacks which search for the location to
     restore control flow to
