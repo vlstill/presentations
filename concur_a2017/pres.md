@@ -218,7 +218,7 @@ in two steps
 ### Memory Image
 
 *   gives concrete values to all values and pointers
-*   details not needed here
+*   details not needed herea
 
 ## Materialization and Removal of DLSs I
 
@@ -243,12 +243,128 @@ from any DLS it is possible to materialize a region before of after it
 *   the semantics of SMG is given by all possible materializations and removals
     of DLSs
 
+## Symbolic Program Configuration
+
+*   $\textit{GVar}$ -- finite set of global variables
+*   $\textit{SVar}$ -- countable set of stack variables
+*   $\textit{SVar} \cap \textit{GVar} = \emptyset$
+*   $\textit{Var} = \textit{SVar} \cup \textit{GVar}$
+
+. . .
+
+**Symbolic Program Configuration** (SPC): $C = (G, \upsilon)$, where
+
+*   $G$ is an SMG
+*   $\upsilon : \mathit{Var} \rightarrow R$ is a map from variables to
+    regions in which their values are stored
+
 ## Data Reinterpretation
 
 *   C/C++ allows data to be accessed through pointers of different types
     (casting, unions)
+
+    . . .
+
 *   in SMGs this is represented by multiple overlapping has-value edges
 
-**Read reinterpretation**
+## Read Reinterpretation
 
+*   reading a value of type $t$ at offset $of$ from an
+    object $o$ of SMG $G$
 
+    . . .
+
+*   produces a new SMG $G'$ and a value $v$
+
+    . . .
+
+*   ads an edge $o \xrightarrow{of,\;t} v$ into $G'$ such
+    that $MI(G) = MI(G')$
+
+    . . .
+
+    *   an unconstrained value if nothing is known about it
+    *   or derived from existing values
+
+## Write Reinterpretation
+
+*   writing a value $v$ of type $t$ at offset $off$ of an object $o$ (of SMG $G$)
+
+    . . .
+
+*   the resulting SMG $G'$ must have an edge $e : o \xrightarrow{of,\;t} v$
+
+    . . .
+
+*   and $MI(G) \subseteq MI(G'')$ where $G''$ is obtained from $G'$ by removing
+    $e$
+
+    . . .
+
+    *   e.g. obtain $G'$ from $G$ by removing (parts of) values colliding with
+        $e$ and adding $e$
+
+## Joins
+
+given SMGs $G_1, G_2$, produce $G$ such that:
+
+*   $MI(G_1) \subseteq MI(G) \supseteq MI(G_2)$
+    *   $G$ generalizes both $G_1$ and $G_2$
+*   $MI(G_1) = MI(G_2) \implies MI(G_1) = MI(G)$
+*   $MI(G_1) \subset MI(G_2) \implies MI(G) = MI(G_2)$
+*   $MI(G_1) \supset MI(G_2) \implies MI(G) = MI(G_1)$
+
+. . .
+
+*   implemented by walking the two SMGs from the corresponding starting objects
+    and merging matching objects
+    *   can merge DLSs with different length (resulting in minimum of the
+        lengths)
+    *   can introduce has-value edges with unknown values
+    *   can join a region with DLS
+
+. . .
+
+*   for joining SMGs from different paths in the control flow
+*   for abstraction
+*   for equality testing of SMGs
+
+## Abstraction
+
+*   merging uninterrupted sequences of neighbouring objects into DLS
+    *   together with possible sub-SMGs rooted at them
+
+    . . .
+
+*   by running join from two objects in the same SMG
+
+    . . .
+
+*   mergeable sequences ranked by length and loss of precision
+
+\includegraphics[page = 18, clip, trim=8.7cm 19cm 4.2cm 6cm, width=\textwidth]{paper.pdf}
+
+## Symbolic Execution with SMGs
+
+*   reading uses read reinterpretation
+*   writing uses write reinterpretation
+
+    . . .
+
+*   if DLS is accessed, or its address (except for addresses of first/last node)
+    is to be taken, materialization occurs
+    *   program statements execute on concrete objects
+
+    . . .
+
+*   DLS becomes 0+, computation is split
+    *   either the DLS is removed
+    *   or its size is incremented to 1+
+
+    . . .
+
+*   if statements can also split computation
+
+    . . .
+
+*   the basic algorithm only tracks value equality and if values are zeroed
