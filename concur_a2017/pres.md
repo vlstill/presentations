@@ -42,8 +42,14 @@ lang: english
 ## Introduction
 
 *   tool Predator, you might know it from SV-COMP
+
+    . . .
+
 *   specializes in programs with dynamically allocated data structures
     *   mostly linked list in the version presented here
+
+    . . .
+
 *   can abstract heap shapes
 *   symbolic execution with symbolically represented heap
 
@@ -53,7 +59,7 @@ lang: english
 
 ## Symbolic Memory Graphs
 
-*   we will focus on linked lists
+*  focus on linked lists
 
 \includegraphics[page = 7, clip, trim=8.7cm 21.2cm 4.5cm 5cm, width=\textwidth]{paper.pdf}
 
@@ -75,14 +81,32 @@ lang: english
     *   the value is stored at offset $\mathrm{off}$
     *   and has type $\mathrm{type}$
 
-    TODO: obrázek
+        \begin{latex}
+        \gtikzset{obj/.style={rectangle, draw},
+                  val/.style={circle, text width = 0em, inner sep = 0.2em, fill=black},
+                  node distance = 1em}
+        \begin{tikzpicture}
+            \node[obj] (o) {o};
+            \node[val, right = 5em of o] (v) {};
+            \node[shift={(0.2,0)}] at (v.east) {$v$};
+            \path[->] (o) edge node[above]{$0,\;\texttt{ptr}$} (v);
+        \end{tikzpicture}
+        \end{latex}
 
     . . .
 
     *   there can be values of multiple types at the same offset (type
         reinterpretation)
 
-    TODO: obrázek
+        \begin{tikzpicture}
+            \node[obj] (o) {o};
+            \node[val, right = 5em of o] (v) {};
+            \node[val, below = of v] (v2) {};
+            \node[shift={(0.2,0)}] at (v.east) {$v_1$};
+            \node[shift={(0.2,0)}] at (v2.east) {$v_2$};
+            \path[->] (o) edge node[above]{$0,\;\texttt{ptr}$} (v);
+            \path[->] (o) edge node[below]{$0,\;\texttt{int64}$} (v2);
+        \end{tikzpicture}
 
 ## Relations Between Objects and Values II
 
@@ -97,7 +121,19 @@ lang: english
         *   `all` for all nodes of DLS (later, with nested objects)
 
 
-  TODO: obrázek
+        \begin{tikzpicture}
+            \node[val] (v) {};
+            \node[obj, right = 5em of v] (o) {o};
+            \node[shift={(-0.2,0)}] at (v.west) {$v_1$};
+            \path[->] (v) edge node[above]{$0,\;\texttt{reg}$} (o);
+        \end{tikzpicture}
+
+        \begin{tikzpicture}
+            \node[val] (v) {};
+            \node[obj, right = 5em of v] (o) {2+ DLS ($d$)};
+            \node[shift={(-0.2,0)}] at (v.west) {$v_2$};
+            \path[->] (v) edge node[above]{$0,\;\texttt{fst}$} (o);
+        \end{tikzpicture}
 
 ## Doubly-Linked List Segments
 
@@ -136,10 +172,7 @@ lang: english
     pointed-to by all the nodes of DLS $d$ (**shared object**):
 
     \begin{latex}
-    \gtikzset{obj/.style={rectangle, draw},
-              val/.style={circle, text width = 0em, inner sep = 0.2em, fill=black},
-              node distance = 1em}
-    \begin{tikzpicture}
+    \begin{tikzpicture}[baseline = (v)]
         \node[obj] (d) at (0, 0) {2+ DLS ($d$)};
         \node[val, below = of d] (v) {};
         \node[shift={(0.2,0)}] at (v.east) {$v$};
@@ -147,8 +180,8 @@ lang: english
 
         \draw[->] (d) -- (v);
         \draw[->] (v) -- (r);
-    \end{tikzpicture}\qquad$\rightarrow$\qquad
-    \begin{tikzpicture}
+    \end{tikzpicture}\qquad$\rightsquigarrow$\qquad
+    \begin{tikzpicture}[baseline = (v)]
         \node[obj] (d1) at (0, 0) {$d_1$};
         \node[val, below right = of d1] (v) {};
         \node[obj, above right = of v] (d2) {$d_2$};
@@ -162,12 +195,13 @@ lang: english
     \end{tikzpicture}
     \end{latex}
 
+    . . .
 
 *   if $\mathit{level}(d) + 1 = \mathit{level}(r)$ then there is one object $r$
     for each node of DLS $d$ (**nested object**):
 
     \begin{latex}
-    \begin{tikzpicture}
+    \begin{tikzpicture}[baseline = (v)]
         \node[obj] (d) at (0, 0) {2+ DLS ($d$)};
         \node[val, below = of d] (v) {};
         \node[shift={(0.2,0)}] at (v.east) {$v$};
@@ -175,8 +209,8 @@ lang: english
 
         \draw[->] (d) -- (v);
         \draw[->] (v) -- (r);
-    \end{tikzpicture}\qquad$\rightarrow$\qquad
-    \begin{tikzpicture}
+    \end{tikzpicture}\qquad$\rightsquigarrow$\qquad
+    \begin{tikzpicture}[baseline = (v1)]
         \node[obj] (d1) at (0, 0) {$d_1$};
         \node[obj, right = 2em of d1] (d2) {$d_2$};
         \node[val, below = of d1]  (v1) {};
@@ -194,6 +228,8 @@ lang: english
     \end{tikzpicture}
     \end{latex}
 
+    . . .
+
 *   back edges from nested nodes to DLS are marked with the `all` target
     specifier
 
@@ -210,15 +246,15 @@ in two steps
 
 *   like SMG, but without DLS and other non-region objects
 *   obtained by materialization and removal of DLSs
-*   $MG(G)$ … set of all memory graphs corresponding to a symbolic memory graph
-    $G$
+*   $MG(G)$ -- set of all memory graphs corresponding to an SMG $G$
 
 . . .
 
 ### Memory Image
 
 *   gives concrete values to all values and pointers
-*   details not needed herea
+*   $MI(G)$ -- set of all memory images corresponding to an SMG $G$
+*   details not needed here
 
 ## Materialization and Removal of DLSs I
 
@@ -239,6 +275,8 @@ from any DLS it is possible to materialize a region before of after it
     *   letting the pointers bypass it
 
     \includegraphics[page = 12, clip, trim=10cm 16.17cm 4cm 9.5cm]{paper.pdf}
+
+    . . .
 
 *   the semantics of SMG is given by all possible materializations and removals
     of DLSs
@@ -265,7 +303,7 @@ from any DLS it is possible to materialize a region before of after it
 
     . . .
 
-*   in SMGs this is represented by multiple overlapping has-value edges
+*   in SMGs represented by multiple overlapping has-value edges
 
 ## Read Reinterpretation
 
@@ -288,7 +326,7 @@ from any DLS it is possible to materialize a region before of after it
 
 ## Write Reinterpretation
 
-*   writing a value $v$ of type $t$ at offset $off$ of an object $o$ (of SMG $G$)
+*   writing a value $v$ of type $t$ at offset $of$ of an object $o$ (of SMG $G$)
 
     . . .
 
@@ -357,7 +395,7 @@ given SMGs $G_1, G_2$, produce $G$ such that:
 
     . . .
 
-*   DLS becomes 0+, computation is split
+*   if DLS becomes 0+, computation is split
     *   either the DLS is removed
     *   or its size is incremented to 1+
 
