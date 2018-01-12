@@ -14,7 +14,7 @@ date: 16\. ledna 2018
 ## Verification of Parallel Programs I
 
 - design of parallel programs is hard
-- easy to make a mistake -- data races, deadlocks
+- easy to make mistakes -- data races, deadlocks
 
   . . .
 
@@ -149,7 +149,7 @@ void thread0() {              void thread1() {
 
 - overall behaviour described by **(relaxed) memory model**
 
-## Memory-Model-Aware Analysis
+## Memory-Model-Aware Analysis -- My Approach
 
 - encode the memory model into the program
 - verify it using verifier without memory model support
@@ -196,7 +196,7 @@ int a = _load( &y );
   - extra memory consumption
   - speed of operations
 - most of my work aims here
-- I will primarily use bounded ordering of instructions
+- I will primarily use bounded reordering of instructions
 
 ## Aims of the Work
 
@@ -278,9 +278,9 @@ FastTrack
 \end{quote}
 
 - primárně mi jde o klasické postupy testování jako jednotkové testování nebo
-  stress testing, případně s použítím nástrojů jako thread sanitizer nebo
+  stress testing, případně s použitím nástrojů jako thread sanitizer nebo
   helgrind
-- FastTrack umí detekovat data race, ale nevidím jak by bylo možné jen použít
+- FastTrack umí detekovat data race, ale nevidím jak by bylo možné jen adaptovat
   pro hledání chyb v lock-free programech v C/C++: pokud jsou všechny sdílené
   proměnné označeny jako atomické, pak podle C/C++ v programu nejsou data races,
   ale mohou se v něm snadno projevit chyby plynoucí z relaxované paměti
@@ -294,8 +294,8 @@ přístup, který nemusí odhalit v programu chyby?
 
 - *soundness*: analyzátor může neskončit nebo odpovědět NEVÍM, pokud však
   odpoví ANO/NE odpověď musí být správná
-  - tj. bounded model checker, který při detekci překročení omezení odpoví
-    NEVÍM může být \uv{sound}, pokud opoví ANO tak ne
+  - např. bounded model checker, který při detekci překročení omezení odpoví
+    NEVÍM může být \uv{sound}, pokud opoví ANO tak není \uv{sound}
 - *completeness*: analyzátor musí skončit pro programy, které mají konečný stavový
   prostor pod modelem sekvenční konzistence a když skončí, tak dát výsledek
   ANO/NE
@@ -339,7 +339,13 @@ Jaké je strovnání vyvíjeného nástroje DIVINE (a speciálně jeho část
 dostupnými nástroji?
 \end{quote}
 
-- co se týče výkonu porovnání zatím není
+- co se týče výkonu, porovnání v oblasti relaxované paměti zatím není
+- komerční nástroje často založeny na statické analýze
+  - riziko false alarms -- v DIVINE by být neměly
+- výzkumné nástroje
+  - DIVINE má typicky lepší podporu jazyka (především u C++)
+  - typicky jiný princip (bounded MC, stateless MC, symbolická exekuce)
+    $\rightarrow$ jiné kompromisy
 
 ## Otázky: Petr Švenda III
 
@@ -349,19 +355,13 @@ programů lze očekávat realizovatelnost kompletní formální verifikace a ve
 kterých oblastech bude hlavním přínosem hledání chyb?
 \end{quote}
 
-- pro relaxované paměťové modely: verifikace modulo limit na množství
-  přeuspořádaných operací
-  - aktuálně není možné poznat, že došlo k překročení limitu
-  - šlo by detekovat a případně postupně zvyšovat limit
-  - pro libovolný limit lze zkonstruovat program pro který je nedostatečný
-  - v hardware je přeuspořádání vždy omezené
-
-- jinak pro uzavřené programy (bez vstupů) závislé jen na plánování verifikace
-  - modulo chyby v generování spustitelného kódu
-  - případně v překladači/knihovně při použití jiného překladače pro generování
-    spustitelného kódu
-
-- na verifikaci otevřených programů se pracuje
+- snaha o verifikaci, jsou tu ale jistá omezení
+  - **relaxovaná paměť**: limit na množství přeuspořádaných instrukcí
+  - otevřené programy (verifikace pro všechny vstupy): nyní jen omezená podpora
+  - vždy: riziko chyb v překladu LLVM na binární kód, v DIVINE
+    - také v překladači/knihovně při překladu výsledné binárky jiným překladačem
+- omezením je velikost analyzovaného programu
+  - pro velké programy plánovaný bungfinding mód v DIVINE
 
 ## Otázky: Petr Švenda IV
 
