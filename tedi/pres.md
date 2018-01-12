@@ -367,8 +367,10 @@ kterých oblastech bude hlavním přínosem hledání chyb?
 
 \begin{quote}
 Je možné vyvíjený nástroj rozšířit o automatické vkládání synchronizačních
-bariér tak, aby se nástrojem detekovaný problé ihned odstranil?
+bariér tak, aby se nástrojem detekovaný problém ihned odstranil?
 \end{quote}
 
-- v principu by to mělo být možné, ale přijde mi smysluplnější soustředit se na
-  efektivitu hledání chyb
+- není vždy zřejmé, co má být správné chování, či jestli je chyba způsobená
+  relaxovaným paměťovým modelem
+- v principu by to mělo být možné detekovat \uv{relaxované chování}, ale přijde
+  mi smysluplnější soustředit se spíše na efektivitu hledání chyb
