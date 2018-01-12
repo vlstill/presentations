@@ -13,7 +13,7 @@ mds :	$(ALL_MD:.md=.pdf)
 		-e 's/\\Split(\[(.*)\])?/\\end{minipage}\\hfill\2\\begin{minipage}[t]{0.48\\textwidth}/' \
 		-e 's/\\endSplit/\\end{minipage}/'
 
-%.pdf : %.tex
+%.pdf : %.tex defs.tex thesis.bib
 	rubber --pdf -I../styles/paradiseBeamer $<
 
 .PRECIOUS: %.tex %.pdf

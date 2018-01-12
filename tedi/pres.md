@@ -5,10 +5,9 @@ subtitle: PhD Thesis Proposal
 author:
     - Vladimír Štill
 header-includes:
-    - \usepackage{divine}
-    - \usepackage{csquotes}
+    - \input{defs}
 
-lang: english, czech
+lang: czech, english
 date: 16\. ledna 2018
 ...
 
@@ -224,15 +223,47 @@ int a = _load( &y );
 
 - techniques for unbounded analysis
 
-## Publications
+## Publications I
 
 \framesubtitle{Techniques for Memory-Efficient Model Checking of C and C++ Code}
 
-## Weak Memory Models as LLVM-to-LLVM Transformation
+\fcite{RSB15TC}
 
-## Using Off-the-Shelf Exception Support Components in C++ Verification
+- tree-based compression scheme, custom allocation scheme
+- I have made part of the implementation (compression), full evaluation, and part of the text
+- I have presented this at SEFM 2015 (rank B)
 
-## Model Checking of C and C++ with DIVINE 4
+## Publications II
+
+\framesubtitle{Weak Memory Models as LLVM-to-LLVM Transformation}
+
+\fcite{SRB15weakmem}
+
+- analysis of programs under the TSO memory model using LLVM transformation
+- I am the main author of this paper
+- I have also presented this at MEMICS 2015
+
+## Publications III
+
+\framesubtitle{Using Off-the-Shelf Exception Support Components in C++ Verification}
+
+\fcite{SRB2017except}
+
+- verification of C++ code with exceptions in DIVINE 4
+- with maximal reuse of existing libraries
+- I am the main author of this paper
+- I have presented this at QRS 2017 (rank B)
+- awarded best paper award
+
+## Publications IV
+
+\framesubtitle{Model Checking of C and C++ with DIVINE 4}
+
+\fcite{DIVINEToolPaper2017}
+
+- tool paper describing architecture of DIVINE 4 and new features of this version
+- I have written most of the text for this paper
+- ATVA 2017 (rank A)
 
 # Reader's Questions
 

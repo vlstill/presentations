@@ -1,0 +1,22 @@
+\let\otp\titlepage
+\renewcommand{\titlepage}{\otp\addtocounter{framenumber}{-1}}
+\usepackage{divine}
+\usepackage{csquotes}
+
+\usepackage[ backend=biber
+           , style=alphabetic % numeric
+           , sortlocale=en_US
+           , bibencoding=UTF8
+           , maxnames=100
+           ]{biblatex}
+\DeclareSourcemap{
+    \maps[datatype=bibtex, overwrite]{
+        \map{
+            \step[fieldset=editor, null]
+            \step[fieldset=language, null]
+            \step[fieldset=doi, null]
+        }
+    }
+}
+\addbibresource{thesis.bib}
+\newcommand{\fcite}[1]{\emergencystretch 3em\fullcite{#1}\medskip}
