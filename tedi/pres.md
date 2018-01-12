@@ -50,7 +50,9 @@ void thread1() {
 
 - LLVM is executed by the model checker
 
-## Relaxed Memory Model Example
+- exploration of all possible runs of the program
+
+## Relaxed Memory Example
 
 ```{.cpp}
 int x, y = 0;
@@ -82,10 +84,10 @@ void thread0() {              void thread1() {
       \draw [-] (-9,0) -- (-9,-6);
       \node () [anchor=west] at (-10,0.5) {memory};
       \node () [anchor=west] at (-10,-2.5)  {\texttt{x}};
-      \node () [anchor=west] at (-9,-2.5)  {\texttt{0}};
+      \node () [anchor=west] at (-9,-2.5) {\only<-8>{\texttt{0}}\only<9->{\texttt{1}}};
 
       \node () [anchor=west] at (-10,-3.5)  {\texttt{y}};
-      \node () [anchor=west] at (-9,-3.5)  {\texttt{0}};
+      \node () [anchor=west] at (-9,-3.5)  {\texttt{\only<-9>0\only<10->1}};
 
       \node () [anchor=center] at (-2,-5.5) {store buffer of t. 0};
       \node () [anchor=center] at (4,-5.5) {store buffer of t. 1};
@@ -95,11 +97,11 @@ void thread0() {              void thread1() {
       \draw [-] (-2,-4) -- (-2,-5);
       \draw [-] (4,-4) -- (4,-5);
 
-      \node<3-> () [anchor=west] at (-4,-4.5)  {\texttt{y}};
-      \node<3-> () [anchor=west] at (-2,-4.5)  {\texttt{1}};
+      \node<3-9> () [anchor=west] at (-4,-4.5)  {\texttt{y}};
+      \node<3-9> () [anchor=west] at (-2,-4.5)  {\texttt{1}};
 
-      \node<5-> () [anchor=west] at (2,-4.5)  {\texttt{x}};
-      \node<5-> () [anchor=west] at (4,-4.5)  {\texttt{1}};
+      \node<5-8> () [anchor=west] at (2,-4.5)  {\texttt{x}};
+      \node<5-8> () [anchor=west] at (4,-4.5)  {\texttt{1}};
 
       \node () [] at (-4, 0.5) {thread 0};
       \draw [->] (-4,0) -- (-4,-2.3);
@@ -112,11 +114,11 @@ void thread0() {              void thread1() {
       \node () [anchor=west, onslide={<6> font=\bf, color=red}] at (2.5, -1.5) {\texttt{load y;}};
       \node () [anchor=west, onslide={<7> font=\bf, color=red}] at (2.5, -2.5) {\texttt{load x;}};
 
-      \draw<3-> [->, dashed] (0.3,-0.5) to[in=0, out=0] (0,-4.5);
-      \draw<4-> [->, dashed] (-7,-2.5) to[in=0, out=0, out looseness = 3, in looseness=0.5] (-0.7,-1.5);
-      \draw<5-> [->, dashed] (6.3,-0.5) to[in=0, out=0] (6,-4.5);
-      \draw<6-> [->, dashed] (-7,-3.5) to[in=0, out=0, out looseness = 0.2, in looseness = 0.7] (5.3,-1.5);
-      \draw<7-> [->, dashed] (6,-4.5) to[in=0, out=0] (5.3,-2.5);
+      \draw<3-7> [->, dashed] (0.3,-0.5) to[in=0, out=0] (0,-4.5);
+      \draw<4-7> [->, dashed] (-7,-2.5) to[in=0, out=0, out looseness = 3, in looseness=0.5] (-0.7,-1.5);
+      \draw<5-7> [->, dashed] (6.3,-0.5) to[in=0, out=0] (6,-4.5);
+      \draw<6-7> [->, dashed] (-7,-3.5) to[in=0, out=0, out looseness = 0.2, in looseness = 0.7] (5.3,-1.5);
+      \draw<7-7> [->, dashed] (6,-4.5) to[in=0, out=0] (5.3,-2.5);
 
       \draw<-2> [->] (-4,-0.3) to (-3.4,-0.3);
       \draw<3> [->] (-4,-0.7) to (-3.4,-0.7);
@@ -125,12 +127,12 @@ void thread0() {              void thread1() {
       \draw<-4> [->] (2,-0.3) to (2.6,-0.3);
       \draw<5> [->] (2,-0.7) to (2.6,-0.7);
       \draw<6> [->] (2,-1.7) to (2.6,-1.7);
-      \draw<7> [->] (2,-2.7) to (2.6,-2.7);
+      \draw<7-> [->] (2,-2.7) to (2.6,-2.7);
   \end{tikzpicture}
   }
 \end{latex}
 
-## Relaxed Memory Models -- Why?
+## Why Relaxed Memory?
 
 - memory significantly slower that the processor cores
 - processor has caches to speed up execution
@@ -146,7 +148,7 @@ void thread0() {              void thread1() {
 
   . . .
 
-- overall behaviour of memory described by **(relaxed) memory model**
+- overall behaviour described by **(relaxed) memory model**
 
 ## Memory-Model-Aware Analysis
 
@@ -195,6 +197,7 @@ int a = _load( &y );
   - extra memory consumption
   - speed of operations
 - most of my work aims here
+- I will primarily use bounded ordering of instructions
 
 ## Aims of the Work
 
