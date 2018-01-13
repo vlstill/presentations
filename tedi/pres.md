@@ -8,7 +8,7 @@ header-includes:
     - \input{defs}
 
 lang: czech, english
-date: 16\. ledna 2018
+date: 16th January 2018
 ...
 
 ## Verification of Parallel Programs I
@@ -58,8 +58,8 @@ int x, y = 0;
 void thread0() {              void thread1() {
     y = 1;                        x = 1;
     int a = x;                    int b = y;
-                                  int c = x;
-}                             }
+}                                 int c = x;
+                              }
 
 ```
 
@@ -133,7 +133,7 @@ void thread0() {              void thread1() {
 
 ## Why Relaxed Memory?
 
-- memory significantly slower that the processor cores
+- memory significantly slower than processor cores
 - processor has caches to speed up execution
 
   . . .
@@ -152,7 +152,7 @@ void thread0() {              void thread1() {
 ## Memory-Model-Aware Analysis -- My Approach
 
 - encode the memory model into the program
-- verify it using verifier without memory model support
+- verify it using a verifier without memory model support
   - e.g. DIVINE, a lot of other verifiers
   - program transformation instead of modification of the verifier
 
@@ -181,7 +181,7 @@ int a = _load( &y );
 
 **program transformation**
 
-- relatively straight-forward
+- relatively straightforward
 - possibility of improvement with static analysis
 - memory model independent
 
@@ -191,21 +191,21 @@ int a = _load( &y );
 
 - memory model dependent
 - rather complex
-- impacts efficiency a lot
+- impact efficiency a lot
   - amount of nondeterminism
   - extra memory consumption
   - speed of operations
-- most of my work aims here
+- the main aim of my work
 - I will primarily use bounded reordering of instructions
 
 ## Aims of the Work
 
-- implement LLVM-based program transformation for relaxed memory models
+- implement an LLVM-based program transformation for relaxed memory models
   - done and quite stable, unlikely to need significant changes
 
 . . .
 
-- provide efficient support of memory models
+- provide efficient support for memory models
   - for `x86-TSO` and Non-Speculative Writes
   - evaluate using DIVINE, other LLVM-based parallel verifiers
 
@@ -280,7 +280,7 @@ FastTrack
 - primárně mi jde o klasické postupy testování jako jednotkové testování nebo
   stress testing, případně s použitím nástrojů jako thread sanitizer nebo
   helgrind
-- FastTrack umí detekovat data race, ale nevidím jak by bylo možné jen adaptovat
+- FastTrack umí detekovat data race, ale nevidím, jak by bylo možné jej adaptovat
   pro hledání chyb v lock-free programech v C/C++: pokud jsou všechny sdílené
   proměnné označeny jako atomické, pak podle C/C++ v programu nejsou data races,
   ale mohou se v něm snadno projevit chyby plynoucí z relaxované paměti
@@ -293,7 +293,7 @@ přístup, který nemusí odhalit v programu chyby?
 \end{quote}
 
 - *soundness*: analyzátor může neskončit nebo odpovědět NEVÍM, pokud však
-  odpoví ANO/NE odpověď musí být správná
+  odpoví ANO/NE, odpověď musí být správná
   - např. bounded model checker, který při detekci překročení omezení odpoví
     NEVÍM může být \uv{sound}, pokud opoví ANO tak není \uv{sound}
 - *completeness*: analyzátor musí skončit pro programy, které mají konečný stavový
@@ -323,7 +323,7 @@ a komplexnosti analyzovaného kódu? Na jaké databázi zdrojových kódů je
 funknčnost nástroje testována?
 \end{quote}
 
-- u pralelních programů záleží především na množství vláken a míře jejich
+- u paralelních programů záleží především na množství vláken a míře jejich
   komunikace
   - lock-free je typicky náročnější než program korektně pracující se zámky
   - jednodušší lock-free datové struktury na 2-4 vláknech
@@ -361,7 +361,7 @@ kterých oblastech bude hlavním přínosem hledání chyb?
   - vždy: riziko chyb v překladu LLVM na binární kód, v DIVINE
     - také v překladači/knihovně při překladu výsledné binárky jiným překladačem
 - omezením je velikost analyzovaného programu
-  - pro velké programy plánovaný bungfinding mód v DIVINE
+  - pro velké programy plánovaný bugfinding mód v DIVINE
 
 ## Otázky: Petr Švenda IV
 
