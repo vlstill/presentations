@@ -149,7 +149,7 @@ void thread0() {              void thread1() {
 
 - overall behaviour described by **(relaxed) memory model**
 
-## Memory-Model-Aware Analysis -- My Approach
+## Memory-Model-Aware Analysis -- My Approach I
 
 - encode the memory model into the program
 - verify it using a verifier without memory model support
@@ -177,7 +177,7 @@ int a = _load( &y );
 
 - `_load`, `_store` simulate the memory model
 
-## Implementation of Relaxed Memory Model
+## Memory-Model-Aware Analysis -- My Approach II
 
 **program transformation**
 
@@ -191,11 +191,9 @@ int a = _load( &y );
 
 - memory model dependent
 - rather complex
-- impact efficiency a lot
+- impact efficiency a lot $\rightarrow$ the main aim of my work
+  - efficient data structures (time & memory)
   - amount of nondeterminism
-  - extra memory consumption
-  - speed of operations
-- the main aim of my work
 - I will primarily use bounded reordering of instructions
 
 ## Aims of the Work
