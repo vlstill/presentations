@@ -318,7 +318,7 @@ pokrýt přístupy definovanými v sekci 4.1.1.
 ## Otázky: Petr Švenda I
 
 \begin{quote}
-Jaké jsou praktické omezení akutálního nástroje z pohledu velikosti
+Jaká jsou praktická omezení akutálního nástroje z pohledu velikosti
 a komplexnosti analyzovaného kódu? Na jaké databázi zdrojových kódů je
 funknčnost nástroje testována?
 \end{quote}
@@ -334,8 +334,8 @@ funknčnost nástroje testována?
 ## Otázky: Petr Švenda II
 
 \begin{quote}
-Jaké je strovnání vyvíjeného nástroje DIVINE (a speciálně jeho část
-řešná studentem v rámci předložených tezí) s dalšími výzkumnými i komerčně
+Jaké je strovnání vyvíjeného nástroje DIVINE (a speciálně jeho části
+řešené studentem v rámci předložených tezí) s dalšími výzkumnými i komerčně
 dostupnými nástroji?
 \end{quote}
 
@@ -349,7 +349,8 @@ dostupnými nástroji?
 
 ## Otázky: Petr Švenda III
 
-\begin{quote}Dále bych požádal o bližší vysvětlení pozice nástroje DIVINE z
+\begin{quote}
+Dále bych požádal o bližší vysvětlení pozice nástroje DIVINE z
 pohledu formální verifikace vs. hledání chyb. Pro jaké typy kontrolovaných
 programů lze očekávat realizovatelnost kompletní formální verifikace a ve
 kterých oblastech bude hlavním přínosem hledání chyb?
