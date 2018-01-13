@@ -269,6 +269,9 @@ int a = _load( &y );
 
 ## Otázky: Tomáš Vojnar I
 
+\newcounter{finalframe}
+\setcounter{finalframe}{\value{framenumber}}
+
 \begin{quote}
 V práci je několikrát uvedeno, že testování není pro paralelní programy
 užitečné. V souvislosti s tím bych se rád zeptal, kam přesně klade doktorand
@@ -375,3 +378,6 @@ bariér tak, aby se nástrojem detekovaný problém ihned odstranil?
   relaxovaným paměťovým modelem
 - v principu by to mělo být možné detekovat \uv{relaxované chování}, ale přijde
   mi smysluplnější soustředit se spíše na efektivitu hledání chyb
+
+\setcounter{framenumber}{\value{finalframe}}
+\addtocounter{framenumber}{-2}
