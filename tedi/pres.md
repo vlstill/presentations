@@ -209,7 +209,7 @@ int a = _load( &y );
 
 . . .
 
-- explore heuristically-directed exploration to increase efficiency of analysis
+- explore heuristically-directed exploration to increase efficiency
   - tighter integration with the analysis tool
 
 . . .
@@ -275,7 +275,7 @@ V práci je několikrát uvedeno, že testování není pro paralelní programy
 užitečné. V souvislosti s tím bych se rád zeptal, kam přesně klade doktorand
 hranici pojmu testování a zda za neužitečné považuje i přístupy, jako je
 systematické testování či dynamická analýza s využitím algoritmů jako např.
-FastTrack
+FastTrack.
 \end{quote}
 
 - primárně mi jde o klasické postupy testování jako jednotkové testování nebo
@@ -347,6 +347,8 @@ dostupnými nástroji?
   - DIVINE má typicky lepší podporu jazyka (především u C++)
   - typicky jiný princip (bounded MC, stateless MC, symbolická exekuce)
     $\rightarrow$ jiné kompromisy
+  - přístup k relaxované paměti také různý: omezení přeuspořádání, omezení
+    množství přepnutí kontextu, …
 
 ## Otázky: Petr Švenda III
 
@@ -374,6 +376,7 @@ bariér tak, aby se nástrojem detekovaný problém ihned odstranil?
 
 - není vždy zřejmé, co má být správné chování, či jestli je chyba způsobená
   relaxovaným paměťovým modelem
+- míříme na programátora, který \uv{ví co dělá} ale potřebuje kontrolu
 - v principu by to mělo být možné detekovat \uv{relaxované chování}, ale přijde
   mi smysluplnější soustředit se spíše na efektivitu hledání chyb
 
