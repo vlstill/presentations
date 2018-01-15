@@ -45,11 +45,17 @@ void thread1() {
 
 - we focus on C and C++
 
+  . . .
+
 - program is translated into LLVM intermediate language
 
 - LLVM is executed by the model checker
 
 - exploration of all possible runs of the program
+
+  . . .
+
+- detect assertions, memory errors, compiler traps, …
 
 ## Relaxed Memory Example
 
