@@ -1,6 +1,6 @@
 ---
 vim: spell spelllang=en
-title: Memory-Model-Aware Analysis of Parallel Programs
+title: Memory-Model-Aware Analysis\newline of Parallel Programs
 subtitle: PhD Thesis Proposal
 author:
     - Vladimír Štill
@@ -139,7 +139,7 @@ void thread0() {              void thread1() {
 
 ## Why Relaxed Memory?
 
-- memory significantly slower than processor cores
+- memory is significantly slower than processor cores
 - processor has caches to speed up execution
 
   . . .
@@ -153,7 +153,7 @@ void thread0() {              void thread1() {
 
   . . .
 
-- overall behaviour described by **(relaxed) memory model**
+- overall behaviour described by a **(relaxed) memory model**
 
 ## Memory-Model-Aware Analysis -- My Approach I
 
@@ -188,7 +188,7 @@ int a = _load( &y );
 **program transformation**
 
 - relatively straightforward
-- possibility of improvement with static analysis
+- can be improved with static analysis
 - memory model independent
 
 . . .
@@ -221,7 +221,7 @@ int a = _load( &y );
 . . .
 
 - analysis of very weak memory models
-  - e.g. ARM and POWER which can feature write reordering
+  - e.g. ARM and POWER, which can feature write reordering
 
 . . .
 
@@ -234,7 +234,7 @@ int a = _load( &y );
 \fcite{RSB15TC}
 
 - tree-based compression scheme, custom allocation scheme
-- I have made part of the implementation (compression), full evaluation, and part of the text
+- I have made part of the implementation (compression), whole evaluation, and part of the text
 - I have presented this at SEFM 2015 (rank B)
 
 ## Publications II
@@ -243,7 +243,7 @@ int a = _load( &y );
 
 \fcite{SRB15weakmem}
 
-- analysis of programs under the TSO memory model using LLVM transformation
+- analysis of programs under the `x86-TSO` memory model using LLVM transformation
 - I am the main author of this paper
 - I have also presented this at MEMICS 2015
 
@@ -302,9 +302,9 @@ přístup, který nemusí odhalit v programu chyby?
 - *soundness*: analyzátor může neskončit nebo odpovědět NEVÍM, pokud však
   odpoví ANO/NE, odpověď musí být správná
   - např. bounded model checker, který při detekci překročení omezení odpoví
-    NEVÍM může být \uv{sound}, pokud opoví ANO tak není \uv{sound}
+    NEVÍM, může být \uv{sound}, pokud opoví ANO, není \uv{sound}
 - *completeness*: analyzátor musí skončit pro programy, které mají konečný stavový
-  prostor pod modelem sekvenční konzistence a když skončí, tak dát výsledek
+  prostor pod modelem sekvenční konzistence, a když skončí, dát výsledek
   ANO/NE
 
 ## Otázky: Tomáš Vojnar III
@@ -333,7 +333,7 @@ funknčnost nástroje testována?
 - u paralelních programů záleží především na množství vláken a míře jejich
   komunikace
   - lock-free je typicky náročnější než program korektně pracující se zámky
-  - jednodušší lock-free datové struktury na 2-4 vláknech
+  - jednodušší lock-free datové struktury na 2--4 vláknech
   - složitější na 2 vláknech
 - testy: cca 700 testů na veškerou funkcionalitu DIVINE
   - vlastní testy, testy C, C++ knihovny
@@ -353,7 +353,7 @@ dostupnými nástroji?
   - DIVINE má typicky lepší podporu jazyka (především u C++)
   - typicky jiný princip (bounded MC, stateless MC, symbolická exekuce)
     $\rightarrow$ jiné kompromisy
-  - přístup k relaxované paměti také různý: omezení přeuspořádání, omezení
+  - přístup k relaxované paměti také může být různý: omezení přeuspořádání, omezení
     množství přepnutí kontextu, …
 
 ## Otázky: Petr Švenda III
@@ -369,7 +369,8 @@ kterých oblastech bude hlavním přínosem hledání chyb?
   - **relaxovaná paměť**: limit na množství přeuspořádaných instrukcí
   - otevřené programy (verifikace pro všechny vstupy): nyní jen omezená podpora
   - vždy: riziko chyb v překladu LLVM na binární kód, v DIVINE
-    - také v překladači/knihovně při překladu výsledné binárky jiným překladačem
+    - také v překladači/knihovně při překladu výsledného spustitelného programu
+      jiným překladačem
 - omezením je velikost analyzovaného programu
   - pro velké programy plánovaný bugfinding mód v DIVINE
 
@@ -382,8 +383,8 @@ bariér tak, aby se nástrojem detekovaný problém ihned odstranil?
 
 - není vždy zřejmé, co má být správné chování, či jestli je chyba způsobená
   relaxovaným paměťovým modelem
-- míříme na programátora, který \uv{ví co dělá} ale potřebuje kontrolu
-- v principu by to mělo být možné detekovat \uv{relaxované chování}, ale přijde
+- míříme na programátora, který \uv{ví, co dělá}, ale potřebuje kontrolu
+- v principu by mělo být možné detekovat \uv{relaxované chování}, ale přijde
   mi smysluplnější soustředit se spíše na efektivitu hledání chyb
 
 \setcounter{framenumber}{\value{finalframe}}
