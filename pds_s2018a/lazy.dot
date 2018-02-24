@@ -1,0 +1,62 @@
+digraph lazy {
+    node [ fontname = UbuntuMono, shape = record ]
+    edge [ fontname = UbuntuMono ]
+    graph [ ranksep = "0.15" ]
+
+    subgraph cluster_orginal {
+        ti [ label = "{x = 0 | y = 0 | …} | {SB0 | ∅ }" ]
+
+        ti -> tit0 [label = "t0: x ← 1" ]
+        ti -> tit1 [label = "t1: read(x) → 0"]
+        tit0 [ label = "{x = 0 | y = 0 | …} | {SB0 | x ← 1 }" ]
+        tit1 [ label = "{x = 0 | y = 0 | …} | {SB0 | ∅ }" ]
+
+        tit1 -> td0
+
+        tit0 -> tit0t0 [label = "t0: y ← 1" ]
+        tit0t0 [ label = "{x = 0 | y = 0 | …} | {SB0 | x ← 1 | y ← 1 }" ]
+        tit0 -> tit0f [label = "f: x ← 1"]
+        tit0f [ label = "{x = 1 | y = 0 | …} | {SB0 | ∅ }" ]
+
+        tit0f -> td1 [label = "t1: read(x) → 1"]
+
+        tit0t0 -> tit0t0f [label = "f: x ← 1"]
+        tit0t0f [ label = "{x = 1 | y = 0 | …} | {SB0 | y ← 1 }" ]
+
+        tit0t0f -> tit0t0ff [ label = "f: y ← 1"]
+        tit0t0ff [ label = "{x = 1 | y = 1 | …} | {SB0 | ∅ }" ]
+        tit0t0f -> td2 [label = "t1: read(x) → 1"]
+        tit0t0ff -> td3 [label = "t1: read(x) → 1"]
+
+        td0 [ label = "…", shape = none ]
+        td1 [ label = "…", shape = none ]
+        td2 [ label = "…", shape = none ]
+        td3 [ label = "…", shape = none ]
+
+        label = "traditional"
+        color = black
+    }
+
+    subgraph cluster_lazy {
+        li [ label = "{x = 0 | y = 0 | …} | {SB0 | ∅ }" ]
+
+        li -> lit0 [label = "t0: x ← 1\lt0: y ← 1" ]
+        li -> lit1 [label = "t1: read(x) → 0"]
+        lit0 [ label = "{x = 0 | y = 0 | …} | {SB0 | x ← 1 | y ← 1 }" ]
+        lit1 [ label = "{x = 0 | y = 0 | …} | {SB0 | ∅ }" ]
+
+        lit0 -> ld1 [label = "t1: read(x) → 0"]
+        ld1 [ label = "{x = 0 | y = 0 | …} | {SB0 | x ← 1 }" ]
+
+        lit0 -> ld2 [label = "t1: read(x) → 1", color = "#009900", style = bold]
+
+        lit1 -> ld0
+
+        ld0 [ label = "…", shape = none ]
+        ld1 [ label = "…", shape = none ]
+        ld2 [ label = "…", shape = none ]
+
+        label = "lazy"
+        color = black
+    }
+}

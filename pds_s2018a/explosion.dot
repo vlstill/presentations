@@ -1,0 +1,36 @@
+digraph explosion {
+    node [ fontname = UbuntuMono, shape = record ]
+    edge [ fontname = UbuntuMono ]
+
+    i [ label = "{x = 0 | y = 0 | z = 0} || {SB0 | ∅ } | {SB1 | ∅ }", color = "#009900", style = bold ]
+
+    i -> s0 [label = "t0: x ← 1"]
+    i -> s1 [label = "t1: y ← 1"]
+
+    s0 [ label = "{x = 0 | y = 0 | z = 0} || {SB0 | x ← 1 } | {SB1 | ∅ }", color = "#009900", style = bold ]
+    s1 [ label = "{x = 0 | y = 0 | z = 0} || {SB0 | ∅ } | {SB1 | y ← 1 }", color = "#009900", style = bold ]
+
+    s0 -> s0f0 [ label = "flush(SB0)", color = red, style = bold ]
+    s0 -> s0s1 [ label = "t1: y ← 1" ]
+
+    s0f0 [ label = "{x = 1 | y = 0 | z = 0} || {SB0 | ∅ } | {SB1 | ∅ }" ]
+    s0s1 [ label = "{x = 0 | y = 0 | z = 0} || {SB0 | x ← 1 } | {SB1 | y ← 1 }", color = "#009900", style = bold ]
+
+    s1 -> s1f1 [ label = "flush(SB1)", color = red, style = bold ]
+    s1 -> s0s1 [ label = "t0: x ← 1" ]
+
+    s1f1 [ label = "{x = 0 | y = 1 | z = 0} || {SB0 | ∅ } | {SB1 | ∅ }" ]
+
+    s0f0 -> s0f0s1 [ label = "t1: y ← 1" ]
+    s0f0s1 [ label = "{x = 1 | y = 0 | z = 0} || {SB0 | ∅ } | {SB1 | y ← 1 }" ]
+    s0f0s1 -> s0f0s1f1 [ label = "flush(SB1)", color = red, style = bold ]
+    s0f0s1f1 [ label = "{x = 1 | y = 1 | z = 0} || {SB0 | ∅ } | {SB1 | ∅ }" ]
+
+    s1f1 -> s1f1s0 [ label = "t0: x ← 1" ]
+    s1f1s0 [ label = "{x = 0 | y = 1 | z = 0} || {SB0 | x ← 1 } | {SB1 | ∅ }" ]
+    s1f1s0 -> s0f0s1f1 [ label = "flush(SB1)", color = red, style = bold ]
+    s0f0s1f1 [ label = "{x = 1 | y = 1 | z = 0} || {SB0 | ∅ } | {SB1 | ∅ }" ]
+
+    s0s1 -> s0f0s1 [ label = "flush(SB0)", color = red, style = bold ]
+    s0s1 -> s1f1s0 [ label = "flush(SB1)", color = red, style = bold ]
+}

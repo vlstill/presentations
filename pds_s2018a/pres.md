@@ -1,6 +1,6 @@
 ---
 vim: spell spelllang=en fo+=t tw=80
-title: Lazy TSO Verification
+title: Lazy `x86`-TSO
 subtitle: and why it is not done yet
 author: Vladimír Štill
 header-includes:
@@ -145,7 +145,7 @@ void thread0() {              void thread1() {
 
   . . .
 
-- reordering of instructions might be also observable
+- reordering of instructions might be also observable (not on `x86`)
 
   . . .
 
@@ -190,5 +190,74 @@ int a = _load( &y );
 - impact efficiency a lot $\rightarrow$ the main aim of my work
   - efficient data structures (time & memory)
   - amount of nondeterminism
-- I will primarily use bounded reordering of instructions
+- bounded reordering of (effects of) instructions
 
+## State Space Explosion {.t}
+
+\begin{latex}
+\vspace*{-1.8em}%
+\includegraphics[width=0.85\textwidth]{explosion}
+
+\vspace*{-23em}
+\visible<2->{
+    \hspace*{17em}
+    \begin{minipage}{0.4\textwidth}
+    flushes not needed if noone reads given value
+    \end{minipage}}
+\end{latex}
+
+## Critical Observations
+
+1.  not all memory is actually accessible by more than one thread (*shared*)
+
+    . . .
+
+2.  not all shared memory is actually *accessed* by more that one thread
+
+    . . .
+
+3.  even memory accessed by more than one threads is usually not accessed by *all
+    of them all the time*
+
+
+. . .
+
+- DIVINE's state space reduction uses these observations
+
+  . . .
+
+- but relaxed memory simulation has to be adapted to support this
+
+## Lazy `x86`-TSO
+
+- instead of flushing store buffers nondeterministically, we flush them only
+  when needed
+
+  - i.e. when someone tries to load given address
+  - need to simulate all outcomes → nondeterminism in load
+
+      . . .
+
+  - how to handle other entries in store buffer?
+
+. . .
+
+- interaction with state-space reduction
+  - store buffers are shared memory for reduction
+  - need to ensure reduction does not see every operation as visible
+
+    . . .
+
+  - hide what happens inside store buffers from reduction
+
+    . . .
+
+  - corner cases: barriers, full store buffers
+
+
+<!--
+## Lazy `x86`-TSO {.t}
+
+\vspace*{-1.8em}
+\includegraphics[scale=0.34]{lazy}
+-->
