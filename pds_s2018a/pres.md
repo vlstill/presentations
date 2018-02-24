@@ -1,10 +1,9 @@
 ---
 vim: spell spelllang=en fo+=t tw=80
-title: Lazy `x86`-TSO
-subtitle: and why it is not done yet
+title: "Lazy `x86`-TSO Memory Model\\newline for C++ Verification"
 author: Vladimír Štill
 header-includes:
-    - \newcommand{\redon}[2]{{\only<#1>{\color{red}}#2}}
+    - \input{defs}
 lang: english
 date: 26th February 2018
 ...
@@ -39,7 +38,7 @@ void thread1() {
 
 ##  Verification of Parallel Programs II
 
-- we focus on C and C++
+- C and C++
 
   . . .
 
@@ -47,7 +46,11 @@ void thread1() {
 
 - LLVM is executed by the model checker
 
-- exploration of all possible runs of the program
+- exploration of \mbox{\only<-2>{all possible}\only<3->{\sout{all possible}}} runs of the program
+
+  . . .
+
+  - actually of some representants of classes of equivalent runs
 
   . . .
 
@@ -151,7 +154,17 @@ void thread0() {              void thread1() {
 
 - overall behaviour described by a **(relaxed) memory model**
 
-## Memory-Model-Aware Analysis -- My Approach I
+. . .
+
+- now: `x86`-TSO memory model
+
+  . . .
+
+  - stores are performed to store buffer
+  - core-local FIFO buffers
+  - entries flushed eventually to the memory
+
+## Memory-Model-Aware Analysis I
 
 - encode the memory model into the program
 - verify it using a verifier without memory model support
@@ -173,20 +186,24 @@ int a = _load( &y );
 ```
 
 - `_load`, `_store` simulate the memory model
+- (more complex in practice)
 
-## Memory-Model-Aware Analysis -- My Approach II
+## Memory-Model-Aware Analysis II
 
 **program transformation**
 
 - can be improved with static analysis
 - memory model independent
+- most complexity is technical
 
 . . .
+
+\bigskip
 
 **memory operations**
 
 - memory model dependent
-- rather complex
+- rather complex (theoretically & technically)
 - impact efficiency a lot $\rightarrow$ the main aim of my work
   - efficient data structures (time & memory)
   - amount of nondeterminism
@@ -208,15 +225,15 @@ int a = _load( &y );
 
 ## Critical Observations
 
-1.  not all memory is actually accessible by more than one thread (*shared*)
+#.  not all memory is actually accessible by more than one thread (*shared*)
 
     . . .
 
-2.  not all shared memory is actually *accessed* by more that one thread
+#.  not all shared memory is actually *accessed* by more that one thread
 
     . . .
 
-3.  even memory accessed by more than one threads is usually not accessed by *all
+#.  even memory accessed by more than one threads is usually not accessed by *all
     of them all the time*
 
 
@@ -230,30 +247,65 @@ int a = _load( &y );
 
 ## Lazy `x86`-TSO
 
-- instead of flushing store buffers nondeterministically, we flush them only
-  when needed
+instead of flushing store buffers nondeterministically, flush them only when
+needed
 
-  - i.e. when someone tries to load given address
-  - need to simulate all outcomes → nondeterminism in load
+- i.e. when someone tries to load given address
+- need to simulate all outcomes → nondeterminism in load
 
-      . . .
+  . . .
 
-  - how to handle other entries in store buffer?
+- how to handle other entries in store buffer?
+
+  . . .
+
+- memory barriers and compare-and-swap/read-modify-write not fully lazy
+
+  . . .
+
+  - flushing of local store buffer can nondeterministically flush entries from
+    other buffers
+  - fully lazy barriers would show down DiOS
+
+## Lazy `x86`-TSO -- Current Status I
+
+the lazy simulation of `x86`-TSO store buffers mostly done
+
+- one known missing corner case
+  - in sequence of stores to unrelated addresses
+  - solution will probably increase lazyness and therefore performance
+
+- probably some space for speed improvement
+
+## Lazy `x86`-TSO -- Current Status II
+
+current delays caused by interaction with state space reductions
+
+  . . .
+
+  - store buffers look like shared memory for reduction
+  - ensure reduction does not see every operation as visible
+
+    . . .
+
+  - not everything in memory model implementation can be hidden -- "real"
+    loads/stores
+
+## Lazy `x86`-TSO -- Future
+
+#. finish implementation
+#. add more tests and benchmarks
+#. compare with other tools
+#. publish
+
+    . . .
+
+#. SV-COMP demo category?
+#. $\text{(optimize \& improve \& publish)}^+$
 
 . . .
 
-- interaction with state-space reduction
-  - store buffers are shared memory for reduction
-  - need to ensure reduction does not see every operation as visible
-
-    . . .
-
-  - hide what happens inside store buffers from reduction
-
-    . . .
-
-  - corner cases: barriers, full store buffers
-
+\bigskip\bigskip\hfill That is all… Thank You!
 
 <!--
 ## Lazy `x86`-TSO {.t}
