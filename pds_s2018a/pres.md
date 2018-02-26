@@ -273,7 +273,7 @@ the lazy simulation of `x86`-TSO store buffers mostly done
 
 - one known missing corner case
   - in sequence of stores to unrelated addresses
-  - solution will probably increase lazyness and therefore performance
+  - solution will probably increase laziness and therefore performance
 
 - probably some space for speed improvement
 
