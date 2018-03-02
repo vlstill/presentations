@@ -158,3 +158,38 @@ void t2() {
 - tools: Herd, RCMC, …
 
 # Effective Stateless Model Checking\newline for C/C++ Concurrency\newline\newline\small\makebox[0.4\textwidth][c]{Michalis Kokologiannakis}\makebox[0.4\textwidth][c]{Ori Lahav}\newline\makebox[0.4\textwidth][c]{Konstantinos Sagonas}\makebox[0.4\textwidth][c]{Viktor Vafeiadis}
+
+## Introduction
+
+### Stateless Model Checking
+
+- for parallel programs, often in real-world languages
+- originally based on operations (interleaving) semantics
+- explores state space
+- does not store closed set
+
+  . . .
+
+- cannot handle non-terminating programs
+- can explore some states repeatedly
+
+. . .
+
+### Dynamic Partial Order Reduction
+
+- eliminates some traces, reduces redundant exploration
+- usually based on some notion of equivalence of traces
+- there are optimal techniques for certain equivalences
+
+## Execution Graphs
+
+the technique from the paper is based on execution graphs, not interleaving
+
+- records memory operations
+- values of writes
+- origin of value for reads
+- dependencies
+
+\input{exg00}
+
+- $sb$ = sequenced before; $rf$ = read-from
