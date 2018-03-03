@@ -6,8 +6,8 @@ digraph exg00 {
     w1 [label = "W(x, 1)"]
     w2 [label = "W(x, 1)"]
     w0 -> {w1,w2} [label = "sb"]
+    w0 -> r1 [label = "sb"]
     r1 [label = "R(x)"]
-    w0 -> r1 [style = "invis" ]
     w2 -> r1 [label = "rf", constraint = false, style = dashed, color = "#009900"]
 }
 // vim: nospell

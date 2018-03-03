@@ -70,7 +70,7 @@ int main() {
 
   . . .
 
-- atomic ordering can be relaxed by specifying *memory order*
+- atomic ordering can be relaxed
 
 ## Memory Model
 
@@ -82,9 +82,10 @@ int main() {
 - what synchronization is guaranteed
 - what reordering can be observed
 
-## C11 Memory Model
+## C11/C++11 Memory Model
 
 - designed to allow high-performance even of very relaxed hardware (POWER/ARM)
+
 - different levels of synchronization: **memory order**
 
     ```{.cpp}
@@ -93,7 +94,7 @@ int main() {
 
 - ranges from *almost no guarantees* to *interleaving semantics*
 
-## C11 Memory Orders I
+## Memory Orders I
 
 - **relaxed** -- only guarantees that operations *on the single location* are
   ordered
@@ -101,13 +102,13 @@ int main() {
   - termination indication (from signal handler, …)
   * can be reordered with other operations
 
-## C11 Memory Orders II
+## Memory Orders II
 
 - **release** -- for write operations
 * **acquire** -- for read operations
 
 * together ensure all previous writes will be visible when a release write is
-  observed by an acquire store (simplified)
+  observed by an acquire read (simplified)
   - *previous* is anything happening control-flow-before in the writing thread
 
 ```{.cpp}
@@ -124,13 +125,13 @@ void t2() {
 }
 ```
 
-## C11 Memory Orders III
+## Memory Orders III
 
 - **acquire+release** -- for read-modify-write/compare-and-swap operations
 
 * **sequential consistency** -- all SC operations are in a total order
   - the default
-  - atomic in other programming languages are usually SC
+  - atomics in other programming languages are usually SC
 
 . . .
 
@@ -140,7 +141,7 @@ void t2() {
   - relaxed for just counting/flagging objects
 - mutexes synchronize as SC
 
-## The Two Main Approaches
+## The Two Main Analysis Approaches
 
 ### Operational-Semantics Based Analysis
 
@@ -183,7 +184,8 @@ void t2() {
 
 ## Execution Graphs I
 
-the technique from the paper is based on execution graphs, not interleaving
+the technique from the paper is based on execution graphs, not interleaving &
+DPOR
 
 - records memory operations
 - values of writes
@@ -207,6 +209,7 @@ a = x;   ||   x = 1;
 b = x;   ||
 ```
 
+\begin{center}
 \begin{tikzpicture}[>=latex,line join=bevel,node distance = 7em]
 
   \draw[draw=none, use as bounding box] (-7em,0.7em) rectangle (7em, -13em);
@@ -228,6 +231,7 @@ b = x;   ||
   \draw<8-9> [->, green, dashed] (w1) edge node[black, above]{$rf$} (r0);
   \draw<9-> [->, green, dashed] (w1) edge node[black, above]{$rf$} (r1);
 \end{tikzpicture}
+\end{center}
 
 - \showon{1}{initialization}
   \showon{2}{in what order should actions be added?}
@@ -238,6 +242,7 @@ b = x;   ||
   \showon{7}{no… revisit reads}
   \showon{8-9}{option 1: revisit \texttt{a = x} \showon{9}{+ add \texttt{b = x}}}
   \showon{10}{option 2: revisit \texttt{b = x}}
+\par\bigskip\bigskip\bigskip\bigskip\par
 
 ## Exploration Requirements
 
@@ -333,3 +338,13 @@ generate all consistent graphs and
 ## Results
 
 <http://plv.mpi-sws.org/rcmc/paper.pdf>
+
+## Summary
+
+- tool RCMC
+
+- analysis of C under the repaired C11 memory model
+
+- stateless model checking, building execution graphs
+
+- loop unrolling to ensure termination
