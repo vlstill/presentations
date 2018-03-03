@@ -1,13 +1,13 @@
 digraph exg00 {
     node [ shape = none ]
-    graph [ ranksep = "0" ]
+    graph [ ranksep = 0, nodesep = 0 ]
 
-    w0 [label = "W(x, 0)", rank = 0]
-    w1 [label = "W(x, 1)", rank = 1]
-    w2 [label = "W(x, 2)", rank = 1]
-    w0 -> {w1,w2} [label = "sb", style = dashed]
-    r1 [label = "R(x)", rank = 1]
+    w0 [label = "W(x, 0)"]
+    w1 [label = "W(x, 1)"]
+    w2 [label = "W(x, 1)"]
+    w0 -> {w1,w2} [label = "sb"]
+    r1 [label = "R(x)"]
     w0 -> r1 [style = "invis" ]
-    w2 -> r1 [label = "rf", constraint=false]
+    w2 -> r1 [label = "rf", constraint = false, style = dashed, color = "#009900"]
 }
 // vim: nospell

@@ -3,3 +3,13 @@
 \renewcommand{\titlepage}{\otp\addtocounter{framenumber}{-1}}
 \newcommand{\redon}[2]{{\only<#1>{\color{red}}#2}}
 \usepackage[normalem]{ulem}
+\newcommand{\showon}[2]{\only<#1>{#2}}
+\usetikzlibrary{positioning,fit,calc,scopes}
+\tikzset{
+  % use option [visible on=<+->] to uncover parts of a tikzpicture
+  invisible/.style={opacity=0},
+  visible on/.style={alt=#1{}{invisible}},
+  alt/.code args={<#1>#2#3}{%
+    \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}} % \pgfkeysalso doesn't change the path
+  },
+}

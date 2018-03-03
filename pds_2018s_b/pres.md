@@ -164,7 +164,7 @@ void t2() {
 ### Stateless Model Checking
 
 - for parallel programs, often in real-world languages
-- originally based on operations (interleaving) semantics
+- originally based on operational (interleaving) semantics
 - explores state space
 - does not store closed set
 
@@ -181,7 +181,7 @@ void t2() {
 - usually based on some notion of equivalence of traces
 - there are optimal techniques for certain equivalences
 
-## Execution Graphs
+## Execution Graphs I
 
 the technique from the paper is based on execution graphs, not interleaving
 
@@ -193,3 +193,143 @@ the technique from the paper is based on execution graphs, not interleaving
 \input{exg00}
 
 - $sb$ = sequenced before; $rf$ = read-from
+
+## Execution Graphs II
+
+not all execution graphs are valid = *consistent*
+
+\bigskip\input{exg01}
+
+## Execution Graph Generation {.t}
+
+```{.cpp}
+a = x;   ||   x = 1;
+b = x;   ||
+```
+
+\begin{tikzpicture}[>=latex,line join=bevel,node distance = 7em]
+
+  \draw[draw=none, use as bounding box] (-7em,0.7em) rectangle (7em, -13em);
+
+  \node (w0) at (0,0) {$W(x, 0)$};
+  \node<3-> (r0) [below left of = w0] {$R(x)$};
+  \node<4-7,9-> (r1) [below of = r0] {$R(x)$};
+  \node<5-> (w1) [below right of = w0] {$W(x, 1)$};
+
+  \definecolor{green}{rgb}{0.0,0.6,0.0};
+  \draw<3-> [->] (w0) edge[bend right] node[left]{$sb$} (r0);
+  \draw<3-7,10> [->, green, dashed] (w0) edge node[black, left]{$rf$} (r0);
+
+  \draw<4-7> [->, green, dashed] (w0) edge node[black, left]{$rf$} (r1);
+
+  \draw<4-7,9-> [->] (r0) edge node[left]{sb} (r1);
+  \draw<5-> [->] (w0) edge[bend left] node[right]{$sb$} (w1);
+
+  \draw<8-9> [->, green, dashed] (w1) edge node[black, above]{$rf$} (r0);
+  \draw<9-> [->, green, dashed] (w1) edge node[black, above]{$rf$} (r1);
+\end{tikzpicture}
+
+- \showon{1}{initialization}
+  \showon{2}{in what order should actions be added?}
+  \showon{3}{add \texttt{a = x}}
+  \showon{4}{add \texttt{b = x}}
+  \showon{5}{add \texttt{x = 1}}
+  \showon{6}{explore again adding \texttt{x = 1} first?}
+  \showon{7}{no… revisit reads}
+  \showon{8-9}{option 1: revisit \texttt{a = x} \showon{9}{+ add \texttt{b = x}}}
+  \showon{10}{option 2: revisit \texttt{b = x}}
+
+## Exploration Requirements
+
+generate all consistent graphs and
+
+#.  don't generate any inconsistent graphs
+#.  don't generate any graph multiple times
+#.  don't store generated graphs
+
+## Revisitable Reads
+
+- revisiting reads all the time causes redundant explorations
+- only one instance of read needs to be revisitable
+
+\makebox[\textwidth][c]{
+\begin{tikzpicture}[>=latex,line join=bevel,node distance = 6em]
+    \definecolor{green}{rgb}{0.0,0.6,0.0};
+
+  \begin{scope}
+    \node (w0) at (0,0) {$W(x, 0)$};
+    \node (r0) [below left of = w0, fill = green!50!white] {$R(x)$};
+    \node (w1) [below right of = w0, invisible] {$W(x, 1)$};
+
+    \draw [->] (w0) edge[bend right] node[left]{$sb$} (r0);
+    \draw [->, green, dashed] (w0) edge node[black, left]{$rf$} (r0);
+
+    \node (s1) [draw = black, fit = {(w0) (r0) (w1)}] {};
+  \end{scope}
+
+    %%%%%%%%%%
+
+  \begin{scope}[visible on=<2->]
+    \node (w0n0) at (-8em, -9em) {$W(x, 0)$};
+    \node (r0n0) [below left of = w0n0, fill = green!50!white] {$R(x)$};
+    \node (w1n0) [below right of = w0n0] {$W(x, 1)$};
+
+    \draw [->] (w0n0) edge[bend right] node[left]{$sb$} (r0n0);
+    \draw [->, green, dashed] (w0n0) edge node[black, left]{$rf$} (r0n0);
+    \draw [->] (w0n0) edge[bend left] node[right]{$sb$} (w1n0);
+
+    \node (s1n0) [draw = black, fit = {(w0n0) (r0n0) (w1n0)}] {};
+
+    \draw [->, densely dotted] (s1) edge node[left]{no revisit} (s1n0);
+  \end{scope}
+
+    %%%%%%%%%%
+
+  \begin{scope}[visible on=<3->]
+    \node (w0n1) at (8em, -9em) {$W(x, 0)$};
+    \node (r0n1) [below left of = w0n1] {$R(x)$};
+    \node (w1n1) [below right of = w0n1] {$W(x, 1)$};
+
+    \draw [->] (w0n1) edge[bend right] node[left]{$sb$} (r0n1);
+    \draw [->, green, dashed] (w1n1) edge node[black, above]{$rf$} (r0n1);
+    \draw [->] (w0n1) edge[bend left] node[right]{$sb$} (w1n1);
+
+    \node (s1n1) [draw = black, fit = {(w0n1) (r0n1) (w1n1)}] {};
+
+    \draw [->, densely dotted] (s1) edge node[right]{revisit} (s1n1);
+  \end{scope}
+
+    %%%%%%%%%%
+\end{tikzpicture}
+}
+
+## Efficient Execution Graph Generation
+
+generate all consistent graphs and
+
+#.  don't generate any inconsistent graphs
+#.  don't generate any graph multiple times
+#.  don't store generated graphs
+
+\bigskip
+
+**what is needed?**
+
+- (non)revisitable reads
+
+  . . .
+
+- prefix closed execution graphs -- all prefixes of consistent EG are also
+  consistent
+
+  - not really for C11/C++11 standard's memory model!
+  - paper uses *repaired C11 memory model*
+
+    . . .
+
+  - prefix closed in absence of RMW/CAS & SC atomics
+  - special handling for these (can generate duplicities)
+
+## Results
+
+<http://plv.mpi-sws.org/rcmc/paper.pdf>
