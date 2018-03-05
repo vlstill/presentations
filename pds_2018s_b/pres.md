@@ -141,7 +141,9 @@ void t2() {
   - relaxed for just counting/flagging objects
 - mutexes synchronize as SC
 
-## The Two Main Analysis Approaches
+# Effective Stateless Model Checking\newline for C/C++ Concurrency\newline\newline\small\makebox[0.4\textwidth][c]{Michalis Kokologiannakis}\makebox[0.4\textwidth][c]{Ori Lahav}\newline\makebox[0.4\textwidth][c]{Konstantinos Sagonas}\makebox[0.4\textwidth][c]{Viktor Vafeiadis}
+
+## Prelude: The Two Main Analysis Approaches
 
 ### Operational-Semantics Based Analysis
 
@@ -157,8 +159,6 @@ void t2() {
 - what reordering is allowed?
 - executions graphs
 - tools: Herd, RCMC, …
-
-# Effective Stateless Model Checking\newline for C/C++ Concurrency\newline\newline\small\makebox[0.4\textwidth][c]{Michalis Kokologiannakis}\makebox[0.4\textwidth][c]{Ori Lahav}\newline\makebox[0.4\textwidth][c]{Konstantinos Sagonas}\makebox[0.4\textwidth][c]{Viktor Vafeiadis}
 
 ## Introduction
 
