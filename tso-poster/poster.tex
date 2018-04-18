@@ -1,0 +1,204 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Jacobs Portrait Poster
+% LaTeX Template
+% Version 1.0 (31/08/2015)
+% (Based on Version 1.0 (29/03/13) of the landscape template
+%
+% Created by:
+% Computational Physics and Biophysics Group, Jacobs University
+% https://teamwork.jacobs-university.de:8443/confluence/display/CoPandBiG/LaTeX+Poster
+% 
+% Further modified by:
+% Nathaniel Johnston (nathaniel@njohnston.ca)
+%
+% Portrait version by:
+% John Hammersley
+%
+% The landscape version of this template was downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[final,20pt, a0]{beamer}
+
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage[scale=1.15]{beamerposter} % Use the beamerposter package for laying out the poster
+
+\usetheme{confposter} % Use the confposter theme supplied with this template
+
+
+\usepackage{natbib}
+\setbeamercolor{block title}{fg=ngreen,bg=white} % Colors of the block titles
+\setbeamercolor{block body}{fg=black,bg=white} % Colors of the body of blocks
+\setbeamercolor{block alerted title}{fg=white,bg=dblue!70} % Colors of the highlighted block titles
+\setbeamercolor{block alerted body}{fg=black,bg=dblue!10} % Colors of the body of highlighted blocks
+% Many more colors are available for use in beamerthemeconfposter.sty
+
+%-----------------------------------------------------------
+% Define the column widths and overall poster size
+% To set effective sepwid, onecolwid and twocolwid values, first choose how many columns you want and how much separation you want between columns
+% In this template, the separation width chosen is 0.024 of the paper width and a 4-column layout
+% onecolwid should therefore be (1-(# of columns+1)*sepwid)/# of columns e.g. (1-(4+1)*0.024)/4 = 0.22
+% Set twocolwid to be (2*onecolwid)+sepwid = 0.464
+% Set threecolwid to be (3*onecolwid)+2*sepwid = 0.708
+
+\newlength{\sepwid}
+\newlength{\marginwid}
+\newlength{\onecolwid}
+\newlength{\twocolwid}
+\newlength{\threecolwid}
+% \setlength{\paperwidth}{841mm} % A0 width: 46.8in
+% \setlength{\paperheight}{1189mm} % A0 height: 33.1in
+\setlength{\sepwid}{20mm} % Separation width (white space) between columns
+\setlength{\marginwid}{80mm} % Margin width (white space) left and right
+\setlength{\onecolwid}{214mm} % Width of one column
+\setlength{\twocolwid}{\onecolwid} % Width of two columns
+\addtolength{\twocolwid}{\onecolwid}
+\addtolength{\twocolwid}{\sepwid}
+\setlength{\threecolwid}{0.708\paperwidth} % Width of three columns
+\setlength{\topmargin}{1cm}
+
+\usepackage{xspace}
+\usepackage{pdfpages}
+
+\newcommand{\todo}[1]{\textcolor{red}{#1}}
+\newcommand{\diff}[2]{\textcolor{blue}{#1}\textcolor{red}{\sout{#2}}}
+\newcommand{\comment}[1]{\textcolor{gray}{#1}}
+\newcommand{\symbiotic}{\textsc{Symbiotic}\xspace}
+\newcommand{\ukojak}{\textsc{UKojak}\xspace}
+\newcommand{\predator}{\textsc{PredatorHP}\xspace}
+\newcommand{\ultimate}{\textsc{UKojak}\xspace}
+\newcommand{\llvm}{\textsc{llvm}\xspace}
+\newcommand{\clang}{\textsc{clang}\xspace}
+\newcommand{\gcc}{\textsc{gcc}\xspace}
+\newcommand{\klee}{\textsc{Klee}\xspace}
+
+%-----------------------------------------------------------
+\usepackage{wrapfig}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,arrows.meta,decorations.markings}
+
+\usepackage{graphicx}  % Required for including images
+\usepackage{booktabs} % Top and bottom rules for tables
+\usepackage[english]{babel}
+
+\usepackage{lipsum}
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\titletext}{Lazy Verification of C and C++ under the x86-TSO Memory Model}
+\newcommand{\logowidth}{2.6\baselineskip}
+\title{%
+  \texorpdfstring{%
+    \makebox[\linewidth]{%
+      \noindent\hspace*{0.5em} %
+      \begin{minipage}{\logowidth}%
+          \includegraphics[width=\logowidth]{mu_logo.pdf} %
+      \end{minipage}%
+      \hfill %
+      \begin{minipage}{\linewidth - \logowidth - \logowidth - 3em}\center\titletext\end{minipage} %
+      \hfill %
+      \begin{minipage}{\logowidth}%
+         \includegraphics[width=\logowidth]{fi_logo.pdf} %
+      \end{minipage}
+      \hspace*{0.5em}%
+    }%
+  }
+  {\titletext}} % Poster title
+
+\author{Vladimír Štill \and Jiří Barnat} % Author(s)
+
+\institute{Faculty of Informatics, Masaryk University\vspace*{-3cm}} % Institution(s)
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\addtobeamertemplate{block end}{}{\vspace*{2ex}} % White space under blocks
+\addtobeamertemplate{block alerted end}{}{\vspace*{2ex}} % White space under highlighted (alert) blocks
+
+\setlength{\belowcaptionskip}{2ex} % White space under figures
+\setlength\belowdisplayshortskip{2ex} % White space under equations
+
+\begin{frame}[t] % The whole poster is enclosed in one beamer frame
+
+\begin{columns}[t] % The whole poster consists of three major columns, the second of which is split into two columns twice - the [t] option aligns each column's content to the top
+
+\begin{column}{\marginwid}\end{column} % Empty spacer column
+\begin{column}{\onecolwid} % The first column
+
+\begin{block}{Foo}
+
+\lipsum[1]
+
+\end{block}
+
+\begin{block}{Bar}
+
+\lipsum[2]
+
+\end{block}
+
+\end{column} % End of the first column
+
+\begin{column}{\sepwid}\end{column} % Empty spacer column
+
+\begin{column}{\twocolwid} % Begin a column which is two columns wide (column 2)
+
+\begin{block}{Two columns}
+
+\lipsum[3]
+
+\end{block}
+
+\begin{columns}[t,totalwidth=\twocolwid] % Split up the two columns wide column again
+
+\begin{column}{\onecolwid}
+
+\begin{block}{Xxxx}
+
+\lipsum[4]
+
+\end{block}
+
+\end{column} % End of column 2.1
+
+\begin{column}{\sepwid}\end{column} % Empty spacer column
+\begin{column}{\onecolwid}
+
+\begin{block}{Results}
+
+\lipsum[5]
+
+\end{block}
+
+%----------------------------------------------------------------------------------------
+
+\end{column} % End of column 2.2
+
+\end{columns} % End of the split of column 2
+
+\end{column} % End of the second column
+
+\begin{column}{\sepwid}\end{column} % Empty spacer column
+
+\begin{column}{\marginwid}\end{column} % Empty spacer column
+
+\end{columns} % End of all the columns in the poster
+
+\end{frame} % End of the enclosing frame
+
+\end{document}
+
