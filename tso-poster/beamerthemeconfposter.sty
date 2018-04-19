@@ -15,7 +15,7 @@
 \RequirePackage{textcomp}
 \RequirePackage{amsmath,amssymb}
 \usefonttheme{professionalfonts}
-\newcommand{\makeruleinbox}{{\usebeamercolor[bg]{block alerted title}\centering\hspace*{-0.7cm}\rule{\inboxrule}{0.5cm}}}
+\newcommand{\makeruleinbox}{\begin{usebeamercolor}[bg]{block alerted title}\centering\hspace*{-0.7cm}\rule{\inboxrule}{0.5cm}\end{usebeamercolor}}
 \usepackage{ragged2e}
 
 % Spacing before and inside list environments to add white space before lists and between items inside lists
@@ -198,9 +198,9 @@
    \begin{column}{\linewidth}
     \vskip0cm
     \centering
-    \usebeamercolor{title in headline}{\color{jblue}\Huge{\textbf{\inserttitle}}\\[0.5ex]}
-    \usebeamercolor{author in headline}{\color{fg}\Large{\insertauthor}\\[1ex]}
-    \usebeamercolor{institute in headline}{\color{fg}\large{\insertinstitute}\\[1ex]}
+    \begin{usebeamercolor}{title in headline}\color{fg}\Huge{\textbf{\inserttitle}}\\[0.5ex]\end{usebeamercolor}
+    \begin{usebeamercolor}{author in headline}\color{fg}\Large{\insertauthor}\\[1ex]\end{usebeamercolor}
+    \begin{usebeamercolor}{institute in headline}\color{fg}\large{\insertinstitute}\\[1ex]\end{usebeamercolor}
     \vskip2cm\mbox{}
    \end{column}
    \vspace{1cm}
