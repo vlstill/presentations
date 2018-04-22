@@ -1,1 +1,1367 @@
+@Inbook{Alglave2013,
+    author="Alglave, Jade and Kroening, Daniel and Nimal, Vincent and Tautschnig, Michael",
+   editor="Felleisen, Matthias and Gardner, Philippa",
+    title="Software Verification for Weak Memory via Program Transformation",
+    bookTitle="European Symposium on Programming",
+    year="2013",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="512--532",
+    _isbn="978-3-642-37036-6",
+    doi="10.1007/978-3-642-37036-6_28",
+    _url="http://dx.doi.org/10.1007/978-3-642-37036-6_28",
+    _read=1,
+    _tags="memory model",
+    _related_raw="[3,7] write atomicity relaxation, 6 RMO, 2 TSO sound and complete procedure, [4,5] axiomatic model and stability",
+    _related="Alglave2010_fences memory model description",
+    _summary="Transformation for adding memory models (parametrized from TSO to POWER) to goto-programs together with optimization of the number of delays."
+}
+
+@Inbook{Alglave2010_fences,
+    author="Alglave, Jade and Maranget, Luc and Sarkar, Susmit and Sewell, Peter",
+    editor="Touili, Tayssir and Cook, Byron and Jackson, Paul",
+    title="Fences in Weak Memory Models",
+    bookTitle="Computer Aided Verification",
+    year="2010",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="258--272",
+    _isbn="978-3-642-14295-6",
+    doi="10.1007/978-3-642-14295-6_25",
+    _url="http://dx.doi.org/10.1007/978-3-642-14295-6_25",
+    _read=1,
+    _tags="memory model",
+    _related_raw="[3] shared memory intro, [4] POWER, [10], [11] verifying memory coherence, [19] Java memory model + thin air, [23], [25] operational model, [26] axiomatic model",
+    _summary="Axiomatic description of memory models and recovering of stronger
+        model from weaker using fences."
+}
+
+@inproceedings{wmdecidability,
+	author = {Atig, Mohamed Faouzi and Bouajjani, Ahmed and Burckhardt, Sebastian and Musuvathi, Madanlal},
+	title = {On the Verification Problem for Weak Memory Models},
+	booktitle = {Principles of Programming Languages},
+	series = {POPL '10},
+	year = {2010},
+	_isbn = {978-1-60558-479-9},
+	location = {Madrid, Spain},
+	pages = {7--18},
+	numpages = {12},
+	_url = {http://doi.acm.org/10.1145/1706299.1706303},
+	doi = {10.1145/1706299.1706303},
+	acmid = {1706303},
+	publisher = {ACM},
+	address = {New York, NY, USA},
+	keywords = {infinite state systems, lossy channel systems, program verification, relaxed memory models},
+	_tags="memory model",
+	_read=1,
+    _summary="Complexity and decidability analisys for memory models, showing
+        TSO/PSO is non-elementary and RMO is undecidable, rather theoretical"
+}
+
+@Inbook{Bouajjani2015,
+    author="Bouajjani, Ahmed and Calin, Georgel and Derevenetc, Egor and Meyer, Roland",
+    editor="Egyed, Alexander and Schaefer, Ina",
+    title="Lazy TSO Reachability",
+    bookTitle="Fundamental Approaches to Software Engineering",
+    year="2015",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="267--282",
+    _isbn="978-3-662-46675-9",
+    doi="10.1007/978-3-662-46675-9_18",
+    _url="http://dx.doi.org/10.1007/978-3-662-46675-9_18",
+    _related = "wmdecidability, Bouajjani2013 10 robustness",
+    _read=1,
+    _summary="TSO semi-decision procedure, lazyly extends runs with TSO
+        semantics (starting from SC), complete only for acyclic programs. Uses
+        robustness checker to detect which runs should be relaxed. On automata,
+        not on programs."
+}
+
+@Inbook{Bouajjani2013,
+    author="Bouajjani, Ahmed and Derevenetc, Egor and Meyer, Roland",
+    editor="Felleisen, Matthias and Gardner, Philippa",
+    title="Checking and Enforcing Robustness against TSO",
+    bookTitle="European Symposium on Programming",
+    year="2013",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="533--553",
+    _isbn="978-3-642-37036-6",
+    doi="10.1007/978-3-642-37036-6_29",
+    _url="http://dx.doi.org/10.1007/978-3-642-37036-6_29",
+    _read=1,
+    _summary="A reduction from TSO robustness/stability (all TSO traces
+        correspond to some SC trace), to multiple SC reachability queries in
+        instrumented program (which has limited buffering in one thered). The
+        reduction requires O(n^2) queries and requires that all pairs of loads
+        and stores for given thread are enumerated.",
+    _related_raw = "[3] DRF programs",
+}
+
+@Inbook{Burckhardt2008,
+    author="Burckhardt, Sebastian and Musuvathi, Madanlal",
+    editor="Gupta, Aarti and Malik, Sharad",
+    title="Effective Program Verification for Relaxed Memory Models",
+    bookTitle="Computer Aided Verification",
+    year="2008",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="107--120",
+    _isbn="978-3-540-70545-1",
+    doi="10.1007/978-3-540-70545-1_12",
+    _url="http://dx.doi.org/10.1007/978-3-540-70545-1_12",
+    _todo="0.5",
+    _read="0.2",
+    _related_raw = "[18] SC, [24] TSO",
+    _summary = "detection of SC violations using a monitor with generalized
+        vector clock, tool Sober"
+}
+
+@Inbook{Burnim2011,
+    author="Burnim, Jabob and Sen, Koushik and Stergiou, Christos",
+    editor="Abdulla, Parosh Aziz and Leino, K. Rustan M.",
+    title="Sound and Complete Monitoring of Sequential Consistency for Relaxed Memory Models",
+    bookTitle="Tools and Algorithms for the Construction and Analysis of Systems",
+    year="2011",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="11--25",
+    _isbn="978-3-642-19835-9",
+    doi="10.1007/978-3-642-19835-9_3",
+    _url="http://dx.doi.org/10.1007/978-3-642-19835-9_3",
+    _read="0.2",
+    _todo=1,
+    _summary="monitors for detecting violations of SC under TSO or PSO, using
+        operational semantics of TSO/PSO"
+}
+
+@Inbook{Alglave2011,
+    author="Alglave, Jade and Maranget, Luc",
+    editor="Gopalakrishnan, Ganesh and Qadeer, Shaz",
+    title="Stability in Weak Memory Models",
+    bookTitle="Computer Aided Verification",
+    year="2011",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="50--66",
+    _isbn="978-3-642-22110-1",
+    doi="10.1007/978-3-642-22110-1_6",
+    _url="http://dx.doi.org/10.1007/978-3-642-22110-1_6",
+    _related_raw="[3] DRF guarantee",
+    _summary = "notion of stability of executions from one memory model to a
+        weaker one, tool offence for inserting synchronization to x86 and POWER
+        assembly to ensure stability",
+    _read=1,
+}
+
+@ARTICLE{Holzmann1997,
+    author={Gerard J. Holzmann},
+    journal={IEEE Transactions on Software Engineering},
+    title={The model checker SPIN},
+    year={1997},
+    volume={23},
+    number={5},
+    pages={279-295},
+    keywords={distributed processing;formal specification;formal
+        verification;SPIN model checker;design error detection;detailed
+            code;distributed software system models;efficient verification
+            system;high-level distributed algorithm descriptions;telephone
+            exchange control;verifier design;verifier structure;Algorithm design
+            and analysis;Application software;Concurrent computing;Control
+            system synthesis;Design methodology;Distributed algorithms;Error
+            correction codes;Message passing;Software systems;Telephony},
+    doi={10.1109/32.588521},
+    ISSN={0098-5589},
+    month=5,
+}
+
+@inproceedings{cppmemmod,
+    author = {Batty, Mark and Owens, Scott and Sarkar, Susmit and Sewell, Peter and Weber, Tjark},
+    title = {Mathematizing C++ Concurrency},
+    booktitle = {Principles of Programming Languages},
+    series = {POPL '11},
+    year = {2011},
+    _isbn = {978-1-4503-0490-0},
+    location = {Austin, Texas, USA},
+    pages = {55--66},
+    numpages = {12},
+    _url = {http://doi.acm.org/10.1145/1926385.1926394},
+    doi = {10.1145/1926385.1926394},
+    acmid = {1926394},
+    publisher = {ACM},
+    address = {New York, NY, USA},
+    keywords = {relaxed memory models, semantics},
+    _read=1,
+    _summary="Axiomatic description of C++ memory model, with some divergencies from the standard draft N3092 (final is ??).",
+}
+
+@article{x86tso,
+    author = {Sewell, Peter and Sarkar, Susmit and Owens, Scott and Nardelli, Francesco Zappa and Myreen, Magnus O.},
+    title = {X86-TSO: A Rigorous and Usable Programmer's Model for x86 Multiprocessors},
+    journal = {Communications of the ACM},
+    issue_date = {July 2010},
+    volume = {53},
+    number = {7},
+    month = jul,
+    year = {2010},
+    issn = {0001-0782},
+    pages = {89--97},
+    numpages = {9},
+    _url = {http://doi.acm.org/10.1145/1785414.1785443},
+    doi = {10.1145/1785414.1785443},
+    acmid = {1785443},
+    publisher = {ACM},
+    address = {New York, NY, USA},
+    _read=1,
+    _summary="Description of the x86 memory model, formalized in HOL4 and as an
+        abstract machine. Also discusses problems with informal specification.",
+    _related_raw="[9] Causal memory, [33] program transformations in java vs. memory model"
+}
+
+@article{hw_view_for_sw_hackers,
+    title={Memory barriers: a hardware view for software hackers},
+    author={Paul E McKenney},
+    journal={Linux Technology Center, IBM Beaverton},
+    year={2010},
+}
+
+@inproceedings{PichonPharabod2016,
+    author = {Pichon-Pharabod, Jean and Sewell, Peter},
+    title = {A Concurrency Semantics for Relaxed Atomics That Permits Optimisation and Avoids Thin-air Executions},
+    booktitle = {Principles of Programming Languages},
+    series = {POPL '16},
+    year = {2016},
+    _isbn = {978-1-4503-3549-2},
+    location = {St. Petersburg, FL, USA},
+    pages = {622--633},
+    numpages = {12},
+    _url = {http://doi.acm.org/10.1145/2837614.2837616},
+    doi = {10.1145/2837614.2837616},
+    acmid = {2837616},
+    publisher = {ACM},
+    address = {New York, NY, USA},
+    keywords = {C/C++, Concurrency, Relaxed memory models},
+    _read = 1,
+    _summary = "An alternative way of defining semantics for non-atomic and
+        relaxed atomic operations, aiming to both avoid thin air reads and
+        enable optimization. Targets C++. The semantics is based on event
+        structures and analyze all runs at the same time, considering possible
+        optimizations.",
+    _related = "event_structures, Sevcik2008 java memory model problems"
+} 
+
+@Inbook{event_structures,
+    author="Nielsen, Mogens and Plotkin, Gordon and Winskel, Glynn",
+    editor="Kahn, Gilles",
+    title="Petri nets, event structures and domains",
+    bookTitle="Semantics of Concurrent Computation",
+    year="1979",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="266--284",
+    _isbn="978-3-540-35163-4",
+    doi="10.1007/BFb0022474",
+    _url="http://dx.doi.org/10.1007/BFb0022474",
+    _read = 0
+}
+
+@Inbook{Sevcik2008,
+    author="{\v{S}}ev{\v{c}}{\'i}k, Jaroslav and Aspinall, David",
+    editor="Vitek, Jan",
+    title="On Validity of Program Transformations in the Java Memory Model",
+    bookTitle="European Conference on Object-Oriented Programming",
+    year="2008",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="27--51",
+    _isbn="978-3-540-70592-5",
+    doi="10.1007/978-3-540-70592-5_3",
+    _url="http://dx.doi.org/10.1007/978-3-540-70592-5_3",
+    _read="0.2",
+    _related_raw = "[11][18] Java Memory Model, [20] JMM is fatally flawed,
+    [16][1][9][23] SC guarantees for DRF programs"
+}
+
+@book{javamm_Gosling2005,
+     author = {Gosling, James and Joy, Bill and Steele, Guy and Bracha, Gilad},
+     title = {The Java(TM) Language Specification (3rd Edition)},
+     year = {2005},
+     _isbn = {0321246780},
+     publisher = {Addison-Wesley Professional},
+}
+
+@inproceedings{javamm_popl_Manson2005,
+    author = {Manson, Jeremy and Pugh, William and Adve, Sarita V.},
+    title = {The Java Memory Model},
+    booktitle = {Principles of Programming Languages},
+    series = {POPL '05},
+    year = {2005},
+    _isbn = {1-58113-830-X},
+    location = {Long Beach, California, USA},
+    pages = {378--391},
+    numpages = {14},
+    _url = {http://doi.acm.org/10.1145/1040305.1040336},
+    doi = {10.1145/1040305.1040336},
+    acmid = {1040336},
+    publisher = {ACM},
+    address = {New York, NY, USA},
+    keywords = {Java, concurrency, memory model, multithreading},
+} 
+
+
+@article{post1946variant,
+    title={A variant of a recursively unsolvable problem},
+    author={Post, Emil L},
+    journal={Bulletin of the American Mathematical Society},
+    volume={52},
+    number={4},
+    pages={264--268},
+    year={1946}
+}
+
+@article{abdulla1996verifying,
+    title={Verifying programs with unreliable channels},
+    author={Abdulla, Parosh Aziz and Jonsson, Bengt},
+    journal={Information and Computation},
+    volume={127},
+    number={2},
+    pages={91--101},
+    year={1996},
+    publisher={Elsevier}
+}
+
+@article{abdulla1996undecidable,
+    title={Undecidable verification problems for programs with unreliable
+    channels},
+    author={Abdulla, Parosh Aziz and Jonsson, Bengt},
+    journal={Information and Computation},
+    volume={130},
+    number={1},
+    pages={71--90},
+    year={1996},
+    publisher={Elsevier},
+    _read="0.1",
+    _summary = "can be combined with [wmdecidability] to prove that LTL and CTL
+        model checking is undecidable for TSO"
+}
+
+@Inbook{Atig2012,
+    author="Atig, Mohamed Faouzi and Bouajjani, Ahmed and Burckhardt, Sebastian and Musuvathi, Madanlal",
+    editor="Seidl, Helmut",
+    title="What's Decidable about Weak Memory Models?",
+    bookTitle="European Symposium on Programming",
+    year="2012",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="26--46",
+    _isbn="978-3-642-28869-2",
+    doi="10.1007/978-3-642-28869-2_2",
+    _url="http://dx.doi.org/10.1007/978-3-642-28869-2_2"
+}
+
+@Inbook{Abdulla2012,
+    author="Abdulla, Parosh Aziz and Atig, Mohamed Faouzi and Chen, Yu-Fang and Leonardsson, Carl and Rezine, Ahmed",
+    editor="Flanagan, Cormac and K{\"o}nig, Barbara",
+    title="Counter-Example Guided Fence Insertion under TSO",
+    bookTitle="Tools and Algorithms for the Construction and Analysis of Systems",
+    year="2012",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="204--219",
+    _isbn="978-3-642-28756-5",
+    doi="10.1007/978-3-642-28756-5_15",
+    _url="http://dx.doi.org/10.1007/978-3-642-28756-5_15"
+}
+
+@Inbook{Linden2010,
+    author="Linden, Alexander and Wolper, Pierre",
+    editor="van de Pol, Jaco and Weber, Michael",
+    title="An Automata-Based Symbolic Approach for Verifying Programs on Relaxed Memory Models",
+    bookTitle="Model Checking Software",
+    year="2010",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="212--226",
+    _isbn="978-3-642-16164-3",
+    doi="10.1007/978-3-642-16164-3_16",
+    _url="http://dx.doi.org/10.1007/978-3-642-16164-3_16"
+}
+
+@Inbook{Atig2011,
+    author="Atig, Mohamed Faouzi and Bouajjani, Ahmed and Parlato, Gennaro",
+    editor="Gopalakrishnan, Ganesh and Qadeer, Shaz",
+    title="Getting Rid of Store-Buffers in TSO Analysis",
+    bookTitle="Computer Aided Verification",
+    year="2011",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="99--115",
+    _isbn="978-3-642-22110-1",
+    doi="10.1007/978-3-642-22110-1_9",
+    _url="http://dx.doi.org/10.1007/978-3-642-22110-1_9"
+}
+
+@inproceedings{Park1995,
+    author = {Park, Seungjoon and Dill, David L.},
+    title = {An Executable Specification, Analyzer and Verifier for RMO (Relaxed Memory Order)},
+    booktitle = {Symposium on Parallel Algorithms and Architectures},
+    series = {SPAA '95},
+    year = {1995},
+    _isbn = {0-89791-717-0},
+    location = {Santa Barbara, California, USA},
+    pages = {34--41},
+    numpages = {8},
+    _url = {http://doi.acm.org/10.1145/215399.215413},
+    doi = {10.1145/215399.215413},
+    acmid = {215413},
+    publisher = {ACM},
+    address = {New York, NY, USA},
+    _read = 1,
+    _summary = "SPARC, encoding to murphi, simple synchronization primitives
+        only, explores all allowed reordering of instructions"
+} 
+
+@Inbook{Abdulla2017,
+    author="Abdulla, Parosh Aziz and Atig, Mohamed Faouzi and Bouajjani, Ahmed and Ngo, Tuan Phong",
+    editor="Legay, Axel and Margaria, Tiziana",
+    title="Context-Bounded Analysis for POWER",
+    bookTitle="Tools and Algorithms for the Construction and Analysis of Systems",
+    year="2017",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="56--74",
+    _isbn="978-3-662-54580-5",
+    doi="10.1007/978-3-662-54580-5_4",
+    _url="https://doi.org/10.1007/978-3-662-54580-5_4",
+    _read="0.5",
+    _summary = "Context bounded analysis for the POWER architecture, by
+        transformation of program. CBMC is used as a backend. It shows that context
+        bounded analysis for POWER is decidable. Tool `power2sc`, compared with
+        goto-instrument and niddhug. Evaluation on C programs."
+}
+
+@inproceedings{Turon2014,
+    author = {Turon, Aaron and Vafeiadis, Viktor and Dreyer, Derek},
+    title = {GPS: Navigating Weak Memory with Ghosts, Protocols, and Separation},
+    booktitle = {Object Oriented Programming Systems Languages \& Applications},
+    series = {OOPSLA '14},
+    year = {2014},
+    _isbn = {978-1-4503-2585-1},
+    location = {Portland, Oregon, USA},
+    pages = {691--707},
+    numpages = {17},
+    _url = {http://doi.acm.org/10.1145/2660193.2660243},
+    doi = {10.1145/2660193.2660243},
+    acmid = {2660243},
+    publisher = {ACM},
+    address = {New York, NY, USA},
+    keywords = {c/c++, concurrency, program logic, separation logic, weak memory models},
+    _read = "0.3",
+    _summary = "Introduces a separation logic GPS which allows proving properties
+        about programs using the (fragment of) C11 memory model. The memory models
+        is restricted to non-atomic, acquire-release, and sequentially consistent
+        accesses -- i.e. it lacks support for relaxed and consume-release accesses."
+}
+
+@Inbook{Dan2013,
+    author="Dan, Andrei Marian and Meshman, Yuri and Vechev, Martin and Yahav, Eran",
+    editor="Logozzo, Francesco and F{\"a}hndrich, Manuel",
+    title="Predicate Abstraction for Relaxed Memory Models",
+    bookTitle="International Static Analysis Symposium",
+    year="2013",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="84--104",
+    abstract="We present a novel approach for predicate abstraction of programs
+        running on relaxed memory models. Our approach consists of two steps.",
+    _isbn="978-3-642-38856-9",
+    doi="10.1007/978-3-642-38856-9_7",
+    _url="https://doi.org/10.1007/978-3-642-38856-9_7",
+    _read = "0.5",
+    _summary = "Presents an approach for verification of (potentially
+        infinite state space) programs under TSO and PSO using predicate
+        abstraction. The paper first shows that it is not possible to use
+        traditional predicate abstraction  to produce boolean program and then
+        verify this boolean program using weak memory semantics. Instead, the
+        authors propose a schema which first verifies the program under SC and
+        then extrapolates predicates from SC run to verify a transformed version of
+        the original program which has store buffers explicitly encoded. The
+        store buffers are bounded in this transformation. Authors also provide
+        implementation in the \textsc{cupex} and evaluation on 7 programs which
+        shows advantages of their predicate extrapolation method."
+}
+
+@Inbook{Yang2004,
+    author="Yang, Yue and Gopalakrishnan, Ganesh and Lindstrom, Gary",
+    editor="Davies, Jim and Schulte, Wolfram and Barnett, Mike",
+    title="Memory-Model-Sensitive Data Race Analysis",
+    bookTitle="International Conference on Formal Engineering Methods",
+    year="2004",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="30--45",
+    abstract="We present a ``memory-model-sensitive'' approach to validating
+        correctness properties for multithreaded programs. Our key insight is
+        that by specifying both the inter-thread memory consistency model and
+        the intra-thread program semantics as constraints, a program
+        verification task can be reduced to an equivalent constraint solving
+        problem, thus allowing an exhaustive examination of all thread
+        interleavings precisely allowed by a given memory model. To demonstrate,
+        this paper formalizes race conditions according to the new Java memory
+        model, for a simplified but non-trivial source language. We then
+        describe the implementation of a memory-model-sensitive race detector
+        using constraint logic programming (CLP). In comparison with
+        conventional program analysis, our approach does not offer the same kind
+        of performance and scalability due to the complexity involved in exact
+        formal reasoning. However, we show that a formal semantics can serve
+        more than documentation purposes --- it can be applied as a sound basis
+        for rigorous property checking, upon which more scalable methods can be
+        derived.",
+    _isbn="978-3-540-30482-1",
+    doi="10.1007/978-3-540-30482-1_11",
+    _url="https://doi.org/10.1007/978-3-540-30482-1_11",
+    _read=1,
+    _summary = "Presents formal semantics for a simple programming language
+        including its precise memory semantics.
+        The motivation is to provide verification procedure for detecting data
+        races under the Java Memory Model (JMM).
+        The formalization uses SC as it is sufficient for detection of data
+        races under JMM (JMM defines data race freedom in terms on SC runs).
+        The entire program, memory constraits, and specification is encoded as
+        constraint solving problem, which can be solved by constraint solver,
+        e.g. Prolog with finite domain data as used in the presented tool
+        *DefectFindrer*."
+}
+
+@Inbook{Huynh2006,
+    author="Huynh, Thuan Quang and Roychoudhury, Abhik",
+    editor="Misra, Jayadev and Nipkow, Tobias and Sekerinski, Emil",
+    title="A Memory Model Sensitive Checker for C{\#}",
+    bookTitle="FM 2006: Formal Methods",
+    year="2006",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="476--491",
+    abstract="Modern concurrent programming languages like Java and C{\#} have a
+        programming language level memory model; it captures the set of all
+        allowed behaviors of programs on any implementation platform --- uni- or
+        multi-processor. Such a memory model is typically weaker than Sequential
+        Consistency and allows reordering of operations within a program thread.
+        Therefore, programs verified correct by assuming Sequential Consistency
+        (that is, each thread proceeds in program order) may not behave
+        correctly on certain platforms! The solution to this problem is to
+        develop program checkers which are memory model sensitive. In this
+        paper, we develop such an invariant checker for the programming language
+        C{\#}. Our checker identifies program states which are reached only
+        because the C{\#} memory model is more relaxed than Sequential
+        Consistency. Furthermore, our checker identifies (a) operation
+        reorderings which cause such undesirable states to be reached, and (b)
+        simple program modifications --- by inserting memory barrier operations
+        --- which prevent such undesirable reorderings.",
+    _isbn="978-3-540-37216-5",
+    doi="10.1007/11813040_32",
+    _url="https://doi.org/10.1007/11813040_32",
+    _summary="Presents explicit state model checker for C# programs (supporting
+        subset of C#/.NET bytecode) which uses the .NET memory model.  The
+        verifier first verifies program under SC and then it explores additional
+        runs allowed under .NET memory model.  It can also insert barriers into
+        the program to avoid relaxed runs which violate given property (that is,
+        not all relaxed runs are disabled by barriers but only those
+        that actually lead to property violation).  The implementation
+        of the exploration algorithm uses list of delayed instructions to
+        implement instruction reordering.  While the authors mention that the
+        number of reordered instructions is not bounded, they do not discuss how
+        this approach works for programs with cycles.",
+    _read=1
+}
+
+@article{Arvind2006,
+    author = {Arvind, Arvind and Maessen, Jan-Willem},
+    title = {Memory Model = Instruction Reordering + Store Atomicity},
+    journal = {ACM SIGARCH Computer Architecture News},
+    issue_date = {May 2006},
+    volume = {34},
+    number = {2},
+    month = may,
+    year = {2006},
+    issn = {0163-5964},
+    pages = {29--40},
+    numpages = {12},
+    _url = {http://doi.acm.org/10.1145/1150019.1136489},
+    doi = {10.1145/1150019.1136489},
+    acmid = {1136489},
+    publisher = {ACM},
+    address = {New York, NY, USA},
+    _read = 1,
+}
+
+@book{SPARC94,
+ author = {SPARC International, Inc., CORPORATE},
+ title = {The SPARC architecture manual (version 9)},
+ year = {1994},
+ _isbn = {0-13-099227-5},
+ publisher = {Prentice-Hall, Inc.},
+ address = {Upper Saddle River, NJ, USA},
+}
+
+@inproceedings{Zhang2015,
+    author = {Zhang, Naling and Kusano, Markus and Wang, Chao},
+    title = {Dynamic Partial Order Reduction for Relaxed Memory Models},
+    booktitle = {Programming Language Design and Implementation},
+    series = {PLDI '15},
+    year = {2015},
+    _isbn = {978-1-4503-3468-6},
+    location = {Portland, OR, USA},
+    pages = {250--259},
+    numpages = {10},
+    _url = {http://doi.acm.org/10.1145/2737924.2737956},
+    doi = {10.1145/2737924.2737956},
+    acmid = {2737956},
+    publisher = {ACM},
+    address = {New York, NY, USA},
+    keywords = {DPOR, PSO, Stateless model checking, TSO, partial order reduction, relaxed memory model, runtime verification},
+} 
+
+@Inbook{Abdulla2015,
+    author="Abdulla, Parosh Aziz and Aronis, Stavros and Atig, Mohamed Faouzi and Jonsson, Bengt and Leonardsson, Carl and Sagonas, Konstantinos",
+    editor="Baier, Christel and Tinelli, Cesare",
+    title="Stateless Model Checking for TSO and PSO",
+    bookTitle="Tools and Algorithms for the Construction and Analysis of Systems",
+    year="2015",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="353--367",
+    _isbn="978-3-662-46681-0",
+    doi="10.1007/978-3-662-46681-0_28",
+    _url="https://doi.org/10.1007/978-3-662-46681-0_28"
+}
+
+@inproceedings{Norris2013,
+    author = {Norris, Brian and Demsky, Brian},
+    title = {CDSchecker: Checking Concurrent Data Structures Written with C/C++ Atomics},
+    booktitle = {Object Oriented Programming Systems Languages \& Applications},
+    series = {OOPSLA '13},
+    year = {2013},
+    _isbn = {978-1-4503-2374-1},
+    location = {Indianapolis, Indiana, USA},
+    pages = {131--150},
+    numpages = {20},
+    _url = {http://doi.acm.org/10.1145/2509136.2509514},
+    doi = {10.1145/2509136.2509514},
+    acmid = {2509514},
+    publisher = {ACM},
+    address = {New York, NY, USA},
+    keywords = {model checking, relaxed memory model},
+}
+
+@inproceedings{Sarkar2011,
+    author = {Sarkar, Susmit and Sewell, Peter and Alglave, Jade and Maranget,
+    Luc and Williams, Derek},
+    title = {Understanding POWER Multiprocessors},
+    booktitle = {Programming Language Design and Implementation},
+    series = {PLDI '11},
+    year = {2011},
+    _isbn = {978-1-4503-0663-8},
+    location = {San Jose, California, USA},
+    pages = {175--186},
+    numpages = {12},
+    _url = {http://doi.acm.org/10.1145/1993498.1993520},
+    doi = {10.1145/1993498.1993520},
+    acmid = {1993520},
+    publisher = {ACM},
+    address = {New York, NY, USA},
+    keywords = {relaxed memory models, semantics},
+}
+
+@Inbook{Derevenetc2014,
+    author="Derevenetc, Egor and Meyer, Roland",
+    editor="Esparza, Javier and Fraigniaud, Pierre and Husfeldt, Thore and Koutsoupias, Elias",
+    title="Robustness against Power is PSpace-complete",
+    bookTitle="Automata, Languages, and Programming",
+    year="2014",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="158--170",
+    abstract="Power is a RISC architecture developed by IBM, Freescale, and several other companies and implemented in a series of POWER processors. The architecture features a relaxed memory model providing very weak guarantees with respect to the ordering and atomicity of memory accesses.",
+    _isbn="978-3-662-43951-7",
+    doi="10.1007/978-3-662-43951-7_14",
+    _url="https://doi.org/10.1007/978-3-662-43951-7_14"
+}
+
+@Inbook{Aspinall2007,
+    author="Aspinall, David and {\v{S}}ev{\v{c}}{\'i}k, Jaroslav",
+    editor="Schneider, Klaus and Brandt, Jens",
+    title="Formalising Java's Data Race Free Guarantee",
+    bookTitle="Theorem Proving in Higher Order Logics",
+    year="2007",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="22--37",
+    _isbn="978-3-540-74591-4",
+    doi="10.1007/978-3-540-74591-4_4",
+    _url="https://doi.org/10.1007/978-3-540-74591-4_4"
+}
+
+@Inbook{Mador-Haim2012,
+    author="Mador-Haim, Sela and Maranget, Luc and Sarkar, Susmit and Memarian, Kayvan and Alglave, Jade and Owens, Scott and Alur, Rajeev and Martin, Milo M. K.  and Sewell, Peter and Williams, Derek",
+    editor="Madhusudan, P.  and Seshia, Sanjit A.",
+    title="An Axiomatic Memory Model for POWER Multiprocessors",
+    bookTitle="Computer Aided Verification",
+    year="2012",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="495--512",
+    _isbn="978-3-642-31424-7",
+    doi="10.1007/978-3-642-31424-7_36",
+    _url="https://doi.org/10.1007/978-3-642-31424-7_36"
+}
+
+@inproceedings{Sarkar2012,
+    author = {Sarkar, Susmit and Memarian, Kayvan and Owens, Scott and Batty, Mark and Sewell, Peter and Maranget, Luc and Alglave, Jade and Williams, Derek},
+    title = {Synchronising C/C++ and POWER},
+    booktitle = {Programming Language Design and Implementation},
+    series = {PLDI '12},
+    year = {2012},
+    _isbn = {978-1-4503-1205-9},
+    location = {Beijing, China},
+    pages = {311--322},
+    numpages = {12},
+    _url = {http://doi.acm.org/10.1145/2254064.2254102},
+    doi = {10.1145/2254064.2254102},
+    acmid = {2254102},
+    publisher = {ACM},
+    address = {New York, NY, USA},
+    keywords = {relaxed memory models, semantics},
+}
+
+@inproceedings{Flur2016,
+    author = {Flur, Shaked and Gray, Kathryn E. and Pulte, Christopher and Sarkar, Susmit and Sezgin, Ali and Maranget, Luc and Deacon, Will and Sewell, Peter},
+    title = {Modelling the ARMv8 Architecture, Operationally: Concurrency and ISA},
+    booktitle = {Principles of Programming Languages},
+    series = {POPL '16},
+    year = {2016},
+    _isbn = {978-1-4503-3549-2},
+    location = {St. Petersburg, FL, USA},
+    pages = {608--621},
+    numpages = {14},
+    _url = {http://doi.acm.org/10.1145/2837614.2837615},
+    doi = {10.1145/2837614.2837615},
+    acmid = {2837615},
+    publisher = {ACM},
+    address = {New York, NY, USA},
+    keywords = {ISA, Relaxed Memory Models, semantics},
+}
+
+@article{Alglave2014,
+    author = {Alglave, Jade and Maranget, Luc and Tautschnig, Michael},
+    title = {Herding Cats: Modelling, Simulation, Testing, and Data Mining for Weak Memory},
+    journal = {ACM Transactions on Programming Languages and Systems},
+    issue_date = {July 2014},
+    volume = {36},
+    number = {2},
+    month = jul,
+    year = {2014},
+    issn = {0164-0925},
+    pages = {7:1--7:74},
+    articleno = {7},
+    numpages = {74},
+    _url = {http://doi.acm.org/10.1145/2627752},
+    doi = {10.1145/2627752},
+    acmid = {2627752},
+    publisher = {ACM},
+    address = {New York, NY, USA},
+    keywords = {Concurrency, software verification, weak memory models},
+}
+
+@article{Lamport1979,
+    author = {Lamport, Leslie},
+    title = {How to Make a Multiprocessor Computer That Correctly Executes Multiprocess Programs},
+    journal = {IEEE Transactions on Computers},
+    issue_date = {September 1979},
+    volume = {28},
+    number = {9},
+    month = sep,
+    year = {1979},
+    issn = {0018-9340},
+    pages = {690--691},
+    numpages = {2},
+    _url = {http://dx.doi.org/10.1109/TC.1979.1675439},
+    doi = {10.1109/TC.1979.1675439},
+    acmid = {1311750},
+    publisher = {IEEE Computer Society},
+    address = {Washington, DC, USA},
+    keywords = {Computer design, concurrent computing, hardware correctness, multiprocessing, parallel processing, parallel processing, Computer design, concurrent computing, hardware correctness, multiprocessing},
+}
+
+@Inbook{Cenciarelli2007,
+    author="Cenciarelli, Pietro and Knapp, Alexander and Sibilio, Eleonora",
+    editor="De Nicola, Rocco",
+    title="The Java Memory Model: Operationally, Denotationally, Axiomatically",
+    bookTitle="European Symposium on Programming",
+    year="2007",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="331--346",
+    abstract="A semantics to a small fragment of Java capturing the new memory model (JMM) described in the Language Specification is given by combining operational, denotational and axiomatic techniques in a novel semantic framework. The operational steps (specified in the form of SOS) construct denotational models (configuration structures) and are constrained by the axioms of a configuration theory. The semantics is proven correct with respect to the Language Specification and shown to capture many common examples in the JMM literature.",
+    _isbn="978-3-540-71316-6",
+    doi="10.1007/978-3-540-71316-6_23",
+    _url="https://doi.org/10.1007/978-3-540-71316-6_23"
+}
+
+@inproceedings{Torlak2010,
+    author = {Torlak, Emina and Vaziri, Mandana and Dolby, Julian},
+    title = {MemSAT: Checking Axiomatic Specifications of Memory Models},
+    booktitle = {Programming Language Design and Implementation},
+    series = {PLDI '10},
+    year = {2010},
+    _isbn = {978-1-4503-0019-3},
+    location = {Toronto, Ontario, Canada},
+    pages = {341--350},
+    numpages = {10},
+    _url = {http://doi.acm.org/10.1145/1806596.1806635},
+    doi = {10.1145/1806596.1806635},
+    acmid = {1806635},
+    publisher = {ACM},
+    address = {New York, NY, USA},
+    keywords = {axiomatic specifications, bounded model checking, memory models, sat},
+}
+
+@inproceedings{Vafeiadis2013,
+    author = {Vafeiadis, Viktor and Narayan, Chinmay},
+    title = {Relaxed Separation Logic: A Program Logic for C11 Concurrency},
+    booktitle = {Object Oriented Programming Systems Languages \& Applications},
+    series = {OOPSLA '13},
+    year = {2013},
+    _isbn = {978-1-4503-2374-1},
+    location = {Indianapolis, Indiana, USA},
+    pages = {867--884},
+    numpages = {18},
+    _url = {http://doi.acm.org/10.1145/2509136.2509532},
+    doi = {10.1145/2509136.2509532},
+    acmid = {2509532},
+    publisher = {ACM},
+    address = {New York, NY, USA},
+    keywords = {c/c++, concurrency, proof system, separation logic, weak memory models},
+}
+
+
+###############################
+
+@InProceedings{BBH+13DIVINE,
+  author = {Jiří Barnat and Luboš Brim and Vojtěch Havel and Jan Havlíček and Jan Kriho and Milan Lenčo and Petr Ročkai and Vladimír Štill and Jiří Weiser},
+  title = {{DiVinE 3.0 – An Explicit-State Model Checker for Multithreaded C \& C++ Programs}},
+  booktitle = {{Computer Aided Verification}},
+  pages = {863--868},
+  volume = {8044},
+  series = {Lecture Notes in Computer Science},
+  year = {2013},
+  _isbn = {978-3-642-39798-1},
+  editor = {Sharygina, Natasha and Veith, Helmut},
+  doi = {10.1007/978-3-642-39799-8_60},
+  publisher = {Springer Berlin Heidelberg},
+  language = {English},
+  keywords = {divine, red hat},
+}
+
+@inproceedings{SRB14CSDR,
+  title = {{Context-Switch-Directed Verification in DIVINE}},
+  author = {Vladimír Štill and Petr Ročkai and Jiří Barnat},
+  _isbn = {978-3-319-14895-3},
+  volume = {8934},
+  pages = {135--146},
+  year = {2014},
+  booktitle = {{Mathematical and Engineering Methods in Computer Science}},
+  volume = {8934},
+  series = {Lecture Notes in Computer Science},
+  editor = {Hliněný, Petr and Dvořák, Zdeněk and Jaroš, Jiří and Kofroň, Jan and
+        Kořenek, Jan and Matula, Petr and Pala, Karel},
+  doi = {10.1007/978-3-319-14896-0_12},
+  publisher = {Springer International Publishing},
+  language = {English},
+  keywords = {divine,red hat},
+}
+
+@inproceedings{RSB15TC,
+  author = {Petr Ročkai and Vladimír Štill and Jiří Barnat},
+  title = {{Techniques for Memory-Efficient Model Checking of C and C++ Code}},
+  booktitle = {{Software Engineering and Formal Methods}},
+  pages = {268--282},
+  volume = {9276},
+  year = {2015},
+  _isbn = {978-3-319-22968-3},
+  series = {Lecture Notes in Computer Science},
+  editor = {Calinescu, Radu and Rumpe, Bernhard},
+  doi = {10.1007/978-3-319-22969-0_19},
+  publisher = {Springer International Publishing},
+  language = {English},
+  keywords = {divine},
+}
+
+@incollection{BRSW15HS,
+  year = {2015},
+  _isbn = {978-3-319-23403-8},
+  booktitle = {Model Checking Software (SPIN 2015)},
+  volume = {9232},
+  series = {Lecture Notes in Computer Science},
+  editor = {Fischer, Bernd and Geldenhuys, Jaco},
+  doi = {10.1007/978-3-319-23404-5_5},
+  title = {Fast, Dynamically-Sized Concurrent Hash Table},
+  publisher = {Springer International Publishing},
+  author = {Jiří Barnat and Petr Ročkai and Vladimír Štill and Jiří Weiser},
+  pages = {49-65},
+  language = {English},
+  keywords = {divine, red hat},
+}
+
+@inproceedings{SRB15weakmem,
+  author = {Vladimír Štill and Petr Ročkai and Jiří Barnat},
+  year = {2016},
+  booktitle = {{Mathematical and Engineering Methods in Computer Science, Revised Selected Papers}},
+  editor = {Jan Kofroň and Tomáš Vojnar},
+  volume = {9548},
+  series = {Lecture Notes in Computer Science},
+  title = {{Weak Memory Models as LLVM-to-LLVM Transformations}},
+  keywords = {divine, red hat},
+  publisher = {Springer International Publishing},
+  pages = {144--155},
+  _isbn = {978-3-319-29817-7},
+  doi = {10.1007/978-3-319-29817-7_13},
+}
+
+@INPROCEEDINGS{BCRSZ16Prob,
+  author = {Jiří Barnat and Ivana Černá and Petr Ročkai and Vladimír Štill and
+        Kristína Zákopčanová},
+  title = {{On Verifying C++ Programs with Probabilities}},
+  year = {2016},
+  booktitle = {{ACM Symposium on Applied Computing}},
+  doi = {10.1145/2851613.2851721},
+  _isbn = {978-1-4503-3739-7},
+  keywords = {divine, red hat},
+  pages = {1238--1243},
+  crossref = {DBLP:conf/sac/2016},
+  _url = {http://doi.acm.org/10.1145/2851613.2851721},
+  _biburl = {http://dblp.uni-trier.de/rec/bib/conf/sac/BarnatCRSZ16},
+  bibsource = {dblp computer science bibliography, http://dblp.org},
+}
+
+@INPROCEEDINGS{SRB16SVC,
+  author = {Vladimír Štill and Petr Ročkai and Jiří Barnat},
+  title = {{DIVINE: Explicit-State LTL Model Checker}},
+  year = {2016},
+  booktitle = {{Tools and Algorithms for the Construction and Analysis of Systems}},
+  publisher = {Springer Berlin Heidelberg},
+  address = {Berlin, Heidelberg},
+  pages = {920--922},
+  _isbn = {978-3-662-49674-9},
+  doi = {10.1007/978-3-662-49674-9_60},
+  _url = {http://dx.doi.org/10.1007/978-3-662-49674-9_60},
+  keywords = {divine},
+}
+
+@InProceedings{SRB2017except,
+  author = {Vladimír Štill and Petr Ročkai and Jiří Barnat},
+  title = {{Using Off-the-Shelf Exception Support Components in C++ Verification}},
+
+  booktitle={Software Quality, Reliability and Security (QRS)},
+  title={Using Off-the-Shelf Exception Support Components in C++ Verification},
+  year={2017},
+  pages={54-64},
+  keywords={C++ languages, Libraries, Software, Standards, Testing, Tools, C++, Exceptions, Model Checking, Unwinder, divine, exceptions, red hat},
+  doi={10.1109/QRS.2017.15},
+  month={7},
+  publisher = "IEEE",
+  page = {https://divine.fi.muni.cz/2017/exceptions/},
+}
+
+@Inbook{MJSLB2017,
+  author = {Jan Mrázek and Martin Jonáš and Vladimír Štill and Henrich Lauko and Jiří Barnat},
+  editor = {Legay, Axel
+        and Margaria, Tiziana},
+  title = {Optimizing and Caching SMT Queries in SymDIVINE},
+  booktitle = {Tools and Algorithms for the Construction and Analysis of Systems},
+  year = {2017},
+  publisher = {Springer Berlin Heidelberg},
+  address = {Berlin, Heidelberg},
+  pages = {390--393},
+  abstract = {This paper presents a new version of the tool SymDIVINE, a model-checker for concurrent C/C++ programs. SymDIVINE uses a control-explicit data-symbolic approach to model checking, which allows for the bit-precise verification of programs with inputs, by representing data part of a program state by a first-order bit-vector formula. The new version of the tool employs a refined representation of symbolic states, which allows for efficient caching of smt queries. Moreover, the new version employs additional simplifications of first-order bit-vector formulas, such as elimination of unconstrained variables from quantified formulas. All changes are documented in detail in the paper.},
+  _isbn = {978-3-662-54580-5},
+  doi = {10.1007/978-3-662-54580-5_29},
+  _url = {https://doi.org/10.1007/978-3-662-54580-5_29},
+  keywords = {divine,symdivine},
+}
+
+@InProceedings{DIVINEToolPaper2017,
+  author = {Zuzana Baranová and Jiří Barnat and Katarína Kejstová and Tadeáš Kučera and Henrich Lauko and Jan Mrázek and Petr Ročkai and Vladimír Štill},
+  title = {{Model Checking of C and C++ with DIVINE 4}},
+  booktitle = {Automated Technology for Verification and Analysis},
+  page = {https://divine.fi.muni.cz/2017/divine4/},
+  _url = {https://divine.fi.muni.cz/2017/divine4/},
+  keywords = {divine, tool paper, red hat},
+  year = {2017},
+  volume = "10482",
+  series = {Lecture Notes in Computer Science},
+  doi = {10.1007/978-3-319-68167-2_14},
+}
+
+###############################
+
+@Inbook{SV-COMP:2016,
+    author="Beyer, Dirk",
+    editor="Chechik, Marsha and Raskin, Jean-Fran{\c{c}}ois",
+    title="Reliable and Reproducible Competition Results with BenchExec and Witnesses (Report on SV-COMP 2016)",
+    bookTitle="Tools and Algorithms for the Construction and Analysis of Systems",
+    year="2016",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="887--904",
+    _isbn="978-3-662-49674-9",
+    doi="10.1007/978-3-662-49674-9_55",
+    _url="https://doi.org/10.1007/978-3-662-49674-9_55"
+}
+
+@Inbook{SV-COMP:2017,
+    author="Beyer, Dirk",
+    editor="Legay, Axel and Margaria, Tiziana",
+    title="Software Verification with Validation of Results",
+    bookTitle="Tools and Algorithms for the Construction and Analysis of Systems",
+    year="2017",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="331--349",
+    _isbn="978-3-662-54580-5",
+    doi="10.1007/978-3-662-54580-5_20",
+    _url="https://doi.org/10.1007/978-3-662-54580-5_20"
+}
+
+@Inbook{Beyer2011,
+    author="Beyer, Dirk and Keremoglu, M. Erkan",
+    editor="Gopalakrishnan, Ganesh and Qadeer, Shaz",
+    title="CPAchecker: A Tool for Configurable Software Verification",
+    bookTitle="Computer Aided Verification",
+    year="2011",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="184--190",
+    _isbn="978-3-642-22110-1",
+    doi="10.1007/978-3-642-22110-1_16",
+    _url="https://doi.org/10.1007/978-3-642-22110-1_16"
+}
+
+@inproceedings{Beyer2016,
+  author    = {Dirk Beyer and Karlheinz Friedberger},
+  title     = {A Light-Weight Approach for Verifying Multi-Threaded Programs with CPAchecker},
+  booktitle = {Mathematical and Engineering Methods in Computer Science},
+  pages     = {61--71},
+  year      = {2016},
+  crossref  = {DBLP:journals/corr/BoudaHKSR16},
+  _url       = {https://doi.org/10.4204/EPTCS.233.6},
+  doi       = {10.4204/EPTCS.233.6},
+  timestamp = {Wed, 03 May 2017 14:47:56 +0200},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/journals/corr/0001F16a},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
+
+@MastersThesis{mgrthesis,
+  author = {Vladimír Štill},
+  title = {{LLVM Transformations for Model Checking}},
+  year = {2016},
+  _urldate = {2016-03-01},
+  type = {Master's Thesis},
+  school = {Masarykova univerzita, Fakulta informatiky, Brno},
+  supervisor = {Jiří Barnat},
+  url = {http://is.muni.cz/th/373979/fi_m/},
+  keywords = {divine},
+}
+
+@techreport{isocpp11draft,
+    title={Standard for Programming Language C++. Working Draft N3337},
+    author={ISO C++ Standards Committee},
+    year={2012},
+    institution={ISO IEC JTC1/SC22/WG21},
+    url = {http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3337.pdf},
+    shorthand = {ISO12}
+}
+
+@techreport{N3092,
+    title = {Programming Languages - C++},
+    author={ISO C++ Standards Committee},
+    year = {2010},
+    institution={ISO IEC JTC1/SC22/WG21},
+    url = {http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3092.pdf},
+    shorthand = {ISO10},
+}
+
+@Inbook{Ströder2014,
+    author="Str{\"o}der, Thomas and Giesl, J{\"u}rgen and Brockschmidt, Marc and Frohn, Florian and Fuhs, Carsten and Hensel, Jera and Schneider-Kamp, Peter",
+    editor="Demri, St{\'e}phane and Kapur, Deepak and Weidenbach, Christoph",
+    title="Proving Termination and Memory Safety for Programs with Pointer Arithmetic",
+    bookTitle="International Joint Conference on Automated Reasoning",
+    year="2014",
+    publisher="Springer International Publishing",
+    address="Cham",
+    pages="208--223",
+    _isbn="978-3-319-08587-6",
+    doi="10.1007/978-3-319-08587-6_15",
+    _url="http://dx.doi.org/10.1007/978-3-319-08587-6_15",
+    _read=1,
+    _tools="AProVE",
+    _related_raw="9, 22 separation logic, 4 5 AProVE, 24 ARMC, 1 COSTA, 7 Cyclist, 29 FuncTion, 25 Julia, 12 KITTeL, 28 LoopFrog, 16 TAN, 14 TRex, 6 T2, 15 Ultimate",
+    _summary = "termination analysis by encoding single nonrecursive LLVM function into integer transition system, uses separation logic"
+}
+
+@Article{Ströder2017,
+    author="Str{\"o}der, Thomas
+    and Giesl, J{\"u}rgen
+    and Brockschmidt, Marc
+    and Frohn, Florian
+    and Fuhs, Carsten
+    and Hensel, Jera
+    and Schneider-Kamp, Peter
+    and Aschermann, Cornelius",
+    title="Automatically Proving Termination and Memory Safety for Programs with Pointer Arithmetic",
+    journal="Journal of Automated Reasoning",
+    year="2017",
+    volume="58",
+    number="1",
+    pages="33--65",
+    abstract="While automated verification of imperative programs has been studied intensively, proving termination of programs with explicit pointer arithmetic fully automatically was still an open problem. To close this gap, we introduce a novel abstract domain that can track allocated memory in detail. We use it to automatically construct a symbolic execution graph that over-approximates all possible runs of a program and that can be used to prove memory safety. This graph is then transformed into an integer transition system, whose termination can be proved by standard techniques. We implemented this approach in the automated termination prover AProVE and demonstrate its capability of analyzing C programs with pointer arithmetic that existing tools cannot handle.",
+    issn="1573-0670",
+    doi="10.1007/s10817-016-9389-x",
+    _url="http://dx.doi.org/10.1007/s10817-016-9389-x",
+    _related = "Ströder2014 [extends]"
+}
+
+
+@inproceedings{Flanagan2005dpor,
+    author = {Flanagan, Cormac and Godefroid, Patrice},
+    title = {Dynamic Partial-order Reduction for Model Checking Software},
+    booktitle = {Principles of Programming Languages},
+    series = {POPL '05},
+    year = {2005},
+    _isbn = {1-58113-830-X},
+    location = {Long Beach, California, USA},
+    pages = {110--121},
+    numpages = {12},
+    _url = {http://doi.acm.org/10.1145/1040305.1040315},
+    doi = {10.1145/1040305.1040315},
+    acmid = {1040315},
+    publisher = {ACM},
+    address = {New York, NY, USA},
+    keywords = {partial-order reduction, software model checking},
+    _read=1,
+    _summary = "dynamic computation of partial order"
+}
+
+@inproceedings{Godefroid1997,
+    author = {Godefroid, Patrice},
+    title = {Model Checking for Programming Languages Using VeriSoft},
+    booktitle = {Principles of Programming Languages},
+    series = {POPL '97},
+    year = {1997},
+    _isbn = {0-89791-853-3},
+    location = {Paris, France},
+    pages = {174--186},
+    numpages = {13},
+    _url = {http://doi.acm.org/10.1145/263699.263717},
+    doi = {10.1145/263699.263717},
+    acmid = {263717},
+    publisher = {ACM},
+    address = {New York, NY, USA},
+}
+
+@inproceedings{Abdulla2014,
+    author = {Abdulla, Parosh and Aronis, Stavros and Jonsson, Bengt and Sagonas, Konstantinos},
+    title = {Optimal Dynamic Partial Order Reduction},
+    booktitle = {Principles of Programming Languages},
+    series = {POPL '14},
+    year = {2014},
+    _isbn = {978-1-4503-2544-8},
+    location = {San Diego, California, USA},
+    pages = {373--384},
+    numpages = {12},
+    _url = {http://doi.acm.org/10.1145/2535838.2535845},
+    doi = {10.1145/2535838.2535845},
+    acmid = {2535845},
+    publisher = {ACM},
+    address = {New York, NY, USA},
+    keywords = {concurrency, dynamic partial oder reduction, software model checking, source sets, systematic testing, wakeup trees},
+}
+
+@inproceedings{Cadar2008,
+    author = {Cadar, Cristian and Dunbar, Daniel and Engler, Dawson},
+    title = {KLEE: Unassisted and Automatic Generation of High-coverage Tests for Complex Systems Programs},
+    booktitle = {USENIX Conference on Operating Systems Design and Implementation},
+    series = {OSDI'08},
+    year = {2008},
+    location = {San Diego, California},
+    pages = {209--224},
+    numpages = {16},
+    url = {http://dl.acm.org/citation.cfm?id=1855741.1855756},
+    acmid = {1855756},
+    publisher = {USENIX Association},
+    address = {Berkeley, CA, USA},
+}
+
+@Inbook{Rakamaric2014,
+    author="Rakamarić, Zvonimir and Emmi, Michael",
+    editor="Biere, Armin and Bloem, Roderick",
+    title="SMACK: Decoupling Source Language Details from Verifier Implementations",
+    bookTitle="Computer Aided Verification",
+    year="2014",
+    publisher="Springer International Publishing",
+    address="Cham",
+    pages="106--113",
+    _isbn="978-3-319-08867-9",
+    doi="10.1007/978-3-319-08867-9_7",
+    _url="https://doi.org/10.1007/978-3-319-08867-9_7"
+}
+
+@Inbook{Sinz2012,
+    author="Sinz, Carsten and Merz, Florian and Falke, Stephan",
+    editor="Flanagan, Cormac and K{\"o}nig, Barbara",
+    title="LLBMC: A Bounded Model Checker for LLVM's Intermediate Representation",
+    bookTitle="Tools and Algorithms for the Construction and Analysis of Systems",
+    year="2012",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="542--544",
+    _isbn="978-3-642-28756-5",
+    doi="10.1007/978-3-642-28756-5_44",
+    _url="https://doi.org/10.1007/978-3-642-28756-5_44"
+}
+
+
+
+###
+
+@online{LLVM,
+    author = {LLVM project},
+    title  = {The LLVM Compiler Infrastructure Project},
+    url    = {http://llvm.org/},
+    urldate = {2017-08-22},
+    year = {2017},
+    shorthand = {LLV17}
+}
+
+@online{llvm:langref,
+    author = {LLVM Project},
+    title  = {LLVM Language Reference Manual},
+    url    = {http://llvm.org/docs/LangRef.html},
+    urldate = {2017-08-22},
+    year = {2017},
+    shorthand = {LLV17}
+}
+
+@InProceedings{Murphi,
+    author = {Dill, David L.},
+    title = {The Murphi Verification System},
+    booktitle = {Computer Aided Verification},
+    series = {CAV '96},
+    year = {1996},
+    _isbn = {3-540-61474-5},
+    pages = {390--393},
+    numpages = {4},
+    url = {http://dl.acm.org/citation.cfm?id=647765.735832},
+    acmid = {735832},
+    publisher = {Springer-Verlag},
+    address = {London, UK, UK},
+}
+
+@Inbook{Gunther2016,
+    author="G{\"u}nther, Henning and Laarman, Alfons and Weissenbacher, Georg",
+    editor="Chechik, Marsha and Raskin, Jean-Fran{\c{c}}ois",
+    title="Vienna Verification Tool: IC3 for Parallel Software",
+    bookTitle="Tools and Algorithms for the Construction and Analysis of Systems",
+    year="2016",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="954--957",
+    abstract="Recently proposed extensions of the IC3 model checking algorithm offer a powerful new way to symbolically verify software. The Vienna Verification Tool (VVT) implements these techniques with the aim to tackle the problem of parallel software verification. Its SMT-based abstraction mechanisms allow VVT to deal with infinite state systems. In addition, VVT utilizes a coarse-grained large-block encoding and a variant of Lipton's reduction to reduce the number of interleavings. This paper introduces VVT, its underlying architecture and use.",
+    _isbn="978-3-662-49674-9",
+    doi="10.1007/978-3-662-49674-9_69",
+    url="https://doi.org/10.1007/978-3-662-49674-9_69"
+}
+
+@Inbook{Cassez2017,
+    author="Cassez, Franck and Sloane, Anthony M.  and Roberts, Matthew and
+        Pigram, Matthew and Suvanpong, Pongsak and de Aledo, Pablo Gonzalez",
+    editor="Legay, Axel and Margaria, Tiziana",
+    title="Skink: Static Analysis of Programs in LLVM Intermediate Representation",
+    bookTitle="Tools and Algorithms for the Construction and Analysis of Systems",
+    year="2017",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="380--384",
+    abstract="Skink is a static analysis tool that analyses the LLVM intermediate representation (LLVM-IR) of a program source code. The analysis consists of checking whether there is a feasible execution that can reach a designated error block in the LLVM-IR. The result of a program analysis is ``correct'' if the error block is not reachable, ``incorrect'' if the error block is reachable, or ``inconclusive'' if the status of the program could not be determined. In this paper, we introduce Skink 2.0 to analyse single and multi-threaded C programs.",
+    _isbn="978-3-662-54580-5",
+    doi="10.1007/978-3-662-54580-5_27",
+    _url="https://doi.org/10.1007/978-3-662-54580-5_27"
+}
+
+@Inbook{Kroening2014,
+    author="Kroening, Daniel and Tautschnig, Michael",
+    editor="{\'A}brah{\'a}m, Erika and Havelund, Klaus",
+    title="CBMC -- C Bounded Model Checker",
+    bookTitle="Tools and Algorithms for the Construction and Analysis of Systems",
+    year="2014",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="389--391",
+    abstract="CBMC implements bit-precise bounded model checking for C programs and has been developed and maintained for more than ten years. CBMC verifies the absence of violated assertions under a given loop unwinding bound. Other properties, such as SV-COMP's ERROR labels or memory safety properties are reduced to assertions via automated instrumentation. Only recently support for efficiently checking concurrent programs, including support for weak memory models, has been added. Thus, CBMC is now capable of finding counterexamples in all of SV-COMP's categories. As back end, the competition submission of CBMC uses MiniSat 2.2.0.",
+    _isbn="978-3-642-54862-8",
+    doi="10.1007/978-3-642-54862-8_26",
+    _url="https://doi.org/10.1007/978-3-642-54862-8_26"
+}
+
+@Inbook{Clarke2004,
+    author="Clarke, Edmund and Kroening, Daniel and Lerda, Flavio",
+    editor="Jensen, Kurt and Podelski, Andreas",
+    title="A Tool for Checking ANSI-C Programs",
+    bookTitle="Tools and Algorithms for the Construction and Analysis of Systems",
+    year="2004",
+    publisher="Springer Berlin Heidelberg",
+    address="Berlin, Heidelberg",
+    pages="168--176",
+    abstract="We present a tool for the formal verification of ANSI-C programs using Bounded Model Checking (BMC). The emphasis is on usability: the tool supports almost all ANSI-C language features, including pointer constructs, dynamic memory allocation, recursion, and the float and double data types. From the perspective of the user, the verification is highly automated: the only input required is the BMC bound. The tool is integrated into a graphical user interface. This is essential for presenting long counterexample traces: the tool allows stepping through the trace in the same way a debugger allows stepping through a program.",
+    _isbn="978-3-540-24730-2",
+    doi="10.1007/978-3-540-24730-2_15",
+    _url="https://doi.org/10.1007/978-3-540-24730-2_15"
+}
+
+@book{Clarke1999,
+    title={Model checking},
+    author={Clarke, Edmund M and Grumberg, Orna and Peled, Doron},
+    year={1999},
+    isbn = {0-262-03270-8},
+    publisher = {MIT Press},
+    address = {Cambridge, MA, USA},
+}
+
+@article{Sistla1985,
+    author = {Sistla, Aravinda P. and Clarke, Edmund M.},
+    title = {The Complexity of Propositional Linear Temporal Logics},
+    journal = {Journal of the ACM},
+    issue_date = {July 1985},
+    volume = {32},
+    number = {3},
+    month = jul,
+    year = {1985},
+    issn = {0004-5411},
+    pages = {733--749},
+    numpages = {17},
+    _url = {http://doi.acm.org/10.1145/3828.3837},
+    doi = {10.1145/3828.3837},
+    acmid = {3837},
+    publisher = {ACM},
+    address = {New York, NY, USA},
+} 
+
+@book{Baier2008,
+    title={Principles of model checking},
+    author={Baier, Christel and Katoen, Joost-Pieter and Larsen, Kim Guldstrand},
+    year={2008},
+    publisher={MIT press}
+}
+
 

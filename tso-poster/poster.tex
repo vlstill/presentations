@@ -118,6 +118,9 @@
 
 %----------------------------------------------------------------------------------------
 
+\newcommand{\xtso}{x86-TSO\xspace}
+\newcommand{\divine}{\mbox{\textsf{DIVINE}}\xspace}
+
 \begin{document}
 
 \addtobeamertemplate{block end}{}{\vspace*{2ex}} % White space under blocks
@@ -133,15 +136,51 @@
 \begin{column}{\marginwid}\end{column} % Empty spacer column
 \begin{column}{\onecolwid} % The first column
 
-\begin{block}{Foo}
+\begin{block}{Relaxed Memory}
 
-\lipsum[1]
+Almost all server, desktop, and laptop processors manufactured in later decades
+exhibit relaxed memory behaviour, which together with the rise of multicore
+processors and parallel programs means that programmers have to deal with its
+additional complexities. Even on x86 processors, which have stronger memory
+model than most other architectures, programmers often have to decide whether
+to play safe with higher level synchronization constructs such as mutexes, or
+tap to the full power of the architecture and risk subtle unintuitive behaviour
+of relaxed memory accesses.
+
+Here, we present an extension of the \divine verifier which allows analysis of
+C and C++ programs under the \xtso memory model~\cite{x86tso}.  We show that by
+carefully designing the relaxed semantics it is possible to integrate it into
+explicit-state model checking in a way which is competitive to both bounded
+model checking and stateless model checking, while at the same time being more
+general and extensible.
 
 \end{block}
 
-\begin{block}{Bar}
+\begin{block}{Store Buffers}
 
-\lipsum[2]
+The typical description of the \xtso memory model uses \emph{store buffers}
+which are first-in-first-out memories local to each processor core. Every store
+the core performs is first saved into the store buffer. When the core performs
+load, it first consults its store buffers and if the given address is present
+in the store buffer it loads it from there, otherwise it loads it from the main
+memory. The core never consults store buffers of other cores. Eventually, each
+store buffer entry is flushed from the store buffer to the memory and therefore
+becomes visible to other threads.
+
+Commonly, the same approach is also used for verification. This does, however,
+create unnecessary nondeterministic flushing of the store buffers.
+
+\end{block}
+
+\begin{block}{Our Approach}
+
+The crucial observation behind our approach is that any nondeterministic
+decision regarding relaxed behaviour of \xtso can be delayed to the moment in
+which loads or fences are executed. This way nondeterminism can be resolved
+only when needed and therefore the verification can run faster and with lower
+memory footprint.
+
+This does, however, require certain generalization of the store buffers. 
 
 \end{block}
 
@@ -151,10 +190,94 @@
 
 \begin{column}{\twocolwid} % Begin a column which is two columns wide (column 2)
 
-\begin{block}{Two columns}
+\begin{block}{The \xtso Memory Model}
 
-\lipsum[3]
+    \begin{center}
+    \begingroup
+    \tt
+    \begin{columns}
+    \begin{column}{12cm}
+    \textcolor{dgreen}{int} x = 0, y = 0; \\
+    \mbox{}\\
+    \textcolor{dgreen}{void} thread0() \{ \\
+    \ \ \ \ y = 1; \\
+    \ \ \ \ \textcolor{dgreen}{int} a = x; \\
+    \}
+    \end{column}
+    \begin{column}{12cm}
+    \mbox{}\\
+    \mbox{}\\
+    \textcolor{dgreen}{void} thread0() \{ \\
+    \ \ \ \ y = 1; \\
+    \ \ \ \ \textcolor{dgreen}{int} a = x; \\
+    \}
+    \end{column}
+    \end{columns}\mbox{}
 
+    \noindent\medskip
+    reachable? a == 0 \&\& b == 0\\[4ex]
+    \endgroup
+    \begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
+                       , semithick
+                       , scale=2
+                       , thck/.style = { thick, decoration={markings,mark=at position 1 with {\arrow[scale=4]{>}}}, postaction={decorate}, },
+                       ]
+
+      \useasboundingbox (-10,1) (7.3,-6);
+
+      \draw [-] (-10,0) rectangle (-7,-6);
+      \draw [-] (-10,-1) -- (-7,-1)
+                (-10,-2) -- (-7,-2)
+                (-10,-3) -- (-7,-3)
+                (-10,-4) -- (-7,-4)
+                (-10,-5) -- (-7,-5);
+      \draw [-] (-9,0) -- (-9,-6);
+      \node () [anchor=west] at (-10,0.5) {memory};
+      \node () [anchor=west] at (-10,-2.5)  {\texttt{\color{blue}x}};
+      \node () [anchor=west] at (-9,-2.5) {\texttt{\color{blue}0}};
+
+      \node () [anchor=west] at (-10,-3.5)  {\texttt{\color{blue}y}};
+      \node () [anchor=west] at (-9,-3.5)  {\texttt{\color{blue}0}};
+
+      \node () [anchor=center] at (-2,-5.5) {store buffer of t. 0};
+      \node () [anchor=center] at (4,-5.5) {store buffer of t. 1};
+
+      \draw [-] (-4,-4) rectangle (0,-5);
+      \draw [-] (2,-4) rectangle (6,-5);
+      \draw [-] (-2,-4) -- (-2,-5);
+      \draw [-] (4,-4) -- (4,-5);
+
+      \node () [anchor=west] at (-4,-4.5)  {\texttt{\color{red}y}};
+      \node () [anchor=west] at (-2,-4.5)  {\texttt{\color{red}1}};
+
+      \node () [anchor=west] at (2,-4.5)  {\texttt{\color{red}x}};
+      \node () [anchor=west] at (4,-4.5)  {\texttt{\color{red}1}};
+
+      \node () [] at (-4, 0.5) {thread 0};
+      \draw [->, thck] (-4,0) -- (-4,-3.3);
+      \node () [anchor=west] at (-3.5, -0.5) {\texttt{\color{red}y = 1;}};
+      \node () [anchor=west] at (-3.5, -1.5) {\texttt{\color{blue}load x; \textrightarrow 0}};
+
+      \node () [] at (2, 0.5) {thread 1};
+      \draw [->, thck] (2,0) -- (2,-3.3);
+      \node () [anchor=west] at (2.5, -0.5) {\texttt{\color{red}x = 1;}};
+      \node () [anchor=west] at (2.5, -1.5) {\texttt{\color{blue}load y; \textrightarrow 0}};
+      \node () [anchor=west] at (2.5, -2.5) {\texttt{\color{dgreen}load x; \textrightarrow 1}};
+
+  \end{tikzpicture}
+  \end{center}
+  A simple demonstration of the \xtso memory model. The thread 0
+  writes 1 to variable \texttt{y} and then loads variable \texttt{x}, the
+  thread 2 writes 1 to \texttt{x} and then loads first \texttt{y} and then
+  \texttt{x}. Intuitively, we would expect it to be impossible for thread 0 to
+  load 0 from \texttt{x} and thread 1 to load 0 from \texttt{y} in the same
+  execution. However, under \xtso, the writes are cached in the store buffers
+  (marked as \textcolor{red}{red}). A load consults only memory and the store
+  buffer of given thread, which means it can ignore newer value from the other
+  thread (\textcolor{blue}{blue}). Therefore \texttt{load x} in thread 0 loads
+  0, as does \texttt{load y} in thread 1. However, \texttt{load x} in the
+  second thread reads value from the store buffer (\textcolor{dgreen}{green})
+  and therefore reads 1.
 \end{block}
 
 \begin{columns}[t,totalwidth=\twocolwid] % Split up the two columns wide column again
@@ -176,6 +299,11 @@
 
 \lipsum[5]
 
+\end{block}
+
+\begin{block}{References}
+\bibliographystyle{plain}
+\bibliography{poster}
 \end{block}
 
 %----------------------------------------------------------------------------------------
