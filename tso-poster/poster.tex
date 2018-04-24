@@ -195,6 +195,7 @@ therefore slow down the verification.
     \textcolor{dgreen}{void} thread0() \{ \\
     \ \ \ \ y = 1; \\
     \ \ \ \ \textcolor{dgreen}{int} a = x; \\
+    \ \ \ \ \textcolor{dgreen}{int} c = y; \\
     \}
     \end{column}
     \begin{column}{12cm}
@@ -202,6 +203,7 @@ therefore slow down the verification.
     \textcolor{dgreen}{void} thread0() \{ \\
     \ \ \ \ y = 1; \\
     \ \ \ \ \textcolor{dgreen}{int} b = x; \\
+    \ \ \ \ \textcolor{dgreen}{int} d = y; \\
     \}
     \end{column}
     \end{columns}\mbox{}
@@ -248,6 +250,7 @@ therefore slow down the verification.
       \draw [->, thck] (-4,0) -- (-4,-3);
       \node () [anchor=west] at (-3.5, -0.5) {\texttt{\color{red}y = 1;}};
       \node () [anchor=west] at (-3.5, -1.5) {\texttt{\color{blue}load x; \textrightarrow 0}};
+      \node () [anchor=west] at (-3.5, -2.5) {\texttt{\color{dgreen}load y; \textrightarrow 1}};
 
       \node () [] at (2, 0.5) {thread 1};
       \draw [->, thck] (2,0) -- (2,-3);
@@ -266,10 +269,9 @@ therefore slow down the verification.
   \xtso, the writes are cached in the store buffers (marked as
   \textcolor{red}{red}). A load consults only memory and the store buffer of
   given thread, which means it can ignore newer value from the other thread
-  (\textcolor{blue}{blue}). Therefore \texttt{load x} in thread 0 can load 0,
-  as can \texttt{load y} in thread 1. Nevertheless, \texttt{load x} in the
-  second thread reads value from the local store buffer
-  (\textcolor{dgreen}{green}) and therefore reads 1.
+  (\textcolor{blue}{blue}). Therefore \texttt{a} and \texttt{b} will contain old
+  values from the memory, while \texttt{c} and \texttt{d} will contain local
+  values from the store buffers.
 
 \end{block}
 
