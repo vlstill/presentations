@@ -279,14 +279,59 @@ it loads it from the main memory. The core never consults store buffers of
 other cores. Eventually, each store buffer entry is flushed from the store
 buffer to the memory and therefore becomes visible to other threads.
 
-Commonly, the same approach is also used for verification -- stores are
-performed into store buffers, which are then nondeterministically flushed to
-simulate that the memory hierarchy can take arbitrary time to propagate a store
-from the store buffer to the main memory. This nondeterminism is often achieved
-by adding a special \emph{flushing thread} which flushes store buffer entries
-and can interleave with the other threads freely. The main disadvantage of this
-approach is that it can create unnecessary nondeterministic choices and
-therefore slow down the verification.
+% Commonly, the same approach is also used for verification -- stores are
+% performed into store buffers, which are then nondeterministically flushed to
+% simulate that the memory hierarchy can take arbitrary time to propagate a store
+% from the store buffer to the main memory. This nondeterminism is often achieved
+% by adding a special \emph{flushing thread} which flushes store buffer entries
+% and can interleave with the other threads freely. The main disadvantage of this
+% approach is that it can create unnecessary nondeterministic choices and
+% therefore slow down the verification.
+
+\end{block}
+
+\begin{block}{Another \xtso Example}
+\makebox[\onecolwid][c]{
+\begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
+                   , semithick
+                   , scale=2
+                   , thck/.style = { thick, decoration={markings,mark=at position 1 with {\arrow[scale=4]{>}}}, postaction={decorate}, },
+                   ]
+
+  \draw [-] (-10,0) rectangle (-7,-4);
+  \draw [-] (-10,-1) -- (-7,-1)
+            (-10,-2) -- (-7,-2)
+            (-10,-3) -- (-7,-3);
+  \node () [anchor=center] at (-8.5, 0.5) {s.b. 1};
+  \node () [anchor=center] at (-8.5,-0.5) {\texttt{x $\leftarrow$ 1}};
+  \node () [anchor=center] at (-8.5,-1.5) {\texttt{y $\leftarrow$ 1}};
+  \node () [anchor=center] at (-8.5,-2.5) {\texttt{x $\leftarrow$ 2}};
+  \node () [anchor=center] at (-8.5,-3.5) {\color{blue}\texttt{y $\leftarrow$ 2}};
+
+  \draw [-] (-6,0) rectangle (-3,-2);
+  \draw [-] (-6,-1) -- (-3,-1);
+  \node () [anchor=center] at (-4.5, 0.5) {s.b. 2};
+  \node () [anchor=center] at (-4.5,-0.5) {\texttt{x $\leftarrow$ 3}};
+  \node () [anchor=center] at (-4.5,-1.5) {\texttt{y $\leftarrow$ 3}};
+
+\end{tikzpicture}
+}
+\\[2ex]
+\begin{columns}
+\begin{column}{12.8em}
+\begingroup
+    \tt
+    \textcolor{dgreen}{void} thread0() \{ \\
+    \ \ \ \ \textcolor{dgreen}{int} a = y; \\
+    \ \ \ \ \textcolor{dgreen}{int} b = x; \\
+    \}
+\endgroup
+\end{column}
+\end{columns}
+\bigskip
+Suppose \texttt{thread0} is about to execute with the displayed contents of
+store buffers of other two threads and suppose it will load value 2 from
+\texttt{y}.
 
 \end{block}
 
@@ -294,33 +339,81 @@ therefore slow down the verification.
 
 \begin{column}{\sepwid}\end{column} % Empty spacer column
 
-
 \begin{column}{\onecolwid}
 
 \begin{block}{Our Approach}
 
 The crucial observation behind our approach is that any nondeterministic
-decision regarding relaxed behaviour of \xtso can be delayed to the moment in
-which loads or fences are executed. This way nondeterminism can be resolved
-only when needed and therefore the verification can run faster and with lower
-memory footprint.
+decision regarding relaxed behaviour under \xtso can be delayed to the moment in
+which loads or fences are executed. This way nondeterminism can be resolved only
+when needed and therefore the verification can run faster and with lower memory
+footprint. This does, however, require certain generalization of the store
+buffers. They have to be visible to all threads and it should be possible to
+flush an entry from the store buffer before deciding on the exact ordering of
+its preceding entries with respect to entries in other store buffers.
 
-This does, however, require certain generalization of the store buffers. Store
-buffers have to be visible to all threads so that loads can consult other
-thread's store buffers and nondeterministically caused them to be flushed if
-matching entries are found. Furthermore, to prevent extended nondeterminism when
-an entry which is not oldest in the store buffer needs to be flushed, store
-buffer entries are extended with a flag which indicates that the corresponding
-entry should have been flushed. This allows us to have entries which are in the
-store buffer, and therefore their order relative to other buffered entries is
-not yet determined, but which have to be flushed once given address is loaded.
-
-Finally, to make the verification decidable, we limit the maximal size of store
-buffers. This limit is configurable and defaults to 32 entries in our
-implementation.
+% Store
+% buffers have to be visible to all threads so that loads can consult other
+% thread's store buffers and nondeterministically caused them to be flushed if
+% matching entries are found. Furthermore, to prevent extended nondeterminism when
+% an entry which is not oldest in the store buffer needs to be flushed, store
+% buffer entries are extended with a flag which indicates that the corresponding
+% entry should have been flushed. This allows us to have entries which are in the
+% store buffer, and therefore their order relative to other buffered entries is
+% not yet determined, but which have to be flushed once given address is loaded.
+% 
+% Finally, to make the verification decidable, we limit the maximal size of store
+% buffers. This limit is configurable and defaults to 32 entries in our
+% implementation.
 
 \end{block}
 
+\begin{block}{}
+\vspace{-3ex}
+\makebox[\onecolwid][c]{
+\begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
+                   , semithick
+                   , scale=2
+                   , thck/.style = { thick, decoration={markings,mark=at position 1 with {\arrow[scale=4]{>}}}, postaction={decorate}, },
+                   ]
+
+  \draw [-] (-10,0) rectangle (-7,-4);
+  \draw [-] (-10,-1) -- (-7,-1)
+            (-10,-2) -- (-7,-2)
+            (-10,-3) -- (-7,-3);
+  \node () [anchor=center] at (-8.5, 0.5) {s.b. 1};
+  \node () [anchor=center] at (-8.5,-0.5) {\color{red}\texttt{x $\leftarrow$ 1}};
+  \node () [anchor=center] at (-8.5,-1.5) {\color{red}\texttt{y $\leftarrow$ 1}};
+  \node () [anchor=center] at (-8.5,-2.5) {\color{red}\texttt{x $\leftarrow$ 2}};
+  \node () [anchor=center] at (-8.5,-3.5) {};
+
+  \draw [-] (-6,0) rectangle (-3,-2);
+  \draw [-] (-6,-1) -- (-3,-1);
+  \node () [anchor=center] at (-4.5, 0.5) {s.b. 2};
+  \node () [anchor=center] at (-4.5,-0.5) {\color{blue}\texttt{x $\leftarrow$ 3}};
+  \node () [anchor=center] at (-4.5,-1.5) {\texttt{y $\leftarrow$ 3}};
+
+\end{tikzpicture}
+}
+\\[2ex]
+\begin{columns}
+\begin{column}{12.8em}
+\begingroup
+    \tt
+    \textcolor{dgreen}{void} thread0() \{ \\
+    \ \ \ \ \textcolor{dgreen}{int} a = y; \textcolor{gray}{// \textrightarrow 2} \\
+    \ \ \ \ \textcolor{dgreen}{int} b = x; \\
+    \}
+\endgroup
+\end{column}
+\end{columns}
+\bigskip
+
+At this point, entries of store buffer 1 are marked as flushed. If \texttt{x} is
+now loaded from store buffer 2, both \texttt{x} entries from store buffer 1
+will be removed.
+
+\end{block}
 
 \end{column} % End of column 2.1
 
@@ -335,7 +428,7 @@ with CBMC~\cite{Clarke2004} and Nidhugg~\cite{Abdulla2015}. It can be seen that
 \divine's solves similar number of benchmarks and finds more bugs.
 
 \begingroup
-\bigskip
+\vspace{3ex}
 \centering
 \setlength\tabcolsep{0.5em} %
 \renewcommand{\arraystretch}{1.1} %
@@ -347,6 +440,7 @@ with CBMC~\cite{Clarke2004} and Nidhugg~\cite{Abdulla2015}. It can be seen that
     \bottomrule
 \end{tabular}
 \endgroup
+\bigskip
 \end{block}
 
 \begin{block}{References}
