@@ -214,11 +214,12 @@
 \setbeamertemplate{block begin}
 {
   \par\vskip\medskipamount
-  \begin{beamercolorbox}[colsep*=0ex,dp={2ex}]{block title}
-    \vskip-0.25cm
-    \usebeamerfont{block title}\large\insertblocktitle
-    \vskip2.5\bigskipamount
+  \begingroup
+  \usebeamerfont{block title}\large
+  \begin{beamercolorbox}[colsep*=0ex,dp={4ex}]{block title}
+    \insertblocktitle
   \end{beamercolorbox}
+  \endgroup
   {\parskip0pt\par}
   \ifbeamercolorempty[bg]{block title}
   {}
