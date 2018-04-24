@@ -149,33 +149,12 @@ tap to the full power of the architecture and risk subtle unintuitive behaviour
 of relaxed memory accesses.
 
 Here, we present an extension of the \divine verifier~\cite{DIVINEToolPaper2017}
-which allows analysis of C and C++ programs under the \xtso memory
-model~\cite{x86tso}.  We show that by carefully designing the relaxed semantics
-it is possible to integrate it into explicit-state model checking in a way which
-is competitive to both bounded model checking and stateless model checking,
-while at the same time being more general and extensible.
-
-\end{block}
-
-\begin{block}{Store Buffers}
-
-The typical description of the \xtso memory model is centered around
-\emph{store buffers} which are first-in-first-out memories local to each
-processor core. Every store the core performs is first saved into the store
-buffer. When the core performs load, it consults its store buffers and if the
-given address is present in the store buffer it loads it from there, otherwise
-it loads it from the main memory. The core never consults store buffers of
-other cores. Eventually, each store buffer entry is flushed from the store
-buffer to the memory and therefore becomes visible to other threads.
-
-Commonly, the same approach is also used for verification -- stores are
-performed into store buffers, which are then nondeterministically flushed to
-simulate that the memory hierarchy can take arbitrary time to propagate a store
-from the store buffer to the main memory. This nondeterminism is often achieved
-by adding a special \emph{flushing thread} which flushes store buffer entries
-and can interleave with the other threads freely. The main disadvantage of this
-approach is that it can create unnecessary nondeterministic choices and
-therefore slow down the verification.
+which allows analysis of C and C++ programs under the \xtso memory model of
+current Intel/AMD CPUs~\cite{x86tso}.  We show that by carefully designing the
+relaxed semantics it is possible to integrate it into explicit-state model
+checking in a way which is competitive to both bounded model checking and
+stateless model checking, while at the same time being more general and
+extensible.
 
 \end{block}
 
@@ -276,7 +255,44 @@ therefore slow down the verification.
 
 \end{block}
 
-\begin{columns}[t,totalwidth=\twocolwid] % Split up the two columns wide column again
+\end{column} % End of the double
+
+\begin{column}{\marginwid}\end{column} % Empty spacer column
+
+\end{columns}
+
+\begin{columns}[t]
+
+\begin{column}{\marginwid}\end{column} % Empty spacer column
+
+\begin{column}{\onecolwid}
+
+\begin{block}{Store Buffers}
+
+The typical description of the \xtso memory model is centered around
+\emph{store buffers} which are first-in-first-out memories local to each
+processor core. Every store the core performs is first saved into the store
+buffer. When the core performs load, it consults its store buffers and if the
+given address is present in the store buffer it loads it from there, otherwise
+it loads it from the main memory. The core never consults store buffers of
+other cores. Eventually, each store buffer entry is flushed from the store
+buffer to the memory and therefore becomes visible to other threads.
+
+Commonly, the same approach is also used for verification -- stores are
+performed into store buffers, which are then nondeterministically flushed to
+simulate that the memory hierarchy can take arbitrary time to propagate a store
+from the store buffer to the main memory. This nondeterminism is often achieved
+by adding a special \emph{flushing thread} which flushes store buffer entries
+and can interleave with the other threads freely. The main disadvantage of this
+approach is that it can create unnecessary nondeterministic choices and
+therefore slow down the verification.
+
+\end{block}
+
+\end{column}
+
+\begin{column}{\sepwid}\end{column} % Empty spacer column
+
 
 \begin{column}{\onecolwid}
 
@@ -340,12 +356,6 @@ with CBMC~\cite{Clarke2004} and Nidhugg~\cite{Abdulla2015}. It can be seen that
 %----------------------------------------------------------------------------------------
 
 \end{column} % End of column 2.2
-
-\end{columns} % End of the split of column 2
-
-\end{column} % End of the second column
-
-\begin{column}{\sepwid}\end{column} % Empty spacer column
 
 \begin{column}{\marginwid}\end{column} % Empty spacer column
 
