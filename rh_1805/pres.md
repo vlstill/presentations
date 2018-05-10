@@ -51,7 +51,7 @@ rather efficient implementation of `x86`-TSO
 . . .
 
 - future: integrate some ideas from stateless model checking
-  - memory action graphs
+  - executions graphs
   - more advanced exploration algorithms
 
 ## Current Status: SV-COMP 2019
