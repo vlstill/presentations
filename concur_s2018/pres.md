@@ -23,7 +23,8 @@ date: 11th May 2018
 
 ## Inverting (In)equalities
 
-- SMT literals: $s \bowtie t$ for some term $s$ and $t$
+- SMT literals: $s \bowtie t$ for some term $s$ and $t$ and ${\bowtie} \in \{
+  \approx, \not\approx, <, >, … \}$
 - if they contain only one occurrence of variable $x$ they might be solvable for
   $x$:
   - $x + a \approx b \rightarrow x = b - a$
@@ -52,9 +53,9 @@ date: 11th May 2018
 - most SMT equations are only conditionally invertible
     - $x << s \approx t$ is invertible iff \pause $t$ ends with at least $s$
       zeroes \pause ($(t >> s) << s \approx t$) \pause
-      - solution: $x = t >> s$
+      - solution: $x = t >> s$ \pause
     - $\mathit{concat}(x, s) \approx t$ is invertible if the last $|s|$ bits of
-      $t$ are equal to $s$
+      $t$ are equal to\ $s$
 
       . . .
 
@@ -88,7 +89,8 @@ date: 11th May 2018
 - intuitively, $\Gamma$ is a set of constrains on $\mathbf{y}$
 
 - $\mathcal{S}$ returns a vector of terms which can be substituted to $\mathbf{x}$
-    - these terms do not contain free $\mathbf{x}$a
+    - these terms do not contain free $\mathbf{x}$
+    - should somehow abstract the model $\mathcal{I}$
 
       . . .
 
