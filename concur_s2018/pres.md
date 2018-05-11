@@ -81,7 +81,7 @@ date: 11th May 2018
         \mathbf{x}) \}$ is unsatisfiable, return *sat*
     3.  otherwise,
         - let $\mathcal{I}$ be a model of $\Gamma'$ and $\mathbf{t} =
-          \mathcal{S}(\mathbf{x}, \mathcal{I}, \Gamma')$
+          \mathcal{S}(\mathbf{x}, \psi, \mathcal{I}, \Gamma)$
         - $\Gamma := \Gamma \cup \{ \psi(\mathbf{y}, \mathbf{t}) \}$
 
 \bigskip
@@ -94,9 +94,40 @@ date: 11th May 2018
 
       . . .
 
-    1.  collects all literals from $\Gamma'$
+    1.  collects all literals true in $\mathcal{I}$ from $\psi$
     #.  projects them into simplified conditions
     #.  linearizes them
     #.  selects and solves one
+
+## Optimizations
+
+- linearizing rewrites: $x + x \rightsquigarrow 2 \cdot x$
+- variable eliminations: eliminate variables for which solution can be found
+  directly (destructive equality resolution, DER)
+- special cases, such as multiplication by odd constant
+- splitting variables instead of extract
+
+## Example I
+
+$$ \forall x\exists a, b.\ (x \cdot a < b) $$
+
+1.  $\Gamma = \emptyset$, $\Gamma' = \set{ (x \cdot a \geq b) }$ \pause\
+    $\mathcal{I} = \set{ x \leftarrow 0, a \leftarrow 0, b \leftarrow 0 }$ \pause\
+    $\mathcal{N}_x = \set{ (x \cdot a < b) }$ \pause\
+    solution: $\varepsilon x.\ b \not\approx 0 \implies x \cdot a < b$
+
+## Example II
+
+$$ \forall x\exists a, b, c.\ (x + a \approx b) \land (a \cdot x \approx c) $$
+
+1.  $\Gamma = \emptyset, \Gamma' = \{ (x + a \not\approx b) \lor (a \cdot x \not\approx c) \}$ \pause \
+    $\mathcal{I} = \set{ a \leftarrow 1, b \leftarrow 2, c \leftarrow 0, x \leftarrow 1 }$ \pause \
+    $\mathcal{N}_x = \{ (x + a \approx b), (a \cdot x \not\approx c) \}$ (projected, linearized) \pause \
+    select $(x + a \approx b)$ \pause inversion is $x = b - a$ \pause\
+
+2.  $\Gamma = \{ (b - a + a \approx b) \land (a \cdot (b - a) \approx c) \}$ \
+    $\Gamma = \{ (a \cdot (b - a) \approx c) \}$ \pause (sat) \
+    $\Gamma' = \{ (a \cdot (b - a) \approx c), (x + a \not\approx b) \lor (a \cdot x \not\approx c)  \}$
+
 
 
