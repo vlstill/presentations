@@ -169,6 +169,7 @@ extensible.
 
     \begingroup
     \centering
+    \begingroup
     \tt
     \begin{columns}
     \begin{column}{12cm}
@@ -181,16 +182,17 @@ extensible.
     \end{column}
     \begin{column}{12cm}
     \mbox{}\\
-    \textcolor{dgreen}{void} thread0() \{ \\
-    \ \ \ \ y = 1; \\
-    \ \ \ \ \textcolor{dgreen}{int} b = x; \\
-    \ \ \ \ \textcolor{dgreen}{int} d = y; \\
+    \textcolor{dgreen}{void} thread1() \{ \\
+    \ \ \ \ x = 1; \\
+    \ \ \ \ \textcolor{dgreen}{int} b = y; \\
+    \ \ \ \ \textcolor{dgreen}{int} d = x; \\
     \}
     \end{column}
     \end{columns}\mbox{}
+    \endgroup
 
     \noindent\medskip
-    reachable? a == 0 \&\& b == 0\\[2ex]
+    is $a = 0 \land b = 0$ reachable?\\[2ex]
     \endgroup
 
     \begin{center}
@@ -213,8 +215,8 @@ extensible.
       \node () [anchor=west] at (-10,-3.5)  {\texttt{\color{blue}y}};
       \node () [anchor=west] at (-9,-3.5)  {\texttt{\color{blue}0}};
 
-      \node () [anchor=center] at (-2,-3.5) {store buffer of t. 0};
-      \node () [anchor=center] at (4,-3.5) {store buffer of t. 1};
+      \node () [anchor=center] at (-2,-3.5) {store buffer};
+      \node () [anchor=center] at (4,-3.5) {store buffer};
 
       \draw [-] (-4,-4) rectangle (0,-5);
       \draw [-] (2,-4) rectangle (6,-5);
