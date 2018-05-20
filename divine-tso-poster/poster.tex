@@ -76,8 +76,10 @@
 \usepackage{pdfpages}
 \usepackage{microtype}
 \usepackage{booktabs}
+\usepackage[export]{adjustbox}
 
 \newcommand{\TODO}[1]{\textcolor{red}{#1}}
+\setlength{\overfullrule}{5pt} % TODO: remove
 
 %-----------------------------------------------------------
 \usepackage{wrapfig}
@@ -92,6 +94,7 @@
 
 \newcommand{\xtso}{\mbox{x86-\kern-.15em TSO}\xspace}
 \newcommand{\divine}{\mbox{DIVINE}\xspace}
+\colorlet{flushed}{yellow!60!red!85!black}
 
 %----------------------------------------------------------------------------------------
 %	TITLE SECTION
@@ -117,9 +120,9 @@
   }
   {\titletext}} % Poster title
 
-\author{Vladimír Štill \and Jiří Barnat} % Author(s)
+\author{Vladimír Štill and Jiří Barnat} % Author(s)
 
-\institute{Faculty of Informatics, Masaryk University\vspace*{-3cm}} % Institution(s)
+\institute{Faculty of Informatics, Masaryk University\vspace*{-2cm}} % Institution(s)
 
 %----------------------------------------------------------------------------------------
 
@@ -146,32 +149,9 @@ Even on x86 processors, which have stronger memory model than most other archite
 Here, we present an extension of the \divine model checker which allows for analysis of C and C++ programs under the \xtso relaxed memory model.
 This means that \divine can now validate parallel programs intended to run on x86 processors more precisely.
 The novelty of our approach is in a careful design of an encoding of \xtso operations so that nondeterminism is minimized, and therefore the performance of analysis is increased.
+In particular, we allow for nondeterminism only in connection with memory fences and load operations of those memory addresses that were written to by a preceding store.
 
 \end{block}
-
-\begin{block}{Results}
-
-In this evaluation, we compare our approach with state-of-the-art bounded model checker CBMC and stateless model checker Nidhugg and show that extended \divine competes well with both of them.
-The evaluation is performed on SV-COMP concurrency benchmarks without data nondeterminism.
-Of these benchmarks, \divine can solve more instances and discover more bugs than both of the other tools.
-The following table shows how many benchmarks were completed by each of the tools, how many of these contained errors under \xtso, but not without relaxed memory, and how many benchmarks were only solved by given tool and not the other two tools.
-
-\begingroup
-\vspace{3ex}
-\centering
-\setlength\tabcolsep{0.5em} %
-\renewcommand{\arraystretch}{1.1} %
-\begin{tabular}{lrrr} \toprule
-             & CBMC & Nidhugg & DIVINE \\ \midrule
-    finished &   21 &      25 &     28 \\
-    errors   &    3 &       3 &     10 \\
-    unique   &    5 &       3 &      6 \\
-    \bottomrule
-\end{tabular}
-\endgroup
-\bigskip
-\end{block}
-
 
 \end{column} % End of the first column
 
@@ -181,6 +161,7 @@ The following table shows how many benchmarks were completed by each of the tool
 
 \begin{block}{The \xtso Memory Model}
 
+    \begin{figure}[h]
     \begingroup
     \centering
     \begingroup
@@ -206,7 +187,7 @@ The following table shows how many benchmarks were completed by each of the tool
     \endgroup
 
     \noindent\medskip
-    is $a = 0 \land b = 0$ reachable?\\[2ex]
+    is $a = 0 \land b = 0$ reachable?\\[2.05ex]
     \endgroup
 
     \begin{center}
@@ -258,14 +239,18 @@ The following table shows how many benchmarks were completed by each of the tool
   \end{tikzpicture}
   \end{center}
 
-  This figure demonstrates the \xtso memory model.
+  \caption{
+  A demonstration of the \xtso memory model.
   The thread 0 stores 1 to variable \texttt{y} and then loads variables \texttt{x} and \texttt{y}.
-  The thread 2 stores 1 to \texttt{x} and then loads \texttt{y} and \texttt{x}.
-  Intuitively, we would expect it to be impossible for $a = 0$ and $b = 0$ to both be true at the end of the execution as there is no interleaving of thread actions which would produce such result.
-  However, under \xtso, the stores are cached in the store buffers (such stores are marked \textcolor{red}{red}).
-  A load consults only memory and the store buffer of the given thread, which means it can load data from memory and ignore newer values from the other thread (\textcolor{blue}{blue}).
+  The thread 1 stores 1 to \texttt{x} and then loads \texttt{y} and \texttt{x}.
+  Intuitively, we would expect it to be impossible for $a = 0$ and $b = 0$ to both be true at the end of the execution, as there is no interleaving of thread actions which would produce such a result.
+  However, under \xtso, the stores are cached in thread-local store buffers (marked \textcolor{red}{red}).
+  A load consults only shared memory and the store buffer of the given thread, which means it can load data from the memory and ignore newer values from the other thread (\textcolor{blue}{blue}).
   Therefore \texttt{a} and \texttt{b} will contain old values from the memory.
   On the other hand, \texttt{c} and \texttt{d} will contain local values from the store buffers (locally read values are marked \textcolor{dgreen}{green}).
+  }
+  \vspace{-1ex}
+  \end{figure}
 
 \end{block}
 
@@ -275,39 +260,59 @@ The following table shows how many benchmarks were completed by each of the tool
 
 \end{columns}
 
-\begin{columns}[t]
+\begin{columns}[t] % The whole poster consists of three major columns, the second of which is split into two columns twice - the [t] option aligns each column's content to the top
 
 \begin{column}{\marginwid}\end{column} % Empty spacer column
+\begin{column}{\onecolwid} % The first column
 
-\begin{column}{\onecolwid}
+\begin{block}{Results}
 
-\begin{block}{Store Buffers}
+We compare our approach with state-of-the-art bounded model checker CBMC and stateless model checker Nidhugg and show that extended \divine competes well with both of them.
+The evaluation is performed on SV-COMP concurrency benchmarks without data nondeterminism.
+Of these benchmarks, \divine can solve more instances and discover more bugs than both of the other tools.
+The following table shows how many benchmarks were completed by each of the tools, how many of these contained errors under \xtso, but not without relaxed memory, and how many benchmarks were only solved by the given tool and not the other two tools.
 
-The typical description of the \xtso memory model is centered around
-\emph{store buffers} which are first-in-first-out memories local to each
-processor core. Every store the core performs is first saved into the store
-buffer. When the core performs load, it consults its store buffers and if the
-given address is present in the store buffer it loads it from there, otherwise
-it loads it from the main memory. The core never consults store buffers of
-other cores. Eventually, each store buffer entry is flushed from the store
-buffer to the memory and therefore becomes visible to other threads.
-
-% Commonly, the same approach is also used for verification -- stores are
-% performed into store buffers, which are then nondeterministically flushed to
-% simulate that the memory hierarchy can take arbitrary time to propagate a store
-% from the store buffer to the main memory. This nondeterminism is often achieved
-% by adding a special \emph{flushing thread} which flushes store buffer entries
-% and can interleave with the other threads freely. The main disadvantage of this
-% approach is that it can create unnecessary nondeterministic choices and
-% therefore slow down the verification.
-
+\begingroup
+\vspace{3ex}
+\centering
+\setlength\tabcolsep{0.5em} %
+\renewcommand{\arraystretch}{1.1} %
+\begin{tabular}{lrrr} \toprule
+             & CBMC & Nidhugg & DIVINE \\ \midrule
+    finished &   21 &      25 &     27 \\
+    TSO bugs &    3 &       3 &      9 \\
+    unique   &    5 &       3 &      5 \\
+    \bottomrule
+\end{tabular}
+\endgroup
+\bigskip
 \end{block}
 
-\begin{block}{Another \xtso Example}
-\makebox[\onecolwid][c]{
+\bigskip
+\includegraphics[width=0.3\onecolwid, valign=t]{qrcode}
+\rm\footnotesize\href{https://divine.fi.muni.cz/2018/x86tso/}{https://divine.fi.muni.cz/2018/x86tso/}
+
+\end{column} % End of the first column
+
+\begin{column}{\sepwid}\end{column} % Empty spacer column
+
+\begin{column}{\twocolwid} % Begin a column which is two columns wide (column 2)
+
+\begin{block}{Delayed Flushing}
+
+\xtso is a Total Store Order memory model, which means store buffers maintain execution order of stores.
+The main novelty of our approach is \emph{delayed flushing} which allows us to remove entries from the store buffer in order in which the corresponding values are read instead of the store order.
+This improvement limits nodeterminism by delaying it as long as possible.
+The reduced nondeterminism translates to better performance of verification using an explicit-state model checker.
+
+\begin{figure}[h]
+\vspace{0.58ex}
+\newcommand{\colwidth}{0.31\twocolwid}
+
+\begin{minipage}[t]{\colwidth}
 \begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
                    , semithick
-                   , scale=2
+                   , scale=1.9
                    , thck/.style = { thick, decoration={markings,mark=at position 1 with {\arrow[scale=4]{>}}}, postaction={decorate}, },
                    ]
 
@@ -319,74 +324,41 @@ buffer to the memory and therefore becomes visible to other threads.
   \node () [anchor=center] at (-8.5,-0.5) {\texttt{x $\leftarrow$ 1}};
   \node () [anchor=center] at (-8.5,-1.5) {\texttt{y $\leftarrow$ 1}};
   \node () [anchor=center] at (-8.5,-2.5) {\texttt{x $\leftarrow$ 2}};
-  \node () [anchor=center] at (-8.5,-3.5) {\color{blue}\texttt{y $\leftarrow$ 2}};
+  \node () [anchor=center] at (-8.5,-3.5) {\color{dgreen}\texttt{y $\leftarrow$ 2}};
 
-  \draw [-] (-6,0) rectangle (-3,-2);
-  \draw [-] (-6,-1) -- (-3,-1);
+  \draw [-] (-6,0) rectangle (-3,-4);
+  \draw [-] (-6,-1) -- (-3,-1)
+            (-6,-2) -- (-3,-2)
+            (-6,-3) -- (-3,-3);
   \node () [anchor=center] at (-4.5, 0.5) {s.b. 2};
   \node () [anchor=center] at (-4.5,-0.5) {\texttt{x $\leftarrow$ 3}};
   \node () [anchor=center] at (-4.5,-1.5) {\texttt{y $\leftarrow$ 3}};
 
 \end{tikzpicture}
-}
-\\[2ex]
-\begin{columns}
-\begin{column}{12.8em}
 \begingroup
     \tt
-    \textcolor{dgreen}{void} thread0() \{ \\
-    \ \ \ \ \textcolor{dgreen}{int} a = y; \\
-    \ \ \ \ \textcolor{dgreen}{int} b = x; \\
+    \textcolor{gray}{void} thread0() \{ \\
+    \indent{}\textcolor{gray}{int} a = y; \\
+    \indent{}\textcolor{gray}{int} b = x; \\
     \}
 \endgroup
-\end{column}
-\end{columns}
-\bigskip
-Suppose \texttt{thread0} is about to execute with the displayed contents of
-store buffers of other two threads and suppose it will load value 2 from
-\texttt{y}.
 
-\end{block}
+\caption{
+Suppose \texttt{thread0} is about to execute with the displayed contents of store buffers of two other threads and suppose it had nondeterministically chosen to load value 2 from \texttt{y} (denoted by \textcolor{dgreen}{green} in the figure).
+The entries at the top of the store buffers are the oldest entries.
+}
 
-\end{column}
+\label{fig:flushflagA}
 
-\begin{column}{\sepwid}\end{column} % Empty spacer column
+\end{minipage}
+%
+\hfill
+%
+\begin{minipage}[t]{\colwidth}
 
-\begin{column}{\onecolwid}
-
-\begin{block}{Our Approach}
-
-The crucial observation behind our approach is that any nondeterministic
-decision regarding relaxed behaviour under \xtso can be delayed to the moment in
-which loads or fences are executed. This way nondeterminism can be resolved only
-when needed and therefore the verification can run faster and with lower memory
-footprint. This does, however, require certain generalization of the store
-buffers. They have to be visible to all threads and it should be possible to
-flush an entry from the store buffer before deciding on the exact ordering of
-its preceding entries with respect to entries in other store buffers.
-
-% Store
-% buffers have to be visible to all threads so that loads can consult other
-% thread's store buffers and nondeterministically caused them to be flushed if
-% matching entries are found. Furthermore, to prevent extended nondeterminism when
-% an entry which is not oldest in the store buffer needs to be flushed, store
-% buffer entries are extended with a flag which indicates that the corresponding
-% entry should have been flushed. This allows us to have entries which are in the
-% store buffer, and therefore their order relative to other buffered entries is
-% not yet determined, but which have to be flushed once given address is loaded.
-% 
-% Finally, to make the verification decidable, we limit the maximal size of store
-% buffers. This limit is configurable and defaults to 32 entries in our
-% implementation.
-
-\end{block}
-
-\begin{block}{}
-\vspace{-3ex}
-\makebox[\onecolwid][c]{
 \begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
                    , semithick
-                   , scale=2
+                   , scale=1.9
                    , thck/.style = { thick, decoration={markings,mark=at position 1 with {\arrow[scale=4]{>}}}, postaction={decorate}, },
                    ]
 
@@ -395,51 +367,97 @@ its preceding entries with respect to entries in other store buffers.
             (-10,-2) -- (-7,-2)
             (-10,-3) -- (-7,-3);
   \node () [anchor=center] at (-8.5, 0.5) {s.b. 1};
-  \node () [anchor=center] at (-8.5,-0.5) {\color{red}\texttt{x $\leftarrow$ 1}};
-  \node () [anchor=center] at (-8.5,-1.5) {\color{red}\texttt{y $\leftarrow$ 1}};
-  \node () [anchor=center] at (-8.5,-2.5) {\color{red}\texttt{x $\leftarrow$ 2}};
-  \node () [anchor=center] at (-8.5,-3.5) {};
+  \node () [anchor=center] at (-8.5,-0.5) {\color{flushed}\texttt{x $\leftarrow$ 1}};
+  \node () [anchor=center] at (-8.5,-1.5) {\color{flushed}\texttt{x $\leftarrow$ 2}};
 
-  \draw [-] (-6,0) rectangle (-3,-2);
-  \draw [-] (-6,-1) -- (-3,-1);
+  \draw [-] (-6,0) rectangle (-3,-4);
+  \draw [-] (-6,-1) -- (-3,-1)
+            (-6,-2) -- (-3,-2)
+            (-6,-3) -- (-3,-3);
   \node () [anchor=center] at (-4.5, 0.5) {s.b. 2};
-  \node () [anchor=center] at (-4.5,-0.5) {\color{blue}\texttt{x $\leftarrow$ 3}};
+  \node () [anchor=center] at (-4.5,-0.5) {\color{dgreen}\texttt{x $\leftarrow$ 3}};
   \node () [anchor=center] at (-4.5,-1.5) {\texttt{y $\leftarrow$ 3}};
 
 \end{tikzpicture}
-}
-\\[2ex]
-\begin{columns}
-\begin{column}{12.8em}
+
 \begingroup
     \tt
-    \textcolor{dgreen}{void} thread0() \{ \\
-    \ \ \ \ \textcolor{dgreen}{int} a = y; \textcolor{gray}{// \textrightarrow 2} \\
-    \ \ \ \ \textcolor{dgreen}{int} b = x; \\
+    \textcolor{gray}{void} thread0() \{ \\
+    \indent{}\textcolor{gray}{int} a = y; \textcolor{gray}{// \textrightarrow 2} \\
+    \indent{}\textcolor{gray}{int} b = x; \\
     \}
 \endgroup
-\end{column}
-\end{columns}
-\bigskip
 
-At this point, entries of store buffer 1 are marked as flushed. If \texttt{x} is
-now loaded from store buffer 2, both \texttt{x} entries from store buffer 1
-will be removed.
+\caption{At this point, \texttt{x}~entries of store buffer 1 are marked as flushed (\textcolor{flushed}{orange}) and the \mbox{$\texttt{y} \leftarrow \texttt{1}$} entry was removed as it was succeeded by the used entry \mbox{$\texttt{y} \leftarrow \texttt{2}$}.
+The thread had nondeterministically selected to load \texttt{x} from store buffer 2.}
+
+\label{fig:flushflagB}
+
+\end{minipage}
+%
+\hfill
+%
+\begin{minipage}[t]{\colwidth}
+
+\begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
+                   , semithick
+                   , scale=1.9
+                   , thck/.style = { thick, decoration={markings,mark=at position 1 with {\arrow[scale=4]{>}}}, postaction={decorate}, },
+                   ]
+
+  \draw [-] (-10,0) rectangle (-7,-4);
+  \draw [-] (-10,-1) -- (-7,-1)
+            (-10,-2) -- (-7,-2)
+            (-10,-3) -- (-7,-3);
+  \node () [anchor=center] at (-8.5, 0.5) {s.b. 1};
+
+  \draw [-] (-6,0) rectangle (-3,-4);
+  \draw [-] (-6,-1) -- (-3,-1)
+            (-6,-2) -- (-3,-2)
+            (-6,-3) -- (-3,-3);
+  \node () [anchor=center] at (-4.5, 0.5) {s.b. 2};
+  \node () [anchor=center] at (-4.5,-0.5) {\texttt{y $\leftarrow$ 3}};
+
+\end{tikzpicture}
+
+\begingroup
+    \tt
+    \textcolor{gray}{void} thread0() \{ \\
+    \indent{}\textcolor{gray}{int} a = y; \textcolor{gray}{// \textrightarrow 2} \\
+    \indent{}\textcolor{gray}{int} b = x; \textcolor{gray}{// \textrightarrow 3} \\
+    \}
+\endgroup
+
+\caption{
+In the load of \texttt{x}, all \texttt{x} entries were evicted from the buffers -- all the flushed entries for \texttt{x} (which were not selected) had to be dropped before \mbox{$\texttt{x} \leftarrow \texttt{3}$} was propagated to the memory.
+The last entry (\mbox{$\texttt{y} \leftarrow \texttt{3}$}) will remain in the store buffer if \texttt{y} will never be loaded in the program again.
+}
+
+\label{fig:flushflagC}
+
+\end{minipage}
+\end{figure}
 
 \end{block}
 
-\end{column} % End of column 2.1
-
-\begin{column}{\sepwid}\end{column} % Empty spacer column
-\begin{column}{\onecolwid}
-
-%----------------------------------------------------------------------------------------
-
-\end{column} % End of column 2.2
+\end{column} % End of the double
 
 \begin{column}{\marginwid}\end{column} % Empty spacer column
 
-\end{columns} % End of all the columns in the poster
+\end{columns}
+
+% \vspace{-5ex}
+% \hspace{0.5in}\begin{beamercolorbox}[wd=816mm,colsep=0.15cm]{cboxb}\end{beamercolorbox}
+%
+% \begin{columns}
+% \begin{column}{\marginwid}\end{column} % Empty spacer column
+% \begin{column}{\onecolwid}
+% \\[1ex]
+% \end{column}
+% \begin{column}{\sepwid}\end{column} % Empty spacer column
+% \begin{column}{\twocolwid}\end{column} % Empty spacer column
+% \begin{column}{\marginwid}\end{column} % Empty spacer column
+% \end{columns}
 
 \end{frame} % End of the enclosing frame
 
