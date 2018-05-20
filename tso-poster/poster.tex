@@ -90,11 +90,14 @@
 
 \usepackage{lipsum}
 
+\newcommand{\xtso}{\mbox{x86-\kern-.15em TSO}\xspace}
+\newcommand{\divine}{\mbox{DIVINE}\xspace}
+
 %----------------------------------------------------------------------------------------
 %	TITLE SECTION
 %----------------------------------------------------------------------------------------
 
-\newcommand{\titletext}{Verification of C and C++ under the~x86-TSO Memory Model}
+\newcommand{\titletext}{Model Checking of C++ Programs under the \xtso Memory Model}
 \newcommand{\logowidth}{2.6\baselineskip}
 \title{%
   \texorpdfstring{%
@@ -120,9 +123,6 @@
 
 %----------------------------------------------------------------------------------------
 
-\newcommand{\xtso}{x86-TSO\xspace}
-\newcommand{\divine}{\mbox{DIVINE}\xspace}
-
 \begin{document}
 
 \addtobeamertemplate{block end}{}{\vspace*{2ex}} % White space under blocks
@@ -140,24 +140,38 @@
 
 \begin{block}{Relaxed Memory}
 
-Almost all server, desktop, and laptop processors manufactured in later decades
-exhibit relaxed memory behaviour, which together with the rise of multicore
-processors and parallel programs means that programmers have to deal with its
-additional complexities. Even on x86 processors, which have stronger memory
-model than most other architectures, programmers often have to decide whether
-to play safe with higher level synchronization constructs such as mutexes, or
-tap to the full power of the architecture and risk subtle unintuitive behaviour
-of relaxed memory accesses.
+Almost all recent processors exhibit relaxed memory behavior, which, together with the rise of multicore processors and parallel programs means that programmers have to deal with its complexities.
+Even on x86 processors, which have stronger memory model than most other architectures, programmers often have to decide whether to play safe with higher level synchronization constructs such as mutexes, or tap to the full power of the architecture and risk subtle unintuitive behavior of relaxed memory accesses.
 
-Here, we present an extension of the \divine verifier~\cite{DIVINEToolPaper2017}
-which allows analysis of C and C++ programs under the \xtso memory model of
-current Intel/AMD CPUs~\cite{x86tso}.  We show that by carefully designing the
-relaxed semantics it is possible to integrate it into explicit-state model
-checking in a way which is competitive to both bounded model checking and
-stateless model checking, while at the same time being more general and
-extensible.
+Here, we present an extension of the \divine model checker which allows for analysis of C and C++ programs under the \xtso relaxed memory model.
+This means that \divine can now validate parallel programs intended to run on x86 processors more precisely.
+The novelty of our approach is in a careful design of an encoding of \xtso operations so that nondeterminism is minimized, and therefore the performance of analysis is increased.
 
 \end{block}
+
+\begin{block}{Results}
+
+In this evaluation, we compare our approach with state-of-the-art bounded model checker CBMC and stateless model checker Nidhugg and show that extended \divine competes well with both of them.
+The evaluation is performed on SV-COMP concurrency benchmarks without data nondeterminism.
+Of these benchmarks, \divine can solve more instances and discover more bugs than both of the other tools.
+The following table shows how many benchmarks were completed by each of the tools, how many of these contained errors under \xtso, but not without relaxed memory, and how many benchmarks were only solved by given tool and not the other two tools.
+
+\begingroup
+\vspace{3ex}
+\centering
+\setlength\tabcolsep{0.5em} %
+\renewcommand{\arraystretch}{1.1} %
+\begin{tabular}{lrrr} \toprule
+             & CBMC & Nidhugg & DIVINE \\ \midrule
+    finished &   21 &      25 &     28 \\
+    errors   &    3 &       3 &     10 \\
+    unique   &    5 &       3 &      6 \\
+    \bottomrule
+\end{tabular}
+\endgroup
+\bigskip
+\end{block}
+
 
 \end{column} % End of the first column
 
@@ -173,19 +187,19 @@ extensible.
     \tt
     \begin{columns}
     \begin{column}{12cm}
-    \textcolor{dgreen}{int} x = 0, y = 0; \\
-    \textcolor{dgreen}{void} thread0() \{ \\
+    \textcolor{gray}{int} x = 0, y = 0; \\
+    \textcolor{gray}{void} thread0() \{ \\
     \ \ \ \ y = 1; \\
-    \ \ \ \ \textcolor{dgreen}{int} a = x; \\
-    \ \ \ \ \textcolor{dgreen}{int} c = y; \\
+    \ \ \ \ \textcolor{gray}{int} a = x; \\
+    \ \ \ \ \textcolor{gray}{int} c = y; \\
     \}
     \end{column}
     \begin{column}{12cm}
     \mbox{}\\
-    \textcolor{dgreen}{void} thread1() \{ \\
+    \textcolor{gray}{void} thread1() \{ \\
     \ \ \ \ x = 1; \\
-    \ \ \ \ \textcolor{dgreen}{int} b = y; \\
-    \ \ \ \ \textcolor{dgreen}{int} d = x; \\
+    \ \ \ \ \textcolor{gray}{int} b = y; \\
+    \ \ \ \ \textcolor{gray}{int} d = x; \\
     \}
     \end{column}
     \end{columns}\mbox{}
@@ -244,17 +258,14 @@ extensible.
   \end{tikzpicture}
   \end{center}
 
-  A simple demonstration of the \xtso memory model. The thread 0 writes 1 to
-  variable \texttt{y} and then loads variable \texttt{x}, the thread 2 writes 1
-  to \texttt{x} and then loads first \texttt{y} and then \texttt{x}.
-  Intuitively, we would expect it to be impossible for \texttt{a == 0} and
-  \texttt{b == 0} to both hold at the end of the execution.  However, under
-  \xtso, the writes are cached in the store buffers (marked as
-  \textcolor{red}{red}). A load consults only memory and the store buffer of
-  given thread, which means it can ignore newer value from the other thread
-  (\textcolor{blue}{blue}). Therefore \texttt{a} and \texttt{b} will contain old
-  values from the memory, while \texttt{c} and \texttt{d} will contain local
-  values from the store buffers.
+  This figure demonstrates the \xtso memory model.
+  The thread 0 stores 1 to variable \texttt{y} and then loads variables \texttt{x} and \texttt{y}.
+  The thread 2 stores 1 to \texttt{x} and then loads \texttt{y} and \texttt{x}.
+  Intuitively, we would expect it to be impossible for $a = 0$ and $b = 0$ to both be true at the end of the execution as there is no interleaving of thread actions which would produce such result.
+  However, under \xtso, the stores are cached in the store buffers (such stores are marked \textcolor{red}{red}).
+  A load consults only memory and the store buffer of the given thread, which means it can load data from memory and ignore newer values from the other thread (\textcolor{blue}{blue}).
+  Therefore \texttt{a} and \texttt{b} will contain old values from the memory.
+  On the other hand, \texttt{c} and \texttt{d} will contain local values from the store buffers (locally read values are marked \textcolor{dgreen}{green}).
 
 \end{block}
 
@@ -421,35 +432,6 @@ will be removed.
 
 \begin{column}{\sepwid}\end{column} % Empty spacer column
 \begin{column}{\onecolwid}
-
-\begin{block}{Results}
-
-We have evaluated our approach on all 54 benchmarks from the SV-COMP's
-Concurrency cathegory which do not have data nondeterminism and compared \divine
-with CBMC~\cite{Clarke2004} and Nidhugg~\cite{Abdulla2015}. It can be seen that
-\divine's solves similar number of benchmarks and finds more bugs.
-
-\begingroup
-\vspace{3ex}
-\centering
-\setlength\tabcolsep{0.5em} %
-\renewcommand{\arraystretch}{1.1} %
-\begin{tabular}{lrrr} \toprule
-               & CBMC & DIVINE & Nidhugg \\ \midrule
-    finished   & 20   & 23     & 24 \\
-    TSO errors &  3   & 10     &  3 \\
-    unique     &  5   &  6     &  8 \\
-    \bottomrule
-\end{tabular}
-\endgroup
-\bigskip
-\end{block}
-
-\begin{block}{References}
-\small
-\bibliographystyle{plain}
-\bibliography{poster}
-\end{block}
 
 %----------------------------------------------------------------------------------------
 
