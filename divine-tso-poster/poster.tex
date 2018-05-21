@@ -302,7 +302,7 @@ The following table shows how many benchmarks were completed by each of the tool
 
 \xtso is a Total Store Order memory model, which means store buffers maintain execution order of stores.
 The main novelty of our approach is \emph{delayed flushing} which allows us to remove entries from the store buffer in order in which the corresponding values are read instead of the store order.
-This improvement limits nodeterminism by delaying it as long as possible.
+This improvement limits nondeterminism by delaying it as long as possible.
 The reduced nondeterminism translates to better performance of verification using an explicit-state model checker.
 
 \begin{figure}[h]
