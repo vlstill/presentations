@@ -48,6 +48,7 @@ date: 21\. 9\. 2018
 
 ## Základy skriptování I
 
+- `bash` je zároveň skriptovací jazyk
 - spustitelný skript musí mít právo na čterní a spouštění
   - nově vytvořený soubor má typicky jen právo čtení a zápisu
   - `chmod +x FILE.sh`{.bash} -- přidá právo spuštění
@@ -67,7 +68,6 @@ date: 21\. 9\. 2018
 
 ## Základy skriptování II
 
-- `bash` je zároveň skriptovací jazyk
 - `if`, cykly, funkce, …
 - spoustu funkcí zajišťují externí příkazy/programy
 - primárně pracuje se stringy
@@ -138,13 +138,15 @@ $ for i in *.h; do mv $i include/; done
 
 . . .
 
+\bigskip
+
 ```.bash
 $ git status --porcelain --ignored | grep '^!!'
 ```
 
 - vypíše všechny ignorované soubory v git repozitáři
 
-## Užitečné utility -- `sed`
+## Užitečné utility -- `sed` I
 
 - textová substituce na základě regulárního výrazu
 - pracuje po řádcích
@@ -153,12 +155,66 @@ $ git status --porcelain --ignored | grep '^!!'
 $ for i in *.h; do mv $i $(echo $i| sed 's/[.]h$/.hpp/'); done
 ```
 
-  - přejmenuje `.h` soubory na `.hpp`
-  - `$(...)` je dosazení textového výstupu příkazu uvnitř závorek
-  - `'s/RGX/B/'` `sed` výraz, který způsobí, že se všechny výskyty, které
-    odpovídají regulárnímu výrazu `RGX` nahradí za `B`
-  - `[.]h$` je regex popisující `.h` na konci řádku/řetězce
-      - `[…]` -- popisuje jeden ze znaků v závorkách
-      - `.` je normálně specielní znak \uv{cokoli}, proto jej obalíme do `[…]`
-      - `$` popisuje konec řádku
-      
+. . .
+
+- přejmenuje `.h` soubory na `.hpp`
+- `$(...)` je dosazení textového výstupu příkazu uvnitř závorek
+- `'s/REGEX/B/'` `sed` výraz, který způsobí, že se všechny výskyty, které
+  odpovídají regulárnímu výrazu `REGEX` nahradí za `B`
+- `[.]h$` je regex popisující `.h` na konci řádku/řetězce
+    - `[…]` -- popisuje jeden ze znaků v závorkách
+    - `.` je normálně specielní znak \uv{cokoli}, proto jej obalíme do `[…]`
+    - `$` popisuje konec řádku
+
+## Užitečné utility -- `sed` II
+
+- `sed` je možné aplikovat na soubory
+- upravený obsah vypisuje na standardní výstup
+  - přepínač `-i`/`--in-place` způsobí modifikaci souboru
+  - pozor na chybné změny -- verzujte (git)!
+
+. . .
+
+```{.bash}
+$ sed -i 's/\(ib\|IB\)002/\1102/g' driver
+```
+
+- pracuje se souborem `driver`, změní ho
+- nahradí všechny výskyty `IB002` za `IB102` a `ib002` za `ib102`
+- `\(…\)` je zachycený podvýraz `\1` se odkazuje na první takový podvýraz
+- `g` zajišťuje, že se nahradí všechny výskyty na řádku, ne jen první
+
+## Užitečné utility -- `find`
+
+- vyhledávání souborů podle kritérií
+- spouštění příkazů nad vyhledanými soubory
+
+```{.bash}
+$ find -name '*.sh' ! -executable
+```
+
+. . .
+
+- vypíše názvy všech shell skriptů, které nejsou spustitelné
+
+. . .
+
+```{.bash}
+$ find \( -type f -a ! -executable \) \
+        -exec setfacl -m u:xbarnat:r {} \;
+$ find \( -type d -o -executable \) \
+        -exec setfacl -m u:xbarnat:rx {} \;
+```
+
+. . .
+
+- přidá ke všem souborům v aktuální složce (rekurzivně) práva uživateli
+  `xbarnat`
+  - pro spustitelné soubory a složky budou pro něj mít práva `rx` (číst a
+    spustit/vstoupit)
+  - nespustitelné soubory budou mít právo pro čtení
+  - `exec`: `{}` se nahradí cestou k souboru, musí být ukončeno `\;`
+
+  . . .
+
+- (umělý příklad, `setfacl -m u:xbarnat:rx --no-mask --recursive .` udělá totéž)
