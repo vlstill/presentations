@@ -35,10 +35,22 @@ date: 13th November 2018
 . . .
 
 \bigskip
+
+**Current Approaches**
+
+- many different ways of finding errors
+    - stateless model checking (Nidhugg, RCMC, …)
+    - bounded model checking (CBMC, …)
+- also techniques which consider any relaxed behaviour as error
+
+. . .
+
+\bigskip
 **Our Focus**
 
 - \xtso memory model of the Intel and AMD CPUs (\xtso)
 - C and C++
+- based on explicit-state model checking
 
 ## The \xtso Memory Model
 
