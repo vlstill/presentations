@@ -68,11 +68,11 @@ date: 13th November 2018
     \item every write to the memory can be delayed
     \item writes are not reordered with each other but a CPU will not see writes done by
       other CPUs instantly
-\end{itemize}\pause
+\end{itemize}
 \begin{center}
 \smallskip\noindent
 Is $a = 0 \land b = 0$ reachable?\\[2.5ex]
-\end{center}
+\end{center} \pause
 \begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
                    , semithick
                    , scale=0.5
@@ -192,7 +192,8 @@ Is $a = 0 \land b = 0$ reachable?\\[2.5ex]
 \begin{minipage}[t]{0.55\textwidth}
     \begin{itemize}
         \only<1>{\item three threads, thread 0 executing}
-        \only<2>{\item nondeterministically choose to load value from the store buffer of thread~1}
+        \only<2>{\item nondeterministically choose which value to load from the
+        store buffers}
         \only<3>{\item older values for \texttt{y} in s.b. 1 removed}
         \only<3>{\item other older values in s.b. 1 marked as flushed}
         \only<4>{\item nondeterministically choose to load value from s.b.~2}
