@@ -240,8 +240,19 @@ Is $a = 0 \land b = 0$ reachable?\\[2.5ex]
 
 - an efficient explicit-state approach to verification under the \xtso memory
   model
+
+  . . .
+
+- relaxed behaviour encoded into the program
+
+  . . .
+
 - works with C and C++ programs
-- analysis of non-terminating programs (with finite state space)
+- extendable to any LLVM-based language straight-forwardly
+
+  . . .
+
+- analysis of non-terminating programs with finite state space
 
 . . .
 
