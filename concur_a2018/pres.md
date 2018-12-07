@@ -28,7 +28,7 @@ date: 7th December 2018
 **this paper**
 
 - one generally useful liveness property (*live program*)
-- efficient algorithm for checking
+- efficient algorithm for checking it
 - evaluation on real-world code
 
 ## Live Program
@@ -60,6 +60,7 @@ a program is *live* iff it always eventually consumes input or terminates
 - extend symbolic execution with fingerprinting of states to facilitate state
   comparisons
   - based on strong hashes
+  - no direct comparison of states
 
 ## State Equality
 
@@ -67,7 +68,7 @@ a program is *live* iff it always eventually consumes input or terminates
 *claim*: For any lasso in explicit execution there is a lasso in symbolic
 execution if the following holds:
 
-- only add branch conditions to that are not already implied by the path
+- only add branch conditions that are not already implied by the path
   condition
 
 . . .
@@ -75,8 +76,12 @@ execution if the following holds:
 *I don't think this is correct*
 
 ```{.c}
-int x = input();
-while ( true ) x = -x;
+int x = input(), y = input();
+while ( true ) {
+    x += y;
+    x -= y;
+}
+
 ```
 
 ## Fingerprinting
