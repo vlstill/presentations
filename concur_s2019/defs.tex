@@ -1,0 +1,9 @@
+% \setbeamersize{text margin left=1.2em, text margin right=1.2em}
+\let\otp\titlepage
+\renewcommand{\titlepage}{\otp\addtocounter{framenumber}{-1}}
+\newcommand{\redon}[2]{{\only<#1>{\color{red}}#2}}
+\usepackage[normalem]{ulem}
+
+\newcommand{\aarr}{{\stackrel{\alpha}{\rightarrow}}}
+\newcommand{\barr}{{\stackrel{\beta}{\rightarrow}}}
+\newcommand{\define}{\mathbin{\stackrel{def}{=}}}
