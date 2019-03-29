@@ -17,6 +17,8 @@ date: 29th March 2019
 
 - reductions of state-space in context of Symbolic Model Checking (BMC/IC3)
 
+    . . .
+
 \includegraphics[width=\textwidth, page=7, clip, trim={1.8cm 17.4cm 1.8cm 1.8cm}]{paper.pdf}
 
 - **Lipton reduction** (left) -- hides intermediate (local) states
@@ -64,11 +66,9 @@ void T1_instr()
 
 - data written only once
 
-. . .
-
 - pointers for which it suffices to check aliasing once
 
-## Problem: Condition Breaks Comumtativity of operations
+## Problem: Conditions Breaks Commutativity of Actions
 
 ```{.c .numberLines}
 void T1()        void T2()
@@ -108,8 +108,6 @@ Let $\aarr$, $\barr$ be two binary relations (actions). $\stackrel{\alpha}{\righ
     . . .
 
 * $\aarr \mathbin{\stackrel{\leftarrow}{\bowtie}} \barr \define \aarr; \barr \supseteq \barr; \aarr$ ($\aarr$ left commutes with $\barr$)
-
-. . .
 
 ## Lipton Reduction
 
@@ -170,9 +168,9 @@ A state predicate (subset of states) $c_\alpha$ is a *dynamic both-moving condit
 
 *   break each action of thread $i$ into *pre*, *post* and *external* parts
 
-*   stay in *pre* part as long as the dynamic mover conditions hold, then switch to *post* part
+*   use *pre* parts as long as the dynamic mover conditions hold, then switch to *post* parts
 
-*   in post the mover conditions have to hold, otherwise switch to the *external* part before running the action
+*   in *post* the mover conditions have to hold, otherwise switch to the *external* part before running the action
 
 *   other threads can only run if $i$ is in *external* part
 
@@ -180,7 +178,7 @@ A state predicate (subset of states) $c_\alpha$ is a *dynamic both-moving condit
 
 **Reduction**
 
-- keep visible only *external* states and states needed to avoid cycles (based on CFG)
+- keep visible only *external* states and states needed to avoid cycles (based on control flow)
 
     . . .
 
