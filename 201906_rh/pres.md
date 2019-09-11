@@ -67,8 +67,6 @@ date: 10th June 2019
 
 \bigskip\pause
 
-- $\rightarrow$ book chapter about DIVINE (in progress)
-
 # DEMO
 
 ## Nontermination Analysis
