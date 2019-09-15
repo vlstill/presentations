@@ -19,7 +19,7 @@ date: 20th Septempler 2019
 
 . . .
 
-\vskip4\bigskipamount DEMO
+\vskip4\bigskipamount DEMO: DIVINE
 
 . . .
 
@@ -164,9 +164,9 @@ $\phantom{\big(}\ta{spin\_lock.exchange(true) \textrightarrow{} false}\big)^\ome
 - this run requires a scheduler which allows `t1` to run only if `t0` is in
   the critical section \pause
 
-- never happens in reality\pause
+- does not happen in reality\pause
 
-- for realistic schedulers infinite run does not imply nontermination
+- for realistic schedulers an infinite run does not imply nontermination
 
 ## What is Nontermination?
 
@@ -235,3 +235,183 @@ $\phantom{\big(}\ta{spin\_lock.exchange(true) \textrightarrow{} false}\big)^\ome
   \node[scc, fit=(c4a) (c4b), line width=3pt] (c4) {};
   \node[anchor=south] at (c4.south) {nontriv. terminal SCC};
 \end{tikzpicture}
+
+## Going **Local**: Active Resource Section Instances
+
+\begin{center}
+\begin{tikzpicture}[node distance=0.4cm,>=stealth',bend angle=45,auto, baseline=(i.base)]
+
+    \useasboundingbox (-6,0.5) rectangle (5,-7.3);
+    \tikzstyle{state}=[circle, thick, draw, minimum size=5mm]
+    \tikzstyle{endcheck}=[circle, thick, draw, cross out, minimum size=3mm]
+    \tikzstyle{acc}=[line width=2pt]
+
+    \node [state, initial, initial text=, initial above] (i) {};
+    \node [state, below left = 0.7cm and 3cm of i] (cs1) {}
+        edge [pre] node {\texttt{lock(m1)}} (i);
+
+    \node<3-> [state, below right = 0.7cm and 2cm of i] (cs1a) {}
+        edge [pre] node[above right] {\texttt{lock(m1)}} (i);
+
+    \node<3-> [state, below = of cs1a] (cs1aw) {}
+        edge [pre, acc] node[right] {\texttt{do\_work\_1}} (cs1a);
+    \node<3-> [state, below = 0.6cm of cs1aw] (cs1acs2) {}
+        edge [pre, acc] node[right] {\texttt{lock(m2)}} (cs1aw);
+    \node<3-> [state, below = of cs1acs2] (cs1acs2w) {}
+        edge [pre, acc] node[right, name=cs1acs2wl] {\texttt{do\_work\_2}} (cs1acs2);
+    \node<3-> [state, below = 0.6cm of cs1acs2w] (cs1acs2u) {}
+        edge [pre, acc] node[right, name=cs1aul] {\texttt{unlock(m2)}} (cs1acs2w);
+    \node<3-> [endcheck, below = 0.6cm of cs1acs2u] (cs1au) {}
+        edge [pre] node[right] {\texttt{unlock(m1)}} (cs1acs2u);
+
+    \node [state, below = of cs1] (cs1w) {}
+        edge [pre] node[right, name=cs1wl] {\texttt{do\_work\_1}} (cs1);
+
+    \node [state, below left = 0.5cm and 1cm of cs1w] (cs1cs2) {}
+        edge [pre] node[above left, name=cs1cs2l] {\texttt{lock(m2)}} (cs1w);
+    \node [state, below = of cs1cs2] (cs1cs2w) {}
+        edge [pre] node[right, name=cs1cs2wl] {\texttt{do\_work\_2}} (cs1cs2);
+    \node [state, below = 0.6cm of cs1cs2w] (cs1cs2u) {}
+        edge [pre] node[right] {\texttt{unlock(m2)}} (cs1cs2w);
+    \node [state, below = 0.6cm of cs1cs2u] (cs1u) {}
+        edge [pre] node[right] {\texttt{unlock(m1)}} (cs1cs2u);
+    \node [state, below = of cs1u] (end) {}
+        edge [pre] node[right] {\texttt{end}} (cs1u);
+
+    \node<3-> [state, below right = 0.5cm and 1cm of cs1w] (cs1cs2a) {}
+        edge [pre] node[above right] {\texttt{lock(m2)}} (cs1w);
+    \node<3-> [state, below = of cs1cs2a] (cs1cs2aw) {}
+        edge [pre, acc] node[right, name=cs1cs2awl] {\texttt{do\_work\_2}} (cs1cs2a);
+    \node<3-> [endcheck, below = 0.6cm of cs1cs2aw] (cs1cs2au) {}
+        edge [pre] node[right, name=cs1cs2aul] {\texttt{unlock(m2)}} (cs1cs2aw);
+
+
+  \begin{pgfonlayer}{background}
+    \tikzstyle{dashed}=[dash pattern=on 5pt off 5pt]
+    \node<3->[draw, fit=(cs1a) (cs1acs2u) (cs1aul), inner sep=0.1cm, fill = yellow!70, xshift=-0.1cm, line width = 2pt] (cs1ains) {};
+    \node<3->[below left = 1mm of cs1ains.north east] {ARSI};
+    \node<3->[draw, dashed, fit=(cs1cs2a) (cs1cs2aw) (cs1cs2awl), inner sep=0.1cm, fill = yellow!70, line width = 2pt] (cs1cs2ains) {};
+    \node<3->[below left = 1mm of cs1cs2ains.north east] {ARSI};
+
+    \node<2>[draw, dashed, fit=(cs1cs2) (cs1cs2w) (cs1cs2wl), inner sep=0.1cm] (cs1cs2ins) {};
+    \node<2>[draw, fit=(cs1) (cs1wl) (cs1cs2u) (cs1cs2l) (cs1wl), inner ysep=0.1cm, inner xsep=0cm] (cs1ins) {};
+
+    \node<3->[draw, fit=(cs1) (cs1cs2l) (cs1cs2u) (cs1cs2aul), inner ysep=0.1cm, inner xsep=0cm] (cs1ins) {};
+    \node<3->[draw, dashed, fit=(cs1cs2) (cs1cs2w) (cs1cs2wl), inner sep=0.1cm] (cs1cs2ins) {};
+    \node<3->[draw, dashed, fit=(cs1acs2) (cs1acs2w) (cs1acs2wl), inner sep=0.1cm] (cs1acs2ins) {};
+  \end{pgfonlayer}
+\end{tikzpicture}
+\end{center}
+
+## Detecting **Local** Nontermination
+
+- a resource section does not terminate if the program can reach a point in it
+  from which it cannot reach the corresponding resource section end
+
+    . . .
+
+- mark edges in ARSIs as **accepting**
+- detect **fully accepting** terminal strongly connected components (**FATSCC**)
+
+\bigskip
+\begin{tikzpicture}[>=latex,>=stealth',auto,node distance=2cm,semithick,initial
+                    text=, ->, shorten >=1pt, initial distance = 1cm]
+  \tikzstyle{state}=[circle, draw, minimum size=0.75cm]
+  \tikzstyle{scc}=[draw, dashed, inner sep = 1.3em, rounded corners=0.4em]
+  \node[state,initial] (c1a) {};
+  \node[state] (c1b) [right of = c1a] {};
+  \node[state] (c1c) [below of = c1a] {};
+
+  \path
+	(c1a) edge[bend left] (c1b)
+	(c1b) edge[bend left] (c1c)
+    (c1c) edge[bend left] (c1a)
+    (c1b) edge[bend left] (c1a)
+  ;
+
+  \node[scc, fit = (c1a) (c1b) (c1c)] (c1) {};
+
+  \node[state] (c2a) [right of = c1b] {};
+  \path (c1b) edge (c2a);
+  \node[scc, fit=(c2a)] (c2) {};
+
+  \node[state] (c4a) [right of = c2a] {};
+  \node[state] (c4b) [right of = c4a] {};
+  \path
+    (c2a) edge (c4a)
+    (c4a) edge[bend left] (c4b)
+    (c4b) edge[bend left] (c4a)
+  ;
+  \node[scc, fit=(c4a) (c4b)] (c4) {};
+  \node[anchor=south] at (c4.south) {nontriv. terminal SCC};
+
+  \node[state] (c5a) [below of = c4a] {};
+  \node[state] (c5b) [right of = c5a] {};
+  \path
+    (c2a) edge[bend right] (c5a)
+    (c5a) edge[bend left, line width=3pt, draw=blue] (c5b)
+    (c5b) edge[bend left, line width=3pt, draw=blue] (c5a)
+  ;
+  \node[scc, fit=(c5a) (c5b), line width=3pt, draw=blue] (c5) {};
+  \node[anchor=south] at (c5.south) {FATSCC};
+\end{tikzpicture}
+
+## Detection Algorithm
+
+- modified Tarjan's algorithm for SCC decomposition: $\mathcal{O}(|G|)$
+
+- global nontermination has no overhead
+
+- for local nontermination the graph can get bigger
+
+. . .
+
+\begin{center}
+\begin{tikzpicture}
+\begin{loglogaxis}[xlabel={safety [s]}, ylabel={local nonterm. [s]},
+                   width=0.53\textwidth, height=0.53\textwidth,
+                   xmin = 0.8, ymin=0.8, xmax=14400, ymax=14400,
+                   title = Wall Time (in seconds)]
+\addplot [ scatter, only marks,mark size=2pt ]
+         table [x=safety, y=local, meta=sl] {wall.dat};
+
+\addplot [ black, sharp plot, thin, update limits=false ] coordinates { (0.1, 0.1) (10e6, 10e6) };
+\addplot [ black, sharp plot, thin, update limits=false, dashed ] coordinates { (0.1, 1) (10e6, 100e6) };
+\addplot [ black, sharp plot, thin, update limits=false, dotted ] coordinates { (0.1, 10) (10e6, 1000e6) };
+\addplot [ black, sharp plot, thin, update limits=false, dashed ] coordinates { (1, 0.1) (100e6, 10e6) };
+\addplot [ black, sharp plot, thin, update limits=false, dotted ] coordinates { (10, 0.1) (1000e6, 10e6) };
+\end{loglogaxis}
+\end{tikzpicture}
+\end{center}
+
+## Resource Sections & Conclusions
+
+**Source of resourcre sections**
+
+- either built-in (mutexes, condition variables, thread joining, …)
+- or user-provided (in source code; block of code, function end, …)
+
+. . .
+
+\bigskip\bigskip
+**Conclusion**
+
+- we have presented a novel technique which allows detecting bugs not captured
+  by safety (or LTL/CTL\*) analysis
+
+  . . .
+
+- built on explicit-state model checking \textrightarrow{} finite state space
+  required
+
+  . . .
+
+- works also on programs which do not terminate
+
+  . . .
+
+- we provide open-source implementation
+
+  . . .
+
+- performance is underwhelming, but it can detect new class of bugs

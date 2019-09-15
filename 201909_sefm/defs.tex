@@ -4,3 +4,21 @@
 \renewcommand{\titlepage}{\otp\addtocounter{framenumber}{-1}}
 \usepackage{booktabs}
 \newcommand{\xtso}{\mbox{x86-\kern-.15em TSO}\xspace}
+\usetikzlibrary{arrows,shapes,snakes,automata,backgrounds,petri,fit}
+\usepackage{pgfplots}
+\pgfplotsset{
+    every axis/.append style={
+        axis on top,
+        scatter/classes={ %
+            tt={mark=square,thick,green!70!black}, %
+            tT={mark=x,thick,green!70!black}, %
+            fT={mark=x,thick,blue}, %
+            MT={mark=x,thick,black}, %
+            TT={mark=x,thick,black}, %
+            MM={mark=x,thick,black}, %
+            tf={mark=triangle,thick,red}, %
+            ft={mark=triangle,thick,red}, %
+            ff={mark=o,thick,blue}
+        }, scatter src=explicit symbolic, axis equal
+    }
+}

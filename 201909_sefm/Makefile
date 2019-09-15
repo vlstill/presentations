@@ -9,7 +9,7 @@ all : mds
 
 mds :	$(ALL_MD:.md=.pdf)
 
-%.tex : %.md Makefile
+%.tex : %.md Makefile defs.tex
 	perl -- ../tools/md2tex.pl -f markdown+smart -t beamer --slide-level=2 \
 		-V documentclass=paradise-slide --standalone --template=../styles/paradiseBeamer/template.tex < $< > $@
 
