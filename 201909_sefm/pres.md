@@ -2,7 +2,7 @@
 vim: spell spelllang=en tw=80 fo+=t
 title: "Local Nontermination Detection\\newline for Parallel C++ Programs"
 author:
-    - Vladimír Štill
+    - \textbf{Vladimír Štill}
     - Jiří Barnat
 header-includes:
     - \input{defs}
@@ -78,7 +78,7 @@ date: 20th Septempler 2019
 
 ```{.cpp}
 bool x = true;
-while ( true ) { x = !x; }
+while (true) { x = !x; }
 ```
 
 \bigskip
@@ -132,7 +132,7 @@ $\tb{spin\_lock.exchange(true) \textrightarrow{} true}^\omega$ (repeats infinite
 
 ```{.cpp}
 void w() {
-    while ( true ) {
+    while (true) {
         while (spin_lock.exchange(true)) { /* wait */ }
         x++;
         spin_lock = false;
@@ -305,8 +305,8 @@ $\phantom{\big(}\ta{spin\_lock.exchange(true) \textrightarrow{} false}\big)^\ome
 
 ## Detecting **Local** Nontermination
 
-- a resource section does not terminate if the program can reach a point in it
-  from which it cannot reach the corresponding resource section end
+- a resource section does not terminate if the program can reach a point in the
+  section from which it cannot reach the corresponding resource section end
 
     . . .
 
