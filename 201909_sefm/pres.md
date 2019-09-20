@@ -7,7 +7,7 @@ author:
 header-includes:
     - \input{defs}
 lang: english
-date: 20th Septempler 2019
+date: 20th September 2019
 ...
 
 
@@ -69,7 +69,7 @@ date: 20th Septempler 2019
 
 \bigskip
 
-- build on explicit-state model checking \textrightarrow{} finite-state
+- builds on explicit-state model checking \textrightarrow{} finite-state
   programs\
   (with possibly infinite behaviour)
 - user can specify what to check
@@ -170,7 +170,7 @@ $\phantom{\big(}\ta{spin\_lock.exchange(true) \textrightarrow{} false}\big)^\ome
 
 ## What is Nontermination?
 
-**Nontermation**
+**Nontermination**
 
 - a program does not terminate if it can reach a point from which it cannot
   reach its end
@@ -184,7 +184,7 @@ $\phantom{\big(}\ta{spin\_lock.exchange(true) \textrightarrow{} false}\big)^\ome
 
 \pause\bigskip
 
-**Local Nontermation**
+**Local Nontermination**
 
 - a resource section does not terminate if the program can reach a point *in the
   resource section* from which it cannot reach *the corresponding resource
@@ -386,7 +386,7 @@ $\phantom{\big(}\ta{spin\_lock.exchange(true) \textrightarrow{} false}\big)^\ome
 
 ## Resource Sections & Conclusions
 
-**Source of resourcre sections**
+**Source of resource sections**
 
 - either built-in (mutexes, condition variables, thread joining, …)
 - or user-provided (in source code; block of code, function end, …)
