@@ -59,8 +59,8 @@ date: 20th Septempler 2019
 
 ## Local Nontermination Detection for Parallel Programs
 
-- we aim at nontermination caused by unintended parallel interactions
-- not at complex control flow & loops
+- we aim at nontermination caused by unintended parallel interactions \pause
+- not at complex control flow & loops \pause
 - should be easy to specify
 - should not report nontermination spuriously
 - should be useful for analysis of services/servers
@@ -410,8 +410,9 @@ $\phantom{\big(}\ta{spin\_lock.exchange(true) \textrightarrow{} false}\big)^\ome
 
   . . .
 
-- we provide open-source implementation
+- open-source implementation
 
   . . .
 
 - performance is underwhelming, but it can detect new class of bugs
+- <https://divine.fi.muni.cz/2019/lnterm/>
