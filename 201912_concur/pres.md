@@ -447,7 +447,7 @@ eventually happen
 
   \path
 	(c1a) edge[bend left] (c1b)
-	(c1b) edge[bend left, draw = red, line width = 3pt] node {$input = \alpha$} (c1c)
+	(c1b) edge[bend left, draw = red, line width = 3pt] node{$input = \alpha$} (c1c)
     (c1c) edge[bend left] (c1a)
     (c1b) edge[bend left] (c1a)
   ;
@@ -494,3 +494,47 @@ with x86-TSO:
 . . .
 
 - over-approximation while searching for an end of a resource section is a problem
+
+## Relaxed Memory
+
+\begin{tikzpicture}[>=latex,>=stealth',auto,node distance=2cm,semithick,initial
+                    text=, ->, shorten >=1pt, initial distance = 1cm]
+  \tikzstyle{state}=[circle, draw, minimum size=0.75cm]
+  \tikzstyle{scc}=[draw, dashed, inner sep = 1.3em, rounded corners=0.4em]
+  \node[state,initial] (c1a) {};
+  \node[state] (c1b) [right of = c1a] {};
+  \node[state] (c1c) [below of = c1a] {};
+
+  \path
+	(c1a) edge[bend left] (c1b)
+	(c1b) edge[bend left, draw = red, line width = 3pt] node[yshift=-0.5em, xshift=-0.8em] {$\max\{|\textit{buf}_i|\} = 2$} (c1c)
+    (c1c) edge[bend left] (c1a)
+    (c1b) edge[bend left] (c1a)
+  ;
+
+  \node[scc, fit = (c1a) (c1b) (c1c)] (c1) {};
+
+  \node[state] (c2a) [right = 5cm of c1b] {};
+  \path (c1b) edge[draw = red, dashed, line width = 3pt] node{$\max\{|\textit{buf}_i|\} = 16$} (c2a);
+  \node[scc, fit=(c2a)] (c2) {};
+
+  \node (c2E) [right of = c2a] {};
+  \path (c2a) edge node{\ \ end} (c2E) ;
+
+  \node[state] (c3a) [below of =c2a] {};
+  \path (c1b) edge[bend right, draw = red, dashed, line width = 3pt] node[above, yshift=0.4em] {\ \ \ \ \ \ $\max\{|\textit{buf}_i|\} = 4$} (c3a);
+  \node[scc, fit=(c3a)] (c3) {};
+
+  \node (c3E) [right of = c3a] {};
+  \path (c3a) edge node{\ \ end} (c3E) ;
+\end{tikzpicture}
+
+- maybe report sections as conditionally nonterminating if more relaxed behaviour is required to leave them then stay
+
+. . .
+
+- possibly report only those that can be reached with less relaxed behaviour then is required to reach the point of no return
+
+. . .
+
+- problem: buffer size is not a good measure of degree of relaxation
