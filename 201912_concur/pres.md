@@ -408,6 +408,10 @@ $\phantom{\big(}\ta{spin\_lock.exchange(true) \textrightarrow{} false}\big)^\ome
 - works only with deterministic threads
 - does not work with relaxed memory
 
+---
+
+Published on SEFM 2019\ \cite{SB2019}.
+
 ## Extending to Nondeterminism
 
 ```{.cpp}
@@ -538,3 +542,7 @@ with x86-TSO:
 . . .
 
 - problem: buffer size is not a good measure of degree of relaxation
+
+## Biblography {.allowpagebreaks}
+
+\printbibliography[heading=none]

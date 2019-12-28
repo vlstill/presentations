@@ -22,3 +22,20 @@
         }, scatter src=explicit symbolic, axis equal
     }
 }
+\usepackage[ backend=biber
+           , style=alphabetic % numeric
+           , sortlocale=en_US
+           , bibencoding=UTF8
+           , maxnames=100
+           ]{biblatex}
+\DeclareSourcemap{
+    \maps[datatype=bibtex, overwrite]{
+        \map{
+            \step[fieldset=editor, null]
+            \step[fieldset=language, null]
+            \step[fieldset=url, null]
+            \step[fieldset=isbn, null]
+        }
+    }
+}
+\addbibresource{pres.bib}
