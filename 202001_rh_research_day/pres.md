@@ -25,7 +25,7 @@ abstract: |
     concurrency bugs.
 ...
 
-## What is DIVINE?
+## What is DIVINE? {.t}
 
 \begin{tikzpicture}[>=latex,>=stealth',auto,node distance=1.5em,semithick,initial
                     text=, ->, shorten >=1pt, initial distance = 1cm]
@@ -39,26 +39,26 @@ abstract: |
 
   \node[box, below = 3em of cpp] (divine) {\textbf{DIVINE}};
 
-  \node<3->[box, below left = 3em and 0em of divine, text width = {width("Error Found")}] (ok) {Correct};
-  \node<4->[box, below right = 3em and 0em of divine] (nok) {Error Found};
+  \node<3->[box, below left = 2em and 0em of divine, text width = {width("Error Found")}] (ok) {Correct};
+  \node<3->[box, below right = 2em and 0em of divine] (nok) {Error Found};
 
-  \tikzstyle{err}=[box, text width = {width("Nontermination/Deadlock")}]
-  \node<5->[err, right = of nok] (assert) {Assertion Violation};
-  \node<6->[err, above = 0.2em of assert] (memerr) {Memory Error};
-  \node<7->[err, above = 0.2em of memerr] (nonterm) {Nontermination/Deadlock};
+  \tikzstyle{err}=[box, text width = {width("Nontermination/Deadlocks")}]
+  \node<4->[err, right = of nok] (assert) {Assertion Violation};
+  \node<5->[err, above = 0.2em of assert] (memerr) {Memory Error};
+  \node<6->[err, above = 0.2em of memerr] (nonterm) {Nontermination/Deadlocks};
 
   \path
     (c) edge (divine)
     (cpp) edge (divine);
   \path<2-> (build) edge (divine);
   \path<3-> (divine) edge (ok);
-  \path<4-> (divine) edge (nok);
+  \path<3-> (divine) edge (nok);
 
-  \path<5-> (nok) edge (assert);
-  \draw<6-> ($ (nok.east) + (0.75em, 0) $)
+  \path<4-> (nok) edge (assert);
+  \draw<5-> ($ (nok.east) + (0.75em, 0) $)
       -- ($ (memerr.west) - (0.75em, 0) $)
       -- (memerr.west);
-  \draw<7-> ($ (nok.east) + (0.75em, 0) $)
+  \draw<6-> ($ (nok.east) + (0.75em, 0) $)
       -- ($ (nonterm.west) - (0.75em, 0) $)
       -- (nonterm.west);
 
@@ -68,73 +68,42 @@ abstract: |
   \node[anchor=west] at (input.east) {Input};
 \end{tikzpicture}
 
+\newcommand{\INT}{\textcolor{red}{int}\xspace}
+\newcommand{\VOID}{\textcolor{red}{void}\xspace}
+\newcommand{\WHILE}{\textcolor{red}{while}\xspace}
+\newcommand{\IF}{\textcolor{red}{if}\xspace}
+\newcommand{\ELSE}{\textcolor{red}{else}\xspace}
+
 \only<1>{DIVINE is a tool for analysis of C and C++ programs.}
 \only<2>{It can process single files, or we can use a replacement compiler to compile
-larger programs into a form which can be processed by DIVINE.}
+larger programs into a form which can be processed by DIVINE.
+
+\medskip
+\texttt{\$ make CC=divcc}}
+\only<3>{Given enough resources, DIVINE will produce result. If an error is
+found, DIVINE will produce a report.}
+\only<4>{\tt
+\INT foo( \INT x ) \{ assert( x > 0 ); /* ... */ \} \\
+
+\INT main() \{ \\
+\ \ \ \ \INT x = input(); \\
+\ \ \ \ \IF ( x >= 0 ) \{ foo( x ); \} \ELSE \{ puts("Error"); \} \\
+\}
+}
+\only<5>{\tt
+\INT main() \{ \\
+\ \ \ \ \INT x = input(); \\
+\ \ \ \ \INT array[100]; \\
+\ \ \ \ array[x] = 42; \\
+\}
+}
+\only<6>{\tt
+\VOID thread1() \{ \\
+\ \ \ \ \WHILE ( x != 0 ) \{ /* wait */ \} \\
+\ \ \ \ /* ... */ \\
+\}
+
+\VOID thread2() \{ x = 42; \}
+}
 
 
-## Relaxed Memory {.fragile}
-
-
-. . .
-
-- caches and inter-core communication in modern CPUs
-
-* out-of-order execution
-
-- has observable effects in multithreaded environments
-
-- can cause nasty and hard to detect bugs
-
-## DIVINE and Relaxed Memory
-
-**Model Checking of C++ Programs under the \xtso Memory Model**
-
-- published and presented at ICFEM 2018
-
-- novel approach to analysis under the memory model used on Intel x86 CPUs
-
-\bigskip\pause
-
-- some performance improvements might be possible in near future with new features of DIVINE
-
-## SV-COMP 2019
-
-- Competition on Software Verification, associated with TACAS
-
-\bigskip\pause
-
-- 5th place out of 12 in Concurrency cathegory (with 0 bad results)
-
-\bigskip
-
-- a lot of unconfirmed but right results
-
-\bigskip\pause
-
-# DEMO
-
-## Nontermination Analysis
-
-- checks that program is not only safe, but also certain parts of it terminate
-  - critical sections
-  - waiting for condition variables, threads…
-  - user-defined parts
-
-\bigskip\pause
-
-**Local Nontermination Detection for Parallel C++ Programs**
-
-- submitted to SEFM 2019 (notification pending)
-
-## Future Work
-
-- more efficient nontermination detection (new algorithm)
-
-\bigskip\pause
-
-- more efficient relaxed memory model support
-
-\bigskip\pause
-
-- at 3.5 years mark… time to start wrapping up
