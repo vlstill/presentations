@@ -96,14 +96,14 @@ If an error is found, DIVINE will produce a report.}
 
 \textbf{there can be variables with arbitrary/unspecified values}
 }
-\only<5>{{\tt
+\only<5>{\tt
 \INT main() \{ \\
 \ \ \ \ \INT x = input(); \\
 \ \ \ \ \INT array[100]; \\
 \ \ \ \ array[x] = 42; \\
 \}
 }
-\only<6>{\tt
+\only<6>{{\tt
 \VOID thread1() \{ \\
 \ \ \ \ \WHILE ( x != 0 ) \{ /* wait */ \} \\
 \ \ \ \ /* ... */ \\
@@ -155,13 +155,13 @@ If an error is found, DIVINE will produce a report.}
     concurrency tests \pause
   - concurrency tests in DIVINE are \emph{deterministic} -- they cannot
     sometimes fail and sometimes succeed \pause
-  - new tests might be needed
 
 ## Verification & After
 
 - verification can be resource intensive
   - due to parallelism
   - due to inputs/unspecified values
+  - due to memory tracking
 
 . . .
 
@@ -172,13 +172,14 @@ If an error is found, DIVINE will produce a report.}
 
 many programs communicate with other programs using file system or network
 
-- DIVINE has support for many POSIX APIs
+- DIVINE has support for large part of the POSIX API \pause
 
-- can be simulated/modelled (arbitrary input, mock clients/servers)
+- can be simulated/modelled (arbitrary input, mock clients/servers) \pause
+
 - or captured and replayed
   1. run the program in a way it can communicate and capture it
-  2. use the capture in verification
+  2. use the capture in verification \pause
   - only works if the program does not encounter need for further communication
-    during verification run
+    during verification run \pause
 - capture + replay can also make debugging these programs easier
   - using our interactive simulator
