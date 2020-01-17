@@ -79,7 +79,7 @@ abstract: |
 \medskip
 \texttt{\$ divine check program.cpp}}
 \only<2>{It can process single files, or we can use a replacement compiler to compile
-larger programs into a form which can be processed by DIVINE.
+larger programs so they can be processed by DIVINE.
 
 \medskip
 \texttt{\$ make CC=divcc}\\
@@ -98,7 +98,7 @@ If an error is found, DIVINE will produce a report.}
 }
 \only<5>{\tt
 \INT main() \{ \\
-\ \ \ \ \INT x = input(); \\
+\ \ \ \ \INT x = 100; \\
 \ \ \ \ \INT array[100]; \\
 \ \ \ \ array[x] = 42; \\
 \}
@@ -154,7 +154,10 @@ If an error is found, DIVINE will produce a report.}
   - it is often easier to write concurrency tests for DIVINE than "normal"
     concurrency tests \pause
   - concurrency tests in DIVINE are \emph{deterministic} -- they cannot
-    sometimes fail and sometimes succeed \pause
+    sometimes fail and sometimes succeed
+    - $\rightarrow$ they can be much smaller than stress tests \pause
+    - DIVINE explores all possible ways the threads can interleave
+
 
 ## Verification & After
 
@@ -172,14 +175,41 @@ If an error is found, DIVINE will produce a report.}
 
 many programs communicate with other programs using file system or network
 
-- DIVINE has support for large part of the POSIX API \pause
+- DIVINE has support for a large part of the POSIX API \pause
 
 - can be simulated/modelled (arbitrary input, mock clients/servers) \pause
 
 - or captured and replayed
-  1. run the program in a way it can communicate and capture it
+  1. run the program in a way it can communicate and capture the communication
   2. use the capture in verification \pause
   - only works if the program does not encounter need for further communication
     during verification run \pause
 - capture + replay can also make debugging these programs easier
-  - using our interactive simulator
+
+## Work in Progress
+
+**Verification of Binaries**
+
+- we are working on a way to lift compiled binaries so they can be analysed by
+  DIVINE
+
+. . .
+
+- would allow verification of programs without available source code
+
+. . .
+
+- some information is lost in binaries -- stack variable boundaries, variable
+  names, …
+
+. . .
+
+\bigskip
+
+**Abstractions**
+
+- we are working on different ways to abstract data
+
+. . .
+
+- including lossy/imprecise abstractions which are faster and can still provide some guarantees
