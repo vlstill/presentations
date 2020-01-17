@@ -94,7 +94,7 @@ If an error is found, DIVINE will produce a report.}
 \ \ \ \ \IF ( x >= 0 ) \{ foo( x ); \} \\
 \}}
 
-\textbf{there can be variables with arbitrary/unspecified values}
+\textbf{there can be \emph{input} variables with arbitrary/unspecified values}
 }
 \only<5>{\tt
 \INT main() \{ \\
@@ -141,18 +141,37 @@ If an error is found, DIVINE will produce a report.}
 
 1.  obtain source code of the program to be verified \pause
   - including dependencies (except for the basics -- C and C++ standard
-    libraries) \pause
-  - must be buildable by clang \pause
+    libraries)
+
+  . . .
+
+  - must be buildable by clang
+
+  . . .
+
   - no assembly components or inline assembly
 
 ## Before Verification II
 
-2.  obtain tests
-  - ideally, the program comes with unit tests usable for verification \pause
+2.  obtain tests \pause
+  - ideally, the program comes with unit tests usable for verification
+
+  . . .
+
   - not all tests work (concurrency stress tests, tests dependent on timing)
-    \pause
+
+  . . .
+
+  - DIVINE-specific tests can use input (unspecified) values to check a set of
+    inputs at once
+
+  . . .
+
   - it is often easier to write concurrency tests for DIVINE than "normal"
-    concurrency tests \pause
+    concurrency tests
+
+  . . .
+
   - concurrency tests in DIVINE are \emph{deterministic} -- they cannot
     sometimes fail and sometimes succeed
     - $\rightarrow$ they can be much smaller than stress tests \pause
