@@ -17,7 +17,7 @@
 \acmConference[ITiCSE '20]{ACM Conference on Innovation and Technology in Computer Science Education}{June 15--19, 2020}{Trondheim, Norway}
 \acmBooktitle{ITiCSE '20: Proceedings of the 2020 ACM Conference on Innovation and Technology in Computer Science Education, June 15--19, 2020, Trondheim, Norway}
 \acmPrice{15.00}
-% \acmISBN{978-1-4503-XXXX-X/18/06}
+% \acmISBN{}
 
 \newcommand{\hsExprTest}{\textit{hsExprTest}}
 
@@ -34,22 +34,29 @@
 \email{xstill@mail.muni.cz}
 
 \begin{abstract}
-    Programming education requires the students have plenty of opportunities
-    for testing their skills.
-    Especially for the beginner-level courses, these opportunities can be
-    granted by short assignments provided by the teachers.
-    In this work, we present a tool which simplifies testing such assignments
-    written in the Haskell functional programming language.
-    We test these exercises at the level of functions -- given a solution to
-    the assignment (a function) and (if needed) specification of the input data
-    for the tested function, the tools can automatically derive tests, compare
-    the teacher's solution to the student's solution, and report the result.
-    For the simplest exercise functions (i.e. total functions operating on
-    basic Haskell data types like numbers, lists, tuples, and functions over
-    these types), our tool can generate test just from the solution.
-    For more complex input data, it is necessary to either constrain inputs
-    (for example to positive numbers), or to provide means of generation of
-    random inputs.
+    Automatic testing of programming assignments is highly desirable as it can
+    provide fast feedback for the students and allows the teachers to teach
+    efficiently even in courses with many students.
+    However, writing tests for students' solutions can be tedious.
+    In this work, we present a novel approach to test generation for small Haskell
+    assignments.
+    Such assignments usually consist of one function (with possibility to use
+    helper functions in its definition) that the students are supposed to program
+    according to a teacher's specification.
+    The teacher is not required to write tests for this function.
+    Instead, we make use of an example solution, which the teacher should have
+    anyway to assess difficulty of the assignment.
+    Using the example solution, and (if needed) a specification of input values for
+    the function, our tools is able to automatically generate randomized tests.
+    If these tests fail, the student is presented with a counterexample which
+    shows the input values, the expected output of the tested function and the
+    output computed by their solution.
+    % In this work, we present a tool which simplifies testing small programming
+    % assignments written in the Haskell functional programming language.
+    % We test these exercises at the level of functions -- given a solution to
+    % the assignment (a function) and (if needed) specification of the input data
+    % for the tested function, the tools can automatically derive tests, compare
+    % the teacher's solution to the student's solution, and report the result.
 \end{abstract}
 
 \begin{CCSXML}
@@ -74,34 +81,14 @@ adult education
 
 \maketitle
 
-\section{Introduction}
-
-Automatic testing of programming assignments is highly desirable as it can
-provide fast feedback for the students and allows the teacher to efficiently
-use their time even in courses with many students.
-However, writing tests for students' solutions can be tedious.
-In this work, we present a novel approach to test generation for small Haskell
-assignments.
-Such assignments usually consist of one function (with possibility to use
-helper functions in its definition) that the students are supposed to program
-according to a teacher's specification.
-The teacher is not required to write tests for this function.
-Instead, we make use of an example solution, which the teacher should have
-anyway to assess difficulty of the assignment.
-Using the example solution, and (if needed) a specification of input values for
-the function, our tools is able to automatically generated randomized tests.
-If these tests fails, the student is presented with a counterexample which
-shows the input values, the expected output of the tested function and the
-output computed by their solution.
-
-\section{Tool Capabilities}
+\section{Testing Capabilities}
 
 Our tools \hsExprTest{} is based on QuickCheck~\cite{Koen2000}, a Haskell tool for
 specification-based testing of Haskell programs.
-It uses QuickCheck for automatic generation of test inputs, and for shrinking
-test inputs which allows us to produce small counterexamples.
+It uses QuickCheck for automatic generation of test inputs, and to shrink test
+inputs, which allows us to produce small counterexamples.
 It also uses QuickCheck's ability to generate printable and shrinkable
-functions~\cite{Koen2012}, which is used when testing implementation of
+functions~\cite{Koen2012}, which is used when testing implementations of
 higher-order functions (i.e., functions which take functions as arguments, for
 example a \texttt{map} function, which takes a function and applies it to each
 element of a list, producing a list of results).
@@ -111,24 +98,41 @@ specification and automatically derives a test expression which compares the
 teacher's and student's solution.
 This expression generation is driven by the type of teacher's solution (and
 optionally also input specification) and can include specialization of
-polymorphic types and wrapping of inputs for higher order functions in such a
-way they can be displayed and shrinked by QuickCheck.
+polymorphic functions and wrapping of inputs for higher order functions in such
+a way they can be displayed and shrinked by QuickCheck.
+
+For the simplest exercise functions (i.e. total functions operating on basic
+Haskell data types like numbers, lists, tuples, and functions over these
+types), our tool can generate tests just from the solution.
+For more complex input data, it is necessary to either constrain inputs
+(for example to positive numbers, or to a certain range), or to provide means
+of generation of random inputs.
+Input data generators for custom data types can be written using the QuickCheck
+library.
+Finally, to accommodate more complex exercises within the same framework, it is
+also possible to write custom QuickCheck tests.
 
 \section{Usage and Availability}
 
-Our tool \hsExprTest{} is an open source tool available on GitHub,
-at \url{https://github.com/vlstill/hsExprTest}, the documentation for testing
-Haskell can be found at
+Our tool is open source and available on GitHub, at
+\url{https://github.com/vlstill/hsExprTest}.
+The documentation for testing Haskell can be found at
 \url{https://github.com/vlstill/hsExprTest/tree/master/src/hs}.
 The tool is used in the introductory course to functional programming at the
 Faculty of Informatics of Masaryk University since 2014 and is continually
 being improved.
 While the tool is integrated with the Information System of Masaryk University
 which is used to submit assignments and present results to students, it is
-possible to also use it with a different submission frontend.
+possible to also use it with a different submission frontends.
 
-% \begin{acks}
-% \end{acks}
+\section{Goal of the Poster}
+
+The poster aims to present our novel testing method which simplifies testing of
+small Haskell programming exercises.
+We believe that by making testing easier, we can promote creation of more and
+better exercises which students can use to improve their new skills.
+The poster could also spark wider conversation about methods used in
+programming courses.
 
 \balance
 \bibliographystyle{ACM-Reference-Format}
