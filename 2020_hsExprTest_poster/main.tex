@@ -40,14 +40,14 @@
     However, writing tests for students' solutions can be tedious.
     In this work, we present a novel approach to test generation for small Haskell
     assignments.
-    Such assignments usually consist of one function (with possibility to use
+    Such assignments usually consist of one function (with the possibility to use
     helper functions in its definition) that the students are supposed to program
     according to a teacher's specification.
     The teacher is not required to write tests for this function.
     Instead, we make use of an example solution, which the teacher should have
-    anyway to assess difficulty of the assignment.
+    to assess the difficulty of the assignment.
     Using the example solution, and (if needed) a specification of input values for
-    the function, our tools is able to automatically generate randomized tests.
+    the function, our tool can automatically generate randomized tests.
     If these tests fail, the student is presented with a counterexample which
     shows the input values, the expected output of the tested function and the
     output computed by their solution.
@@ -83,29 +83,30 @@ adult education
 
 \section{Testing Capabilities}
 
-Our tools \hsExprTest{} is based on QuickCheck~\cite{Koen2000}, a Haskell tool for
+Our tool \hsExprTest{} is based on QuickCheck~\cite{Koen2000}, a Haskell tool for
 specification-based testing of Haskell programs.
 It uses QuickCheck for automatic generation of test inputs, and to shrink test
 inputs, which allows us to produce small counterexamples.
 It also uses QuickCheck's ability to generate printable and shrinkable
 functions~\cite{Koen2012}, which is used when testing implementations of
 higher-order functions (i.e., functions which take functions as arguments, for
-example a \texttt{map} function, which takes a function and applies it to each
+example, a \texttt{map} function, which takes a function and applies it to each
 element of a list, producing a list of results).
 
 However, unlike QuickCheck, \hsExprTest{} uses the teacher's solution as a
 specification and automatically derives a test expression which compares the
 teacher's and student's solution.
 This expression generation is driven by the type of teacher's solution (and
-optionally also input specification) and can include specialization of
-polymorphic functions and wrapping of inputs for higher order functions in such
-a way they can be displayed and shrinked by QuickCheck.
+optionally also input specification).
+It can include specialization of
+polymorphic functions and wrapping of inputs for higher-order functions in such
+a way they can be displayed and shrunk by QuickCheck.
 
 For the simplest exercise functions (i.e. total functions operating on basic
 Haskell data types like numbers, lists, tuples, and functions over these
 types), our tool can generate tests just from the solution.
 For more complex input data, it is necessary to either constrain inputs
-(for example to positive numbers, or to a certain range), or to provide means
+(for example to positive numbers, or to a specific range) or to provide means
 of generation of random inputs.
 Input data generators for custom data types can be written using the QuickCheck
 library.
@@ -121,17 +122,17 @@ The documentation for testing Haskell can be found at
 The tool is used in the introductory course to functional programming at the
 Faculty of Informatics of Masaryk University since 2014 and is continually
 being improved.
-While the tool is integrated with the Information System of Masaryk University
-which is used to submit assignments and present results to students, it is
-possible to also use it with a different submission frontends.
+While the tool is integrated with the Information System of Masaryk University,
+which is used to submit assignments and present results to students, it is also
+possible to use it with different submission frontends.
 
-\section{Goal of the Poster}
+\section{Goals of the Poster}
 
 The poster aims to present our novel testing method which simplifies testing of
 small Haskell programming exercises.
-We believe that by making testing easier, we can promote creation of more and
-better exercises which students can use to improve their new skills.
-The poster could also spark wider conversation about methods used in
+We believe that by making testing easier, we can promote the creation of more
+and better exercises which students can use to improve their new skills.
+The poster could also spark a broader conversation about methods used in
 programming courses.
 
 \balance
