@@ -5,21 +5,38 @@
 % Proceedings from the previous year for inspiration: https://dl.acm.org/doi/proceedings/10.1145/3304221
 % For poster abstracts, see section "5C: Posters"
 
-\documentclass[sigconf,screen]{acmart} % Toggles: review, anonymous, authorversion
+\documentclass[sigconf]{acmart} % Toggles: review, anonymous, authorversion, screen
 
 \usepackage[utf8]{inputenc}         % Encoding of this TeX source file
 \usepackage{csquotes}				% Proper quoting
 
-\setcopyright{rightsretained}
+\settopmatter{printacmref=true}
+  % mandatory for ITiCSE'20
+
+\fancyhead{}
+  % do not delete this code.
+
+\usepackage{balance}
+  % for creating a balanced last page (usually last page with references)
+
+% defining the \BibTeX command - from Oren Patashnik's original BibTeX documentation.
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08emT\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
 \copyrightyear{2020}
 \acmYear{2020}
-\acmConference[ITiCSE '20]{ACM Conference on Innovation and Technology in Computer Science Education}{June 15--19, 2020}{Trondheim, Norway}
-\acmBooktitle{ITiCSE '20: Proceedings of the 2020 ACM Conference on Innovation and Technology in Computer Science Education, June 15--19, 2020, Trondheim, Norway}
+\setcopyright{rightsretained}
+\acmConference[ITiCSE '20]{Proceedings of the 2020 ACM Conference on Innovation and Technology in Computer Science Education}{June 15--19, 2020}{Trondheim, Norway}
+\acmBooktitle{Proceedings of the 2020 ACM Conference on Innovation and Technology in Computer Science Education (ITiCSE '20), June 15--19, 2020, Trondheim, Norway}
 \acmPrice{15.00}
+\acmDOI{10.1145/3341525.3393972}
+\acmISBN{978-1-4503-6874-2/20/06}
 
 \newcommand{\hsExprTest}{\textit{hsExprTest}}
 
 \begin{document}
+
+\fancyhead{}
+  % do not delete this code.
 
 \title{Automatic Test Generation\\ for Haskell Programming Assignments}
 
@@ -76,12 +93,6 @@ Haskell,
 QuickCheck,
 adult education
 }
-
-\copyrightyear{2020}
-\acmYear{2020}
-\acmConference[ITiCSE '20]{Proceedings of the 2020 ACM Conference on Innovation and Technology in Computer Science Education}{June 15--19, 2020}{Trondheim, Norway}
-\acmBooktitle{Proceedings of the 2020 ACM Conference on Innovation and Technology in Computer Science Education (ITiCSE '20), June 15--19, 2020, Trondheim, Norway}\acmDOI{10.1145/3341525.3393972}
-\acmISBN{978-1-4503-6874-2/20/06}
 
 \maketitle
 
