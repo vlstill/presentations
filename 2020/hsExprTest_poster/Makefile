@@ -14,6 +14,12 @@ cleanbib:
 $(TITLE).pdf: $(TITLE).tex $(TITLE).bib $(IMAGES)
 	latexmk --pdf $(TITLE)
 
+$(TITLE)-pub.pdf: $(TITLE)-pub.tex $(TITLE).bib $(IMAGES)
+	latexmk --pdf $(TITLE)-pub
+
+$(TITLE)-pub.tex: $(TITLE).tex
+	sed 's/\\documentclass\[sigconf\]{acmart}/\\documentclass[sigconf, authorversion, screen]{acmart}/' $< > $@
+
 # Using git latexdiff
 # https://gitlab.com/git-latexdiff/git-latexdiff
 #diff:
