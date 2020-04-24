@@ -90,8 +90,7 @@
 programming education,
 automatic testing,
 Haskell,
-QuickCheck,
-adult education
+QuickCheck
 }
 
 \maketitle
@@ -110,8 +109,8 @@ element of a list, producing a list of results).
 
 However, unlike QuickCheck, \hsExprTest{} uses the teacher's solution as a
 specification and automatically derives a test expression which compares the
-teacher's and student's solution.
-This expression generation is driven by the type of teacher's solution (and
+teacher's and student's solutions.
+The expression generation is driven by the type of teacher's solution (and
 optionally also input specification).
 It can include specialization of
 polymorphic functions and wrapping of inputs for higher-order functions in such
@@ -133,7 +132,7 @@ also possible to write custom QuickCheck tests.
 Our tool is open source and available on GitHub, at
 \url{https://github.com/vlstill/hsExprTest}.
 The documentation for testing Haskell can be found at
-\url{https://github.com/vlstill/hsExprTest/tree/master/src/hs}.
+\url{https://github.com/vlstill/hsExprTest/tree/master/doc/hs.md}.
 The tool is used in the introductory course to functional programming at the
 Faculty of Informatics of Masaryk University since 2014 and is continually
 being improved.
