@@ -137,3 +137,9 @@ sympy-plots-for-*.tex/
 *.o
 *.bin
 *.report.*
+
+2016/mgrthesis/pres.tex
+2016/rh_q*/pres.tex
+2016/sym_svvp/pres.tex
+2016/tacas/pres.tex
+2016/tedi/pres.tex
