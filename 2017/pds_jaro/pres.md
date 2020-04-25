@@ -7,7 +7,7 @@ author:
     - Alberto Griggio
     - Stefano\ Tonetta
     - Sergio Mover
-    - \
+    - \newline
     - presented by Vladimír Štill
 header-includes:
     - \newcommand{\redon}[2]{{\only<#1>{\color{red}}#2}}

@@ -328,10 +328,10 @@ int main() {
 *   minimal overhead: $2.6\,\%$ time overhead compared to an older style of
     implementation which required changes to the verification core
 
-\center\
-\
+\par\center{}
 [`divine.fi.muni.cz`](https://divine.fi.muni.cz)\
-`paradise-fi/divine` on [GitHub](https://github.com/paradise-fi/divine)\
-\
-more data & code:\
+`paradise-fi/divine` on [GitHub](https://github.com/paradise-fi/divine)
+
+\par\center{}
+more data & code:\newline{}
 [`divine.fi.muni.cz/2017/exceptions`](https://divine.fi.muni.cz/2017/exceptions)

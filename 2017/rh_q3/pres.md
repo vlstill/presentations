@@ -11,7 +11,7 @@ header-includes:
     - \setbeamercovered{invisible}
     - \setbeamercovered{again covered={\opaqueness<1->{15}}}
     - \newenvironment{wrap}[1]{#1}{}
-    - \newcommand{\gray}{}%\setbeamercolor{item}{fg=gray}\setbeamercolor{normal text}{fg=gray}}
+    - \newcommand{\gray}{}
 lang: english
 date: 22nd September 2017
 ...

@@ -8,10 +8,10 @@ all : mds $(SEQPROGS)
 mds :	$(ALL_MD:.md=.pdf)
 
 %.tex : %.md paper.pdf
-	pandoc --slide-level=2 -V documentclass=paradise-slide -s $< -t beamer -f markdown+raw_tex -o $@ --template=../styles/paradiseBeamer/template.tex
+	pandoc --slide-level=2 -V documentclass=paradise-slide -s $< -t beamer -f markdown+raw_tex -o $@ --template=../../styles/paradiseBeamer/template.tex
 
 %.pdf : %.tex $(ALL_DOT:.dot=.pdf) defs.tex
-	rubber --pdf -I "../styles/paradiseBeamer/" -o $@ $<
+	rubber --pdf -I "../../styles/paradiseBeamer/" -o $@ $<
 
 %.pdf : %.dot
 	dot -Tpdf $< -o $@

@@ -215,7 +215,7 @@ struct Mutex {
 
 # Demo II: Memory Models
 
-\iffalse
+<!--
 
 * sumarizace verzi DIVINE, a jejich schopnosti
 - vstupy CESMI, DVE, LLVM, ..., vystupy DESS
@@ -226,4 +226,4 @@ struct Mutex {
 * LLVM-LLVM transformace (priklad relaxovana pamet)
 * ukazka 
 
-\fi
+-->

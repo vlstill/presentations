@@ -28,7 +28,7 @@ date: 10th June 2019
 ## Relaxed Memory {.fragile}
 
 \begin{center}
-  \includegraphics[width=8em]{../icfem_2018/spectre}
+  \includegraphics[width=8em]{../../2018/icfem_xtso/spectre}
 \end{center}
 
 . . .
