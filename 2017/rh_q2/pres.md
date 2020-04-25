@@ -11,7 +11,7 @@ header-includes:
     - \setbeamersize{text margin left=1.2em, text margin right=1.2em}
     - \newcommand{\redon}[2]{{\only<#1>{\color{red}}#2}}
     - \usepackage{changepage}
-    - \input{../names.tex}
+    - \input{../../names.tex}
 lang: czech
 date: 12\. května 2017
 ...

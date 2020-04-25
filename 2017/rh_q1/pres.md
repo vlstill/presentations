@@ -10,7 +10,7 @@ header-includes:
     - \usepackage[small]{eulervm}
     - \newcommand{\TODO}[1]{{\color{red}#1}}
     - \setbeamersize{text margin left=1.2em, text margin right=1.2em}
-    - \input{../names.tex}
+    - \input{../../names.tex}
 lang: czech
 date: 3\. Března 2017
 ...
