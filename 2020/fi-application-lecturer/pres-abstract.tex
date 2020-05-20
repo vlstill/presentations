@@ -1,0 +1,48 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[shorthands=off,english]{babel} % package for multilingual support
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage{csquotes}
+
+\usepackage{xcolor}
+\definecolor{dark-red}{rgb}{0.6,0.15,0.15}
+\definecolor{dark-green}{rgb}{0.15,0.4,0.15}
+\definecolor{medium-blue}{rgb}{0,0,0.5}
+\usepackage[ pdfauthor={Vladimir Still}
+           , pdftitle={Functional Aspects of Contemporary and Future C++},
+           , pdfsubject={Presentation Abstract},
+           , plainpages=false
+           , pdfpagelabels
+           , unicode
+           , draft=false
+           , colorlinks=true
+           , linkcolor={dark-red}
+           , citecolor={dark-green}
+           , urlcolor={medium-blue}
+           , unicode=true
+           ]{hyperref}
+
+\pagestyle{empty}
+
+\begin{document}
+\section*{Functional Aspects of Contemporary and Future C++}
+
+\renewcommand{\abstractname}{Presentation Abstract}
+\begin{abstract}
+	\noindent
+	Modern C++ is a multi-paradigm programming language which features aspects
+	of procedural, object-oriented, generic, and functional programming.
+	In this presentation, we will focus on its functional aspects and relate its
+	features to some of the common functional patterns from functional
+	languages such as Haskell.
+	We will see that list transformation functions such as \texttt{map} and
+	\texttt{filter} have their C++ counterparts in the newly standardised ranges
+	library.
+	We will also show how algebraic data types can be represented in C++, and
+	that future of C++ might include features such as pattern matching and use
+	of monads.
+\end{abstract}
+
+\end{document}
