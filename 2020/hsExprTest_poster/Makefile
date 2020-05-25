@@ -1,8 +1,9 @@
 TITLE=main
 BIBFILE=references
 IMAGES=$(wildcard img/*)
+STYS=$(wildcard *.sty)
 
-all: $(TITLE).pdf
+all: $(TITLE).pdf poster.pdf
 
 clean:
 	rm -f *.aux *.dvi *.log *.synctex.gz *.out *.nav *.toc *.snm *.run.xml *-blx.bib *.bbl *.blg *.bcf
@@ -19,6 +20,9 @@ $(TITLE)-pub.pdf: $(TITLE)-pub.tex $(TITLE).bib $(IMAGES)
 
 $(TITLE)-pub.tex: $(TITLE).tex
 	sed 's/\\documentclass\[sigconf\]{acmart}/\\documentclass[sigconf, authorversion, screen]{acmart}/' $< > $@
+
+poster.pdf: poster.tex $(TITLE).bib $(STYS) $(IMAGES)
+	latexmk -shell-escape -pdf poster.tex
 
 # Using git latexdiff
 # https://gitlab.com/git-latexdiff/git-latexdiff

@@ -1,0 +1,308 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Jacobs Portrait Poster
+% LaTeX Template
+% Version 1.0 (31/08/2015)
+% (Based on Version 1.0 (29/03/13) of the landscape template
+%
+% Created by:
+% Computational Physics and Biophysics Group, Jacobs University
+% https://teamwork.jacobs-university.de:8443/confluence/display/CoPandBiG/LaTeX+Poster
+%
+% Further modified by:
+% Nathaniel Johnston (nathaniel@njohnston.ca)
+%
+% Portrait version by:
+% John Hammersley
+%
+% The landscape version of this template was downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%    PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[final, 20pt, a0]{beamer}
+
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage[scale=1.15]{beamerposter} % Use the beamerposter package for laying out the poster
+
+\usepackage[ backend=biber
+           , style=numeric
+           , sortlocale=en_US
+           , bibencoding=UTF8
+           , sorting=anyt % explicit label, name, year, title
+           , maxnames=4
+           , maxalphanames=4
+           , maxbibnames=100
+           , urldate=long
+           ]{biblatex}
+\DeclareSourcemap{
+    \maps[datatype=bibtex, overwrite]{
+        \map{
+            \step[fieldset=editor, null]
+            \step[fieldset=language, null]
+        }
+    }
+}
+\addbibresource{main.bib}
+
+\usetheme{confposter} % Use the confposter theme supplied with this template
+
+\definecolor{mublue}{RGB}{27,69,143} % {cmyk}{0.81,0.52,0,0.44}
+\setbeamercolor{structure}{fg=black}
+\setbeamercolor{cboxb}{bg=mublue}
+\setbeamercolor{title in headline}{fg=mublue}
+\setbeamercolor{block title}{fg=mublue,bg=white} % Colors of the block titles
+\setbeamercolor{block body}{fg=black,bg=white} % Colors of the body of blocks
+\setbeamercolor{block alerted title}{fg=white,bg=mublue} % Colors of the highlighted block titles
+\setbeamercolor{block alerted body}{fg=black,bg=mublue} % Colors of the body of highlighted blocks
+% Many more colors are available for use in beamerthemeconfposter.sty
+
+%-----------------------------------------------------------
+% Define the column widths and overall poster size
+% To set effective sepwid, onecolwid and twocolwid values, first choose how many columns you want and how much separation you want between columns
+% In this template, the separation width chosen is 0.024 of the paper width and a 4-column layout
+% onecolwid should therefore be (1-(# of columns+1)*sepwid)/# of columns e.g. (1-(4+1)*0.024)/4 = 0.22
+% Set twocolwid to be (2*onecolwid)+sepwid = 0.464
+% Set threecolwid to be (3*onecolwid)+2*sepwid = 0.708
+
+\newlength{\sepwid}
+\newlength{\marginwid}
+\newlength{\onecolwid}
+\newlength{\twocolwid}
+\newlength{\threecolwid}
+% \setlength{\paperwidth}{841mm} % A0 width: 46.8in
+% \setlength{\paperheight}{1189mm} % A0 height: 33.1in
+\setlength{\sepwid}{20mm} % Separation width (white space) between columns
+\setlength{\marginwid}{80mm} % Margin width (white space) left and right
+\setlength{\onecolwid}{214mm} % Width of one column
+\setlength{\twocolwid}{\onecolwid} % Width of two columns
+\addtolength{\twocolwid}{\onecolwid}
+\addtolength{\twocolwid}{\sepwid}
+\setlength{\threecolwid}{0.708\paperwidth} % Width of three columns
+\setlength{\topmargin}{1cm}
+
+\usepackage{xspace}
+\usepackage{pdfpages}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage[export]{adjustbox}
+
+\newcommand{\TODO}[1]{\textcolor{red}{#1}}
+\setlength{\overfullrule}{15pt} % TODO: remove
+
+%-----------------------------------------------------------
+\usepackage{wrapfig}
+\usepackage{tikz}
+\usetikzlibrary{arrows,arrows.meta,positioning,shapes,automata,backgrounds,petri,fit,matrix,decorations.pathreplacing,calc}
+\tikzset{
+    *|/.style={
+        to path={
+            (perpendicular cs: horizontal line through={(\tikztostart)},
+                                 vertical line through={(\tikztotarget)})
+            % is the same as (\tikztostart -| \tikztotarget)
+            % but just to be safe: http://tex.stackexchange.com/a/29781/16595
+            -- (\tikztotarget) \tikztonodes
+        }
+    },
+	|*/.style={to path={
+		(\tikztostart) -- (perpendicular cs: vertical line through={(\tikztostart)},
+											 horizontal line through={(\tikztotarget)})
+  	}}
+}
+
+\usepackage{graphicx}  % Required for including images
+\usepackage{booktabs} % Top and bottom rules for tables
+\usepackage[english]{babel}
+
+\usepackage{varwidth}
+\usepackage{minted}
+\usepackage{qrcode}
+
+\newminted[hscode]{haskell}{autogobble,breaklines}
+\newmintinline[hs]{haskell}{}
+
+\newcommand{\hsExprTest}{\textit{hsExprTest}}
+
+%----------------------------------------------------------------------------------------
+%    TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\titletext}{Automatic Test Generation\\ for Haskell Programming Assignments}
+\newcommand{\logowidth}{2.6\baselineskip}
+\title{%
+  \texorpdfstring{%
+    \makebox[\linewidth]{%
+      \noindent\hspace*{0.5em} %
+      \hfill %
+      \begin{minipage}{\linewidth-3em}\center\titletext\end{minipage} %
+      \hfill %
+      \hspace*{0.5em}%
+    }\bigskip%
+  }
+  {\titletext}}
+
+\author{Vladimír Štill}
+
+\institute{Faculty of Informatics, Masaryk University\\Czech Republic\vspace*{-2cm}} % Institution(s)
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\addtobeamertemplate{block end}{}{\vspace*{2ex}} % White space under blocks
+\addtobeamertemplate{block alerted end}{}{\vspace*{2ex}} % White space under highlighted (alert) blocks
+\setbeamercolor{itemize item}{fg=mublue}
+
+\setlength{\belowcaptionskip}{2ex} % White space under figures
+\setlength\belowdisplayshortskip{2ex} % White space under equations
+
+\begin{frame}[t] % The whole poster is enclosed in one beamer frame
+
+\begin{columns}[t] % The whole poster consists of three major columns, the second of which is split into two columns twice - the [t] option aligns each column's content to the top
+
+\begin{column}{\marginwid}\end{column} % Empty spacer column
+\begin{column}{\onecolwid} % The first column
+
+\begin{block}{Overview}
+    Automatic testing of programming assignments is highly desirable as it can
+    provide fast feedback for the students and allows the teachers to teach
+    efficiently even in courses with many students.
+    However, writing tests for students' solutions can be tedious.
+    In this work, we present a novel approach to test generation for small Haskell
+    assignments.
+    Such assignments usually consist of one function (with the possibility to use
+    helper functions in its definition) that the students are supposed to program
+    according to a teacher's specification.
+    The teacher is not required to write tests for this function.
+    Instead, we make use of an example solution, which the teacher should have
+    to assess the difficulty of the assignment.
+    Using the example solution, and (if needed) a specification of input values for
+    the function, our tool can automatically generate randomized tests.
+    If these tests fail, the student is presented with a counterexample which
+    shows the input values, the expected output of the tested function and the
+    output computed by their solution.
+\end{block}
+
+\begin{block}{Our Use}
+    In autumn 2019 we had roughly 950 students in the course, with 12 homework
+    sets and 32 unique auto-evaluated exercises.
+    Auto-evaluated exercises are also available for practice before exams.
+\end{block}
+
+\begin{block}{More Information}
+    Our tool \hsExprTest{} is based on QuickCheck~\cite{Koen2000}, a tool for
+    specification-based testing of Haskell programs.
+    It is publicly available on GitHub, as part of a toolkit for automatic
+    testing of small programming exercises used in several courses on the
+    Faculty of Informatics of Masaryk University.
+
+    \bigskip\bigskip
+    More information and links to GitHub can be also found on the accompanying
+    page for this poster.
+
+    \bigskip\bigskip\footnotesize
+    \qrcode[height=0.25\onecolwid]{http://vstill.eu/publications/2020/hsExprTest/}~~
+    \href{http://vstill.eu/publications/2020/hsExprTest/}{vstill.eu/publications/2020/hsExprTest/}
+\end{block}
+
+\end{column} % End of the first column
+
+\begin{column}{\sepwid}\end{column} % Empty spacer column
+
+\begin{column}{\twocolwid} % Begin a column which is two columns wide (column 2)
+
+\begin{block}{Tool Workflow}
+
+    \begin{figure}[h]
+        \begin{center}
+        \begin{tikzpicture}[
+                >=stealth', shorten >=1pt, auto, node distance=3cm, semithick,
+                scale=2, thick,
+                code/.style = {align = left, draw, inner sep = 0.5em,
+                               rounded corners = 0.3em},
+                ->/.style = {-{Latex[length=0.5em]}}
+               ]
+
+            \node[code] (student) {
+                \hs{binmap :: (a -> a -> b) -> [a] -> [b]}\\
+                \hs{binmap _ []       = []} \\
+                \hs{binmap _ [_]      = []} \\
+                \hs{binmap f (x:y:xs) = f x y : binmap f (y:xs)}
+              };
+            \node[above = 0em of student.north, anchor = south] {Student's Solution};
+
+            \node[code, below = 3em of student.south west, anchor = north west] (teacher) {
+                \hs{expr = "binmap"} \\
+                \hs{timeout = 5} \\
+                \\
+                \hs{binmap :: (a -> a -> b) -> [a] -> [b]} \\
+                \hs{binmap f xs = zipWith f xs (drop 1 xs)}
+              };
+            \node[above = 0em of teacher.north, anchor = south] {Teacher's Solution + Specification};
+
+            \node[code, below right = 3em and -0.2em of teacher] (exprtest)
+                {
+                  \begin{varwidth}{14em}\begin{itemize}
+                    \item compare types
+                    \item instantiate polymorphic types
+                    \item make functions showable
+                    \item generate expression
+                    \item run on random data
+                  \end{itemize}\end{varwidth}
+                };
+            \node[above = 0em of exprtest.north, anchor = south] {\textbf{\hsExprTest}};
+
+            \node[left = 3em of exprtest, yshift = 1.5em] (ok)
+                {\color{green!50!black}\textbf{Test Passed}};
+            \node[left = 3em of exprtest, yshift = -1.5em] (fail)
+                {\color{red}\textbf{Test Failed + Counterexample}};
+
+            \draw (student.east) -- ++(4.5em, 0) edge[|*, ->] (exprtest.north);
+            \draw (teacher.east) -- ++(1.5em, 0) edge[|*, ->] (exprtest.north);
+            \draw[->] (exprtest) edge (ok.east)
+                      (exprtest) edge (fail.east);
+
+        \end{tikzpicture}
+        \end{center}
+
+        \caption{%
+            Workflow of our tool \hsExprTest{}.
+            The student's code is submitted through the web browser usually, and
+            the student can get their an answer within a few seconds.
+        }
+    \end{figure}
+
+\end{block}
+
+\begin{block}{Main Features}
+
+\end{block}
+
+\begin{block}{Bibliography}
+
+{
+    \emergencystretch 3em % there is little other fixing possible for bibio
+    \printbibliography[heading=none]
+}
+\end{block}
+
+\end{column} % End of the double
+
+\begin{column}{\marginwid}\end{column} % Empty spacer column
+
+\end{columns}
+
+\end{frame}
+
+\end{document}
+
+% vim: spell spelllang=en tw=80 expandtab
