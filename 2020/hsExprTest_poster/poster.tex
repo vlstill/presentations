@@ -34,25 +34,25 @@
 
 \usepackage[scale=1.15]{beamerposter} % Use the beamerposter package for laying out the poster
 
-\usepackage[ backend=biber
-           , style=numeric
-           , sortlocale=en_US
-           , bibencoding=UTF8
-           , sorting=anyt % explicit label, name, year, title
-           , maxnames=4
-           , maxalphanames=4
-           , maxbibnames=100
-           , urldate=long
-           ]{biblatex}
-\DeclareSourcemap{
-    \maps[datatype=bibtex, overwrite]{
-        \map{
-            \step[fieldset=editor, null]
-            \step[fieldset=language, null]
-        }
-    }
-}
-\addbibresource{main.bib}
+% \usepackage[ backend=biber
+%            , style=numeric
+%            , sortlocale=en_US
+%            , bibencoding=UTF8
+%            , sorting=anyt % explicit label, name, year, title
+%            , maxnames=4
+%            , maxalphanames=4
+%            , maxbibnames=100
+%            , urldate=long
+%            ]{biblatex}
+% \DeclareSourcemap{
+%     \maps[datatype=bibtex, overwrite]{
+%         \map{
+%             \step[fieldset=editor, null]
+%             \step[fieldset=language, null]
+%         }
+%     }
+% }
+% \addbibresource{main.bib}
 
 \usetheme{confposter} % Use the confposter theme supplied with this template
 
@@ -201,7 +201,7 @@
 \end{block}
 
 \begin{block}{More Information}
-    Our tool \hsExprTest{} is based on QuickCheck~\cite{Koen2000}, a tool for
+    Our tool \hsExprTest{} is based on QuickCheck, a tool for %~\cite{Koen2000}
     specification-based testing of Haskell programs.
     It is publicly available on GitHub, as part of a toolkit for automatic
     testing of small programming exercises used in several courses on the
@@ -286,33 +286,33 @@
 
 \begin{block}{Main Features}
   \begin{itemize}
-    \item small counterexamples (thanks to QuickCheck): \hs{binmap (\_ -> 0) [0]} $\rightsquigarrow^*$ error
     \item no need to write tests
     \item teacher gives specification of inputs
+    \item small counterexamples (thanks to QuickCheck): \hs{binmap (\_ -> 0) [0]} $\rightsquigarrow^*$ error
     \item students do unexpected mistakes -- randomized testing can catch them
-    \item support for type comparison
+    \item support for typing exercises
   \end{itemize}
 \end{block}
 
 \begin{block}{Input Specification}
   For more complex data, input ranges can be specified:
-  \begin{hscode}
+  \begin{hscode*}{frame=leftline, framesep=1em, rulecolor=gray}
     expr = "showInBase"
     pattern = [p| (x :: Range Integer 0 2222, b :: Range Integer 2 36) |]
 
     showInBase :: Integral i => i -> i -> String
     {- ... -}
-  \end{hscode}
+  \end{hscode*}
 
   or custom generators used (as for QuickCheck):
-  \begin{hscode}
+  \begin{hscode*}{frame=leftline, framesep=1em, rulecolor=gray}
     data BinTree a = Empty | Node a (BinTree a) (BinTree a)
                      deriving (Show, Eq)
 
     instance Arbitrary a => Arbitrary (BinTree a) where
         arbitrary = {- random generator -}
         shrink = {- optional counterexample shrinker -}
-  \end{hscode}
+  \end{hscode*}
 
   In future, we plan to auto-create generators for recursive data types with no dependency between values (like \hs{BinTree}).
 \end{block}
@@ -327,10 +327,10 @@
 \begin{column}{\marginwid}\end{column} % Empty spacer column
 \begin{column}{\onecolwid+\sepwid+\twocolwid}
 
-\begin{block}{Bibliography}
-    \emergencystretch 3em % there is little other fixing possible for bibio
-    \printbibliography[heading=none]
-\end{block}
+% \begin{block}{Bibliography}
+%     \emergencystretch 3em % there is little other fixing possible for bibio
+%     \printbibliography[heading=none]
+% \end{block}
 
 \end{column}
 
