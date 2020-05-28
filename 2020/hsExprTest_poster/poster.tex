@@ -163,6 +163,7 @@
 \addtobeamertemplate{block end}{}{\vspace*{2ex}} % White space under blocks
 \addtobeamertemplate{block alerted end}{}{\vspace*{2ex}} % White space under highlighted (alert) blocks
 \setbeamercolor{itemize item}{fg=mublue}
+\setbeamerfont{block title}{family=\sf}
 
 \setlength{\belowcaptionskip}{2ex} % White space under figures
 \setlength\belowdisplayshortskip{2ex} % White space under equations
@@ -246,7 +247,7 @@
                 \hs{timeout = 5} \\
                 \\
                 \hs{binmap :: (a -> a -> b) -> [a] -> [b]} \\
-                \hs{binmap f xs = zipWith f xs (drop 1 xs)}
+                \hs{binmap f xs = zipWith f xs (tail xs)}
               };
             \node[above = 0em of teacher.north, anchor = south] {Teacher's Solution + Specification};
 
