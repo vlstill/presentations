@@ -156,6 +156,8 @@
 
 %----------------------------------------------------------------------------------------
 
+\hyphenation{Quick-Check}
+
 \begin{document}
 
 \addtobeamertemplate{block end}{}{\vspace*{2ex}} % White space under blocks
@@ -165,7 +167,7 @@
 \setlength{\belowcaptionskip}{2ex} % White space under figures
 \setlength\belowdisplayshortskip{2ex} % White space under equations
 
-\begin{frame}[t] % The whole poster is enclosed in one beamer frame
+\begin{frame}[t,fragile] % The whole poster is enclosed in one beamer frame
 
 \begin{columns}[t] % The whole poster consists of three major columns, the second of which is split into two columns twice - the [t] option aligns each column's content to the top
 
@@ -193,8 +195,8 @@
 \end{block}
 
 \begin{block}{Our Use}
-    In autumn 2019 we had roughly 950 students in the course, with 12 homework
-    sets and 32 unique auto-evaluated exercises.
+    In the autumn 2019 semester we had roughly 950 students in the course, with
+    12 homework sets and 32 unique exercises evaluated by our tool.
     Auto-evaluated exercises are also available for practice before exams.
 \end{block}
 
@@ -235,7 +237,6 @@
             \node[code] (student) {
                 \hs{binmap :: (a -> a -> b) -> [a] -> [b]}\\
                 \hs{binmap _ []       = []} \\
-                \hs{binmap _ [_]      = []} \\
                 \hs{binmap f (x:y:xs) = f x y : binmap f (y:xs)}
               };
             \node[above = 0em of student.north, anchor = south] {Student's Solution};
@@ -276,26 +277,62 @@
 
         \caption{%
             Workflow of our tool \hsExprTest{}.
-            The student's code is submitted through the web browser usually, and
-            the student can get their an answer within a few seconds.
+            The student's code is usually submitted through the web browser.
+            The student can get their an answer within a few seconds.
         }
     \end{figure}
 
 \end{block}
 
 \begin{block}{Main Features}
-
+  \begin{itemize}
+    \item small counterexamples (thanks to QuickCheck): \hs{binmap (\_ -> 0) [0]} $\rightsquigarrow^*$ error
+    \item no need to write tests
+    \item teacher gives specification of inputs
+    \item students do unexpected mistakes -- randomized testing can catch them
+    \item support for type comparison
+  \end{itemize}
 \end{block}
 
-\begin{block}{Bibliography}
+\begin{block}{Input Specification}
+  For more complex data, input ranges can be specified:
+  \begin{hscode}
+    expr = "showInBase"
+    pattern = [p| (x :: Range Integer 0 2222, b :: Range Integer 2 36) |]
 
-{
-    \emergencystretch 3em % there is little other fixing possible for bibio
-    \printbibliography[heading=none]
-}
+    showInBase :: Integral i => i -> i -> String
+    {- ... -}
+  \end{hscode}
+
+  or custom generators used (as for QuickCheck):
+  \begin{hscode}
+    data BinTree a = Empty | Node a (BinTree a) (BinTree a)
+                     deriving (Show, Eq)
+
+    instance Arbitrary a => Arbitrary (BinTree a) where
+        arbitrary = {- random generator -}
+        shrink = {- optional counterexample shrinker -}
+  \end{hscode}
+
+  In future, we plan to auto-create generators for recursive data types with no dependency between values (like \hs{BinTree}).
 \end{block}
 
 \end{column} % End of the double
+
+\begin{column}{\marginwid}\end{column} % Empty spacer column
+
+\end{columns}
+\begin{columns}[t] % The whole poster consists of three major columns, the second of which is split into two columns twice - the [t] option aligns each column's content to the top
+
+\begin{column}{\marginwid}\end{column} % Empty spacer column
+\begin{column}{\onecolwid+\sepwid+\twocolwid}
+
+\begin{block}{Bibliography}
+    \emergencystretch 3em % there is little other fixing possible for bibio
+    \printbibliography[heading=none]
+\end{block}
+
+\end{column}
 
 \begin{column}{\marginwid}\end{column} % Empty spacer column
 
@@ -305,4 +342,4 @@
 
 \end{document}
 
-% vim: spell spelllang=en tw=80 expandtab
+% vim: spell spelllang=en tw=80 expandtab fo-=t
