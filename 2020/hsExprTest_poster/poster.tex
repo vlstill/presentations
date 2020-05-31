@@ -196,9 +196,9 @@
 \end{block}
 
 \begin{block}{Our Use}
-    In the autumn 2019 semester we had roughly 950 students in the course, with
+    In the autumn 2019 semester, we had roughly 950 students in the course, with
     12 homework sets and 32 unique exercises evaluated by our tool.
-    Auto-evaluated exercises are also available for practice before exams.
+    Auto-evaluated exercises are also available for practise before exams.
 \end{block}
 
 \begin{block}{More Information}
@@ -209,7 +209,7 @@
     Faculty of Informatics of Masaryk University.
 
     \bigskip\bigskip
-    More information and links to GitHub can be also found on the accompanying
+    More information and links to GitHub can also be found on the accompanying
     page for this poster.
 
     \bigskip\bigskip\footnotesize
@@ -277,9 +277,9 @@
         \end{center}
 
         \caption{%
-            Workflow of our tool \hsExprTest{}.
-            The student's code is usually submitted through the web browser.
-            The student can get their an answer within a few seconds.
+            The workflow of our tool \hsExprTest{}.
+            The student's code is usually submitted through a web browser (through the Masaryk University Information System in our case).
+            The student can get an answer within a few seconds.
         }
     \end{figure}
 
@@ -288,10 +288,10 @@
 \begin{block}{Main Features}
   \begin{itemize}
     \item no need to write tests
-    \item teacher gives specification of inputs
+    \item teacher gives a specification of inputs (partial functions, functions over custom data types)
     \item small counterexamples (thanks to QuickCheck): \hs{binmap (\_ -> 0) [0]} $\rightsquigarrow^*$ error
-    \item students do unexpected mistakes -- randomized testing can catch them
-    \item support for typing exercises
+    \item students make unexpected mistakes -- randomized testing can catch them
+    \item support for typing exercises (e.g., write a type of an expression)
   \end{itemize}
 \end{block}
 
@@ -315,7 +315,7 @@
         shrink = {- optional counterexample shrinker -}
   \end{hscode*}
 
-  In future, we plan to auto-create generators for recursive data types with no dependency between values (like \hs{BinTree}).
+  In the future, we plan to auto-create generators for recursive data types with no dependency between values (like \hs{BinTree}).
 \end{block}
 
 \end{column} % End of the double
