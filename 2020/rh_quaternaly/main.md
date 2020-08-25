@@ -172,7 +172,8 @@ Now we execute $T_2$: $y ← 1$; read $x$.
 Unless the store $x ← 1$ was already propagated to the memory, the read would
 return 0 -- a value which seem to be impossible from the inspection of the
 program.
-**TODO: image?**
+
+![An illustration of an unintuitive behaviour the relaxed memory on x86-64.](store-buffering.pdf)
 
 Programmes have to use some sort of synchronisation to to prevent relaxed
 behaviour from breaking their programs.
