@@ -254,3 +254,20 @@ operation might want to mark it as a resource section.
 Programs" by Vladimír Štill and Jiří Barnat
 (<http://dx.doi.org/10.1007/978-3-030-30446-1_20>,
 <https://divine.fi.muni.cz/2019/lnterm>)
+
+### Other research topics of DIVINE and future work
+
+Research around the DIVINE analyser also focuses on other topics, currently
+mostly on a symbolic and abstract representation of data.
+This allows DIVINE to handle programs in which some variables have arbitrary
+values or some inputs contain arbitrary data.
+DIVINE can than decide if the program is correct for all possible values of
+such data.
+These kind of analyses come with a significant increase in computational
+complexity and some of the contemporary research in our group focuses on ways
+to improve its efficiency through the use of lossy abstractions and their
+iterative refinement.
+Further research in our group includes decompilation of x86-64 binaries into
+LLVM, which would allow DIVINE to analyse native binaries through decompilation
+and possibly annotate them with symbolic data. However, the research into
+decompilation is in quite early stages.
