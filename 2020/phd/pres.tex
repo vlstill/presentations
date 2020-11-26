@@ -1,0 +1,287 @@
+\documentclass[aspectratio=169]{paradise-slide}
+
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{:}
+\setbeamercolor{caption name}{fg=normal text.fg}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+
+\usepackage{upquote}
+\usepackage{microtype}
+
+% Comment these out if you don't want a slide with just the
+% part/section/subsection/subsubsection title:
+\AtBeginPart{
+  \let\insertpartnumber\relax
+  \let\partname\relax
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \let\insertsectionnumber\relax
+  \let\sectionname\relax
+  \frame{\sectionpage}
+}
+\AtBeginSubsection{
+  \let\insertsubsectionnumber\relax
+  \let\subsectionname\relax
+  \frame{\subsectionpage}
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+\ifxetex
+  \usepackage{polyglossia}
+  \setmainlanguage{}
+  \setotherlanguages{}
+\else
+  \usepackage[shorthands=off,english]{babel}
+\fi
+\usepackage{minted}
+
+\newminted[cppcode]{cpp}{autogobble,breaklines,escapeinside=⟦⟧}
+\newminted[cppcodeln]{cpp}{autogobble,breaklines,linenos,escapeinside=⟦⟧}
+\newmintinline[cpp]{cpp}{}
+
+\usepackage[ backend=biber
+           , style=alphabetic % numeric
+           , sortlocale=en_US
+           , bibencoding=UTF8
+           , sorting=anyt % explicit label, name, year, title
+           , sortlocale=cs_CZ
+           , maxnames=100
+           , maxalphanames=4
+           , maxbibnames=100
+           , urldate=long
+           ]{biblatex}
+\DeclareSourcemap{
+    \maps[datatype=bibtex, overwrite]{
+        \map{
+            \step[fieldset=editor, null]
+            \step[fieldset=language, null]
+            \step[fieldset=url, null]
+            \step[fieldset=isbn, null]
+        }
+    }
+}
+\addbibresource{my.bib}
+\newcommand{\fcite}[1]{\emergencystretch 3em{\protect\NoHyper\cite{#1}}~\fullcite{#1}}
+
+\usepackage{xspace}
+\newcommand{\xtso}{\mbox{x86-\kern-.15em TSO}\xspace}
+
+\title{Analysis of Parallel C++ Programs}
+\subtitle{PhD Thesis Defense}
+\author{Vladimír Štill}
+\date{3rd December 2020}
+
+\newenvironment{prespart}[1]{%
+  \begin{frame}{}%
+    \centering
+      {\Large #1} \par\bigskip\bigskip%
+}{%
+  \end{frame}%
+}
+\let\otp\titlepage
+\renewcommand{\titlepage}{\otp\addtocounter{framenumber}{-1}}
+
+\begin{document}
+
+\frame[plain]{\titlepage}
+
+\begin{frame}{Analysis of Parallel C++ Programs}
+
+\textbf{Analysis of Parallel Programs}
+\begin{itemize}
+    \item parallel processing inherent in modern hardware
+    \item it is easy to make mistakes in parallel software
+    \item problems hard to find by conventional testing
+\end{itemize}
+\pause
+
+\bigskip
+\textbf{C++}
+\begin{itemize}
+  \item often used in performance-critical applications
+  \item high-level language
+  \item has many features present in other languages (and not present in C)
+    \pause
+    \begin{itemize}
+      \item objects, inheritance, threading, exceptions, …
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{TODO}
+  - DIVINE
+\end{frame}
+
+\begin{prespart}{Improvements in Analysis of Realistic Programs}
+  \begin{itemize}
+    \item \fcite{SRB2017}
+  \end{itemize}
+\end{prespart}
+
+\begin{frame}{Component Reuse}
+  analysis of high-level programming languages is complex
+  \begin{itemize}
+    \item syntax (\cpp{for ( auto [ k, v ] : map ) { ...  }})
+    \item code-generation (\cpp{template< typename T > class vector { ... }})
+    \item object-based polymorphism, run-time types, virtual methods
+    \item exceptions
+    \item libraries
+    \item … \pause
+    \item → expensive to implement from scratch
+  \end{itemize}
+
+  \pause\bigskip
+  we reuse existing components
+  \begin{itemize}
+    \item compiler (clang)
+    \item some libraries (pdclib, libc++)
+  \end{itemize}
+
+  and implement other
+  \begin{itemize}
+    \item parts of exception handling (libunwind)
+    \item threads (pthread)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Exceptions in C++}
+  \begin{minipage}{0.47\textwidth}
+    \setlength{\leftmargini}{1em}
+    \begin{itemize}
+      \item ubiquitous in C++
+      \item disabling them can change behaviour (e.g. allocation)
+      \item need complex runtime support
+        \begin{itemize}
+          \item exception matching
+          \item cleanup
+          \item stack unwinding
+        \end{itemize}
+    \end{itemize}
+  \end{minipage}
+  \hfill
+  \pause
+  \newcommand{\arr}[1]{\visible<#1>{\textcolor{red}{$\mathbf{\longleftarrow}$}}}
+  \begin{minipage}{0.47\textwidth}
+    \begin{cppcodeln}
+      X::~X() { } ⟦\arr{7}⟧
+
+      void g() {
+        throw std::out_of_range(); ⟦\arr{5}⟧
+      }
+      void f() {
+        X x; ⟦\arr{3}⟧
+        g(); ⟦\arr{4}⟧
+      } ⟦\arr{6}⟧
+      int main() {
+        try {
+          f(); ⟦\arr{2}⟧
+        } catch ( std::logic_error ) {
+          /* ... */ ⟦\arr{8}⟧
+        }
+      }
+    \end{cppcodeln}
+  \end{minipage}
+\end{frame}
+
+\begin{frame}{Exceptions in DIVINE}
+  \textbf{Goals}
+  \begin{itemize}
+    \item reuse as much of the C++ library implementation as possible
+    \item limit changes to the core of DIVINE
+    \item full support for C++ exceptions
+  \end{itemize}
+  \pause
+
+  \bigskip
+  \textbf{Our Approach}
+  \begin{itemize}
+    \item calculate exception handling metadata for the LLVM code
+    \item unwinding library that uses them
+    \item lower some exception handling primitives in LLVM to our functions
+  \end{itemize}
+  \pause
+
+  \bigskip
+  \textbf{Results}
+  \begin{itemize}
+    \item just 300 lines of code for metadata and 210 lines of code for unwinding
+    \item comparable performance to (partial) implementation that requires substantial changes to
+      the C++ library implementation and DIVINE
+  \end{itemize}
+\end{frame}
+
+\begin{prespart}{Analysis of Programs Under the \xtso Relaxed Memory Model}
+  \begin{itemize}
+    \item \fcite{SB2018x86tso}
+  \end{itemize}
+\end{prespart}
+
+\begin{frame}[fragile]{Relaxed Memory}
+  \begin{minipage}{0.47\textwidth}
+    modern processors use various techniques to speed up processing
+    \begin{itemize}
+      \item cache hierarchies
+      \item instruction reordering
+      \item speculative execution
+    \end{itemize}
+    \pause
+
+    this gives rise to observable relaxed behaviour
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.48\textwidth}
+    \begin{cppcode}
+      int x = 0;
+      int y = 0;
+    \end{cppcode}
+    \begin{minipage}{0.48\textwidth}
+      \begin{cppcode}
+        void thread0()
+        {
+          y = 1;
+          int a = x;
+        }
+      \end{cppcode}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+      \begin{cppcode}
+        void thread1()
+        {
+          x = 1;
+          int b = y;
+        }
+      \end{cppcode}
+    \end{minipage}
+
+    \centering\medskip
+    Is $\texttt{a} = 0 \land \texttt{b} = 0$ reachable?
+  \end{minipage}
+\end{frame}
+
+\begin{prespart}{Local Nontermination analysis for Parallel Programs}
+  \begin{itemize}
+    \item \fcite{SB2019}
+  \end{itemize}
+\end{prespart}
+
+\begin{prespart}{Other Significant Publications}
+  \begin{itemize}
+    \item \fcite{DIVINEToolPaper2017}
+    \item \fcite{RSCB2018}
+  \end{itemize}
+\end{prespart}
+
+\begin{prespart}{Conclusion}
+\end{prespart}
+
+\end{document}
+
+% vim: fo+=t tw=100 spell spelllang=en shiftwidth=2
