@@ -1,4 +1,4 @@
-\documentclass[aspectratio=169]{paradise-slide}
+\documentclass[aspectratio=169, fi]{paradise-slide}
 
 \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{caption label separator}{:}
@@ -9,6 +9,7 @@
 
 \usepackage{upquote}
 \usepackage{microtype}
+\usepackage{booktabs}
 
 % Comment these out if you don't want a slide with just the
 % part/section/subsection/subsubsection title:
@@ -87,6 +88,7 @@
 }
 \let\otp\titlepage
 \renewcommand{\titlepage}{\otp\addtocounter{framenumber}{-1}}
+\newcommand{\rquote}[1]{\begin{quote}#1\end{quote}\bigskip\setlength{\leftmargini}{1em}}
 
 \begin{document}
 
@@ -94,10 +96,10 @@
 
 \begin{frame}{Analysis of Parallel C++ Programs}
 
-\textbf{Analysis of Parallel Programs}
+\textbf{Automatic Analysis of Parallel Programs}
 \begin{itemize}
-    \item parallel processing inherent in modern hardware
-    \item it is easy to make mistakes in parallel software
+    \item parallel processing to make use of modern hardware
+    \item easy to make mistakes in parallel software
     \item problems hard to find by conventional testing
 \end{itemize}
 \pause
@@ -110,13 +112,26 @@
   \item has many features present in other languages (and not present in C)
     \pause
     \begin{itemize}
-      \item objects, inheritance, threading, exceptions, …
+      \item complex objects, inheritance, threading, atomic variables, exceptions, …
     \end{itemize}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{TODO}
-  - DIVINE
+\begin{frame}{DIVINE}
+  All work presented in the thesis is implemented and evaluated in DIVINE
+
+  \begin{itemize}
+    \item explicit-state analyser for C and C++, using LLVM intermediate representation
+      \begin{enumerate}
+        \item C/C++ translated to LLVM using clang compiler
+        \item LLVM is instrumented
+        \item and executed by DIVINE in search for errors
+      \end{enumerate}\pause
+    \item primarily targets reachability, also supports Büchy and termination conditions
+    \item symbolic extensions \pause
+    \item multiple other contributors, parts presented here authored mostly by me
+    \item open source
+  \end{itemize}
 \end{frame}
 
 \begin{prespart}{Improvements in Analysis of Realistic Programs}
@@ -126,12 +141,12 @@
 \end{prespart}
 
 \begin{frame}{Component Reuse}
-  analysis of high-level programming languages is complex
+  analysis of high-level programming languages is complex \pause
   \begin{itemize}
-    \item syntax (\cpp{for ( auto [ k, v ] : map ) { ...  }})
-    \item code-generation (\cpp{template< typename T > class vector { ... }})
-    \item object-based polymorphism, run-time types, virtual methods
-    \item exceptions
+    \item syntax (\cpp{for ( auto [ k, v ] : map ) { ...  }}) \pause
+    \item code-generation (\cpp{template< typename T > class vector { ... }}) \pause
+    \item object-based polymorphism, run-time type support, virtual methods \pause
+    \item exceptions \pause
     \item libraries
     \item … \pause
     \item → expensive to implement from scratch
@@ -146,11 +161,12 @@
 
   and implement other
   \begin{itemize}
-    \item parts of exception handling (libunwind)
     \item threads (pthread)
+    \item parts of exception handling (libunwind)
   \end{itemize}
 \end{frame}
 
+\newcommand{\arr}[1]{\visible<#1>{\textcolor{red}{$\mathbf{\longleftarrow}$}}}
 \begin{frame}[fragile]{Exceptions in C++}
   \begin{minipage}{0.47\textwidth}
     \setlength{\leftmargini}{1em}
@@ -161,13 +177,18 @@
         \begin{itemize}
           \item exception matching
           \item cleanup
-          \item stack unwinding
+          \item {\only<2->\bf stack unwinding}
         \end{itemize}
     \end{itemize}
+
+    \bigskip
+    \visible<2->{Stack:}\medskip\\
+    \visible<5,7>{\framebox[0.8\textwidth]{\vphantom{gf}\only<5>{\cpp{g}}\only<7>{\cpp{X::~X}}}}
+    \visible<3-7>{\framebox[0.8\textwidth]{\vphantom{gf}\cpp{f}}}
+    \visible<2->{\framebox[0.8\textwidth]{\vphantom{gf}\cpp{main}}}
   \end{minipage}
   \hfill
   \pause
-  \newcommand{\arr}[1]{\visible<#1>{\textcolor{red}{$\mathbf{\longleftarrow}$}}}
   \begin{minipage}{0.47\textwidth}
     \begin{cppcodeln}
       X::~X() { } ⟦\arr{7}⟧
@@ -193,7 +214,7 @@
 \begin{frame}{Exceptions in DIVINE}
   \textbf{Goals}
   \begin{itemize}
-    \item reuse as much of the C++ library implementation as possible
+    \item reuse as much of the C++ library implementation as possible (libc++abi)
     \item limit changes to the core of DIVINE
     \item full support for C++ exceptions
   \end{itemize}
@@ -202,8 +223,8 @@
   \bigskip
   \textbf{Our Approach}
   \begin{itemize}
-    \item calculate exception handling metadata for the LLVM code
-    \item unwinding library that uses them
+    \item calculate exception handling metadata for the LLVM code in DIVINE
+    \item implement unwinding library using this metadata
     \item lower some exception handling primitives in LLVM to our functions
   \end{itemize}
   \pause
@@ -211,9 +232,10 @@
   \bigskip
   \textbf{Results}
   \begin{itemize}
-    \item just 300 lines of code for metadata and 210 lines of code for unwinding
+    \item no modifications to libc++abi required
     \item comparable performance to (partial) implementation that requires substantial changes to
       the C++ library implementation and DIVINE
+    \item makes use of the new state representation in DIVINE 4
   \end{itemize}
 \end{frame}
 
@@ -235,28 +257,28 @@
 
     this gives rise to observable relaxed behaviour
   \end{minipage}
-  \hfill
+  \hfill\pause
   \begin{minipage}{0.48\textwidth}
     \begin{cppcode}
       int x = 0;
       int y = 0;
     \end{cppcode}
-    \begin{minipage}{0.48\textwidth}
+    \begin{minipage}{0.49\textwidth}
       \begin{cppcode}
         void thread0()
-        {
-          y = 1;
-          int a = x;
+        { ⟦\arr{6}⟧
+          y = 1; ⟦\arr{7}⟧
+          int a = x; ⟦\arr{8-}⟧
         }
       \end{cppcode}
     \end{minipage}
     \hfill
-    \begin{minipage}{0.48\textwidth}
+    \begin{minipage}{0.49\textwidth}
       \begin{cppcode}
         void thread1()
-        {
-          x = 1;
-          int b = y;
+        { ⟦\arr{6-8}⟧
+          x = 1; ⟦\arr{9}⟧
+          int b = y; ⟦\arr{10}⟧
         }
       \end{cppcode}
     \end{minipage}
@@ -264,6 +286,131 @@
     \centering\medskip
     Is $\texttt{a} = 0 \land \texttt{b} = 0$ reachable?
   \end{minipage}
+
+  \bigskip\bigskip\pause
+  \begin{minipage}[t]{0.48\textwidth}
+    Not under \emph{Sequential Consistency}
+
+    \visible<6->{
+      \medskip
+      Globals: \texttt{x = \only<-8>{0}\only<9->{1}}, \texttt{y = \only<-6>{0}\only<7->{1}}\\
+      Locals: \texttt{a = \only<-7>{$\bot$}\only<8->{0}}, \texttt{b = \only<-9>{$\bot$}\only<10->{1}}\\
+    }
+  \end{minipage}
+  \hfill\pause
+  \begin{minipage}[t]{0.48\textwidth}
+    Reachable on x86, ARM, POWER, …
+
+    \visible<6->{
+      \medskip
+      Globals: \texttt{x = \only<-10>{0}\only<11->{1}}, \texttt{y = 0}\\
+      Locals: \texttt{a = \only<-7>{$\bot$}\only<8->{0}}, \texttt{b =
+        \only<-9>{$\bot$}\only<10->{\textcolor{red}{0}}}\\
+      Store buffer t0: \textcolor{red}{\only<7->{y = 1}} \\
+      Store buffer t1: \textcolor{red}{\only<9-10>{x = 1}}  \\
+    }
+  \end{minipage}
+\end{frame}
+
+\begin{frame}{Analysis of Programs Under the x86-TSO Relaxed Memory Model}
+  Preexisting approaches
+  \begin{itemize}
+    \item stateless model checking (Nidhugg, RCMC, …)
+    \item bounded model checking (CBMC, …)
+    \item explicit-state model checking (not very competitive)
+    \item also techniques which consider any relaxed behaviour as error
+  \end{itemize}
+
+  \bigskip
+  Our approach
+  \begin{itemize}
+    \item \xtso – memory model of Intel and AMD x86(-64) CPUs
+    \item C and C++
+    \item based on explicit-state model checking
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Efficient explicit simulation of \xtso}
+  \begin{itemize}
+    \item \xtso allows arbitrary delaying of stores
+    \item only some possibilites observable
+    \item flushing store buffers only if someone reads buffered values
+    \item delayed flushing – some values can behave as flushed, but their order respective to other
+      buffered values can be undetermined
+  \end{itemize}
+
+  \pause\bigskip
+  \colorlet{frombuf}{green!60!black}
+  \colorlet{flushed}{yellow!60!red!85!black}
+  \begin{minipage}[t]{0.4\textwidth}
+
+  \begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
+                     , semithick
+                     , scale=0.5
+                     , thck/.style = { thick, decoration={markings,mark=at position 1 with {\arrow[scale=4]{>}}}, postaction={decorate}, },
+                     ]
+
+    \draw [-] (-10,0) rectangle (-7,-4);
+    \draw [-] (-10,-1) -- (-7,-1)
+              (-10,-2) -- (-7,-2)
+              (-10,-3) -- (-7,-3);
+    \node () [anchor=center] at (-8.5, 0.5) {s.b. 1};
+    \node () [anchor=center] at (-8.5,-0.5) {\only<-5>{\only<4->{\color{flushed}}\texttt{x $\leftarrow$ 1}}};
+    \node () [anchor=center] at (-8.5,-1.5) {\only<-3>{\texttt{y $\leftarrow$ 1}}\only<4-5>{\color{flushed}\texttt{x $\leftarrow$ 2}}};
+    \node () [anchor=center] at (-8.5,-2.5) {\only<-3>{\texttt{x $\leftarrow$ 2}}};
+    \node () [anchor=center] at (-8.5,-3.5) {\only<-3>{\only<3>{\color{frombuf}}\texttt{y $\leftarrow$ 2}}};
+
+    \draw [-] (-6,0) rectangle (-3,-4);
+    \draw [-] (-6,-1) -- (-3,-1)
+              (-6,-2) -- (-3,-2)
+              (-6,-3) -- (-3,-3);
+    \node () [anchor=center] at (-4.5, 0.5) {s.b. 2};
+    \node () [anchor=center] at (-4.5,-0.5) {\only<-6>{\only<5-6>{\color{frombuf}}\texttt{x $\leftarrow$ 3}}\only<7->{\texttt{y $\leftarrow$ 3}}};
+    \node () [anchor=center] at (-4.5,-1.5) {\only<-6>{\texttt{y $\leftarrow$ 3}}};
+
+  \end{tikzpicture}
+
+  \newcommand{\ly}{\only<3->{\only<3>{\textcolor{frombuf}}{// \textrightarrow 3}}}
+  \newcommand{\lx}{\only<5->{\only<5-6>{\textcolor{frombuf}}{// \textrightarrow 4}}}
+  \begin{cppcode}
+  void thread0() {
+    int a = y; ⟦\ly⟧
+    int b = x; ⟦\lx⟧
+  }
+  \end{cppcode}
+  \end{minipage}
+  \begin{minipage}[t]{0.55\textwidth}
+      \begin{itemize}
+          \only<1>{\item}
+          \only<2>{\item three threads, thread 0 executing}
+          \only<3>{\item nondeterministically choose which value to load from the
+          store buffers}
+          \only<4>{\item older values for \texttt{y} in s.b. 1 removed}
+          \only<4>{\item other older values in s.b. 1 marked as flushed}
+          \only<5>{\item nondeterministically choose to load value from s.b.~2}
+          \only<6>{\item flushed values for \texttt{x} has to be removed (overwritten)}
+          \only<7>{\item \texttt{x} is propagated to the memory}
+          \only<8>{\item \texttt{y $\leftarrow$ 3} stays in buffer unless \texttt{y} is read again}
+      \end{itemize}
+  \end{minipage}
+\end{frame}
+
+\begin{frame}{Results}
+
+  \begin{itemize}
+    \item evaluation on nonsymbolic SV-COMP concurrency benchmarks
+    \item compared with CBMC and Nidhugg
+
+    \vspace{2ex}
+    \setlength\tabcolsep{0.5em} %
+    \begin{tabular}{lrrr} \toprule
+        \textcolor{gray}{(total = 54)} & CBMC & \textbf{DIVINE} & Nidhugg \\ \midrule
+        finished                & 20   & 23     & 24 \\
+        TSO errors              &  3   & 10     &  3 \\
+        uniqly solved           &  5   &  6     &  8 \\
+        \bottomrule
+    \end{tabular}
+  \end{itemize}
 \end{frame}
 
 \begin{prespart}{Local Nontermination analysis for Parallel Programs}
@@ -281,6 +428,214 @@
 
 \begin{prespart}{Conclusion}
 \end{prespart}
+
+\begin{prespart}{Reactions to Reviews}
+\end{prespart}
+
+\def\rname{Tomáš Vojnar}
+\def\qtitle{Questions by \rname}
+
+\begin{frame}[fragile]{\qtitle}
+\rquote{What I am slightly missing in the chapter [4] is a better explanation of which particular features
+of exception handling were not supported by DIVINE 3.}
+
+  \begin{itemize}
+    \item exception specifications
+      \begin{cppcode}
+        void bar(int x) throw() { ... }
+        void foo(int x) throw (std::out_of_range) { ... }
+      \end{cppcode}
+    \item new approach also allows for implementation of \cpp{longjmp}/\cpp{setjmp} for the sake of
+      C~programs
+    \item DIVINE 3 does not check if the target function is using C++ exceptions
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{\qtitle}
+  Handling of unaligned loads in \xtso.\bigskip
+
+  \begin{itemize}
+    \item alignment is not significant for our \xtso simulation, as long as the there are no
+      \emph{partially overlapping} loads/stores
+      \begin{itemize}
+        \item this matches with the observed behaviour of x86-64 processors and the \xtso
+          theoretical memory model
+      \end{itemize}
+    \item partial overlaps should not happen for atomic variables in C++ (undefined behaviour)
+    \item but can happen for non-atomics (e.g. \cpp{memcpy}) TODO
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{\qtitle}
+  \rquote{Why do you concentrate solely on instances of resource sections that are bound to
+    non-terminate? Why do you not consider these that can but need not terminate too? I understand
+    that such non-termination can happen under weak fairness when accessing shared resources, but
+    why not considering strong fairness (at least wrt access to some resources) and non-termation
+    that is possible (though not necessary) under such fairness too?}
+
+  Consider this example from a single-prodcer single-consumer queue using atomics:
+  \begin{cppcode}
+    T &front() {
+        while ( empty() ) { /* wait */ }
+        // ...
+  \end{cppcode}
+  \begin{itemize}
+    \item empty is a non-blocking operation, therefore the thread is always enabled at this line
+    \item we tried to avoid false nontermination errors in common synchronization patterns
+    \item it would be possible to have also sections that check for other fairness criteria
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{\qtitle}
+  \rquote{Where are the predefined resource sections applied in DIVINE? Is this within
+    implementation of various synchronization primitives, or are you trying to detect even
+    application-specific resource sections automatically?}
+
+  \begin{itemize}
+    \item in synchronization primitives defined in DIVINE (mostly in the \texttt{pthread} library)
+    \item automatic detection might be possible for wait-style sections, but would be hard for
+      mutual exclusion
+    \item with automatic detection, there is a risk that a small change in source (or compiler)
+      would interfere with detection
+  \end{itemize}
+\end{frame}
+
+\def\rname{Jaco van de Pol}
+
+\begin{frame}{\qtitle}
+  \rquote{Could you summarize the main problem(s) solved by this thesis, but \emph{not} in related
+    work?}
+  \begin{itemize}
+    \item 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{\qtitle}
+  \rquote{Could you summarize the main new technique(s) developed by you in this thesis?}
+  \begin{itemize}
+    \item 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{\qtitle}
+  \rquote{You state that the verification of nearly all features of C++ and its standard library are
+    supported. Which features are not supported, why not, and how fundamental are they?}
+
+  most of C++17 is supported, missing features include:
+  \begin{itemize}
+    \item some functionality related to locale support (due to missing support in our libc
+      implementation)
+      \begin{itemize}
+        \item unlikely to be used in parallel algorithms and data structures
+      \end{itemize}
+    \item filesystem support is limited by abilities of virtual file system in DIVINE
+    \item parts of \texttt{math.h} (mostly related to loating-point environment)
+    \item handling of real time
+    \item networking (defined in platform APIs, not C++)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{\qtitle}
+  \rquote{You transform an ``LLVM program under TSO'' to an ``LLVM program under SC''. What
+  scientific support do you have that the transformation preserves semnatics? What properties of the
+  program are actually preserved by the transformation? (e.g. all linerar-time properties? only
+  stutter-free properties? fair traces? termination? branching properties?)}
+  \begin{itemize}
+    \item the argumentation stated in the paper and a suite of test which test reachable results of
+      thread interactions
+    \item we considered mostly reachability
+      \begin{itemize}
+        \item automata-based approach to LTL would likely lead to infinite state space with store
+          buffer limits, or unsound analysis without them
+        \item as long as values used to evaluate the formula (or syncrhonize Büchy automaton, etc)
+          are read using the proposed transformation, unbounded state space should preserve
+          stutter-free linear properties
+      \end{itemize}
+    \item DIVINE can reliably analyse only stutter-free linerar-time properties and has no support
+      for branching properties
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{\qtitle}
+  \rquote{You compare your solution to weak-fairness, but how does your solution compare to strong
+    fairness? Why are the fairness assumptions you postulate justified in reality?}
+  \begin{itemize}
+    \item strong fairness is not strong enough to eliminate spurious conterexamples in common
+      synchronization patterns used with atomic variable
+    \item 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{\qtitle}
+  \rquote{Can it happen that the tool concludes termination, just because a malloc-function returns
+    NULL (out-of-memory) non-deterministically?}
+  \begin{itemize}
+    \item yes (the problem is same as for symbolic data)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{\qtitle}
+  \rquote{Do you have concrete ideas on how to integrate your advances with more symbolic or more
+    modular apporaches?}
+
+  Symbolic approaches
+  \begin{itemize}
+    \item DIVINE has support for compiled data abstractions, both precise (bitvectors) and lossy
+    \item exception support does not interfere with symbolic approaches (as long as control-flow is
+      explicit)
+    \item conceptually, \xtso simulation does not intefere with symbolic approaches
+      \begin{itemize}
+        \item implementation would be tricky in DIVINE
+        \item the symbolic extension relies on over-approximation of set of possibly symbolic
+          locations this would likely encompass the whole program if any symbolic value was stored
+          using store buffers
+      \end{itemize}
+    \item local nontermination would need a modified fairness condition to handle nondeterminism
+      without under-approximation
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{\qtitle}
+  \rquote{Do you have concrete ideas on how to integrate your advances with more symbolic or more
+    modular apporaches?}
+
+  Modular approaches
+  \begin{itemize}
+    \item I have rather limited knowledge of modular approaches to software verification
+    \item exceptions
+      \begin{itemize}
+        \item symbolic analysis could be used to find conditions under which exception can
+          or must be raised by a function
+        \item however, our apporoach to exceptions is badly suited for axiomatic analysis usual for
+          modular methods
+      \end{itemize}
+    \item \xtso – TODO
+    \item local nontermination – thread-modular apporoaches seem to be orthogonal to our approach,
+      it might be possible to use them to limit the number of resource sections that need to be
+      checked
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{\qtitle}
+  From text comments:
+  \rquote{[Chapter 4] Is the solution sound with respect to the (intended) semantics of exceptions? In
+    particular, what about corner cases, like an exception is raised during handling another
+    exception (maybe even during stack unwinding/cleanup handlers).}
+
+  yes
+  \begin{itemize}
+    \item these cases are handled by the part of C++ library that is re-used, so the behaviour
+      shoudl be equivalent to the behaviour presented in normal execution
+    \item only difference could be in parallel access to exception by the undwinder and some other
+      thread, however:
+      \begin{itemize}
+        \item the exception object is thread-local
+        \item while it contains user payload which might be globally visible, it does not access it
+          (it does not have any knowledge of its structure)
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
 
 \end{document}
 
