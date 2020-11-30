@@ -11,6 +11,8 @@
 \usepackage{microtype}
 \usepackage{booktabs}
 
+\usetikzlibrary{arrows,shapes,snakes,automata,backgrounds,petri,fit}
+
 % Comment these out if you don't want a slide with just the
 % part/section/subsection/subsubsection title:
 \AtBeginPart{
@@ -86,13 +88,11 @@
 }{%
   \end{frame}%
 }
-\let\otp\titlepage
-\renewcommand{\titlepage}{\otp\addtocounter{framenumber}{-1}}
 \newcommand{\rquote}[1]{\begin{quote}#1\end{quote}\bigskip\setlength{\leftmargini}{1em}}
 
 \begin{document}
 
-\frame[plain]{\titlepage}
+\frame[plain, noframenumbering]{\titlepage}
 
 \begin{frame}{Analysis of Parallel C++ Programs}
 
@@ -136,7 +136,7 @@
 
 \begin{prespart}{Improvements in Analysis of Realistic Programs}
   \begin{itemize}
-    \item \fcite{SRB2017}
+    \item \fcite{SRB2017} \hfill 75\,\%
   \end{itemize}
 \end{prespart}
 
@@ -241,7 +241,7 @@
 
 \begin{prespart}{Analysis of Programs Under the \xtso Relaxed Memory Model}
   \begin{itemize}
-    \item \fcite{SB2018x86tso}
+    \item \fcite{SB2018x86tso} \hfill 90\,\%
   \end{itemize}
 \end{prespart}
 
@@ -415,27 +415,223 @@
 
 \begin{prespart}{Local Nontermination analysis for Parallel Programs}
   \begin{itemize}
-    \item \fcite{SB2019}
+    \item \fcite{SB2019} \hfill 90\,\%
   \end{itemize}
 \end{prespart}
 
+\begin{frame}{Beyond Safety Checking}
+  safety checking is common for realistic parallel programs
+  \begin{itemize}
+    \item assertion violations, memory corruption, data races…
+    \item caused by thread interleaving, possibly with relaxed memory
+    \pause
+    \item if the program does not terminate…
+    \begin{itemize}
+      \item the tool might not terminate
+      \item or it might report there are no safety violations (correctly)
+    \end{itemize}
+  \end{itemize}
+
+  \pause\bigskip
+  → often we need to go beyond safety checking
+  \begin{itemize}
+    \item termination
+    \item temporal properties (liner, branching time, …)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Local Nontermination analysis for Parallel Programs}
+  \begin{minipage}{0.49\textwidth}
+    checking that some patrs of the program terminate
+    \begin{itemize}
+      \item critical sections
+      \item waiting for entry to critical sections
+      \item waiting for condition variables, thread termination
+      \item user-defined parts
+    \end{itemize}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.47\textwidth}
+    \begin{cppcode}
+      void foo() {
+        // lock
+        std::unique_lock guard( mtx );
+        do_work()
+        cond.notify_all();
+      } // unlock
+    \end{cppcode}
+  \end{minipage}
+\end{frame}
+
+\begin{frame}[fragile]{Local Nontermination analysis for Parallel Programs}
+  \setlength{\leftmargini}{1em}
+  \begin{itemize}
+    \item we aim at nontermination caused by unintended parallel interactions \pause
+    \item not at complex control flow \& loops \pause
+    \item should be easy to specify
+    \item should not report nontermination spuriously
+    \item should be useful for analysis of services/servers – programs that should not terminate
+  \pause
+  \bigskip
+    \item builds on explicit-state model checking → finite-state programs (with possibly infinite behaviour)
+    \item user can specify what to check
+  \end{itemize}
+
+  \bigskip
+  \begin{minipage}{0.49\textwidth}
+    \begin{cppcode}
+      bool x = true;
+      while (true) { x = !x; }
+    \end{cppcode}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.49\textwidth}
+    \begin{tikzpicture}[>=latex,>=stealth',auto,node distance=2cm,semithick,initial text=]
+      \node[state,initial] (t) {$x$};
+      \node[state] (f) [right of = t] {$\lnot x$};
+
+      \path[->, shorten >=1pt]
+        (t) edge[bend left] (f)
+        (f) edge[bend left] (t)
+      ;
+    \end{tikzpicture}
+  \end{minipage}
+\end{frame}
+
+\begin{frame}[fragile]{What is Nontermination?}
+  \begin{cppcode}
+  std::atomic< bool > spin_lock;
+  void worker() { // two of these running in parallel
+      while (true) {
+          while (spin_lock.exchange(true)) { /* wait */ }
+          x++;
+          spin_lock = false;
+      }
+  }
+  \end{cppcode}
+
+  Does every \emph{wait} end? \pause
+
+  \bigskip
+  \newcommand{\ta}[1]{\text{\textcolor{blue}{\texttt{[t0: #1]}}}}
+  \newcommand{\tb}[1]{\text{\textcolor{red}{\texttt{[t1: #1]}}}}
+  $\ta{spin\_lock.exchange(true) \textrightarrow{} false}$\\
+  $\big(\tb{spin\_lock.exchange(true) \textrightarrow{} true}$\\
+  $\phantom{\big(}\ta{x++}$\\
+  $\phantom{\big(}\ta{spin\_lock = false}$\\
+  $\phantom{\big(}\ta{spin\_lock.exchange(true) \textrightarrow{} false}\big)^\omega$
+
+  \medskip
+  \textbf{both threads can run}
+\end{frame}
+
+\begin{frame}[fragile]{Local Nontermination analysis for Parallel Programs}
+%  \begin{minipage}{0.66\textwidth}
+    Resource Section
+    \begin{itemize}
+      \item a block of code with an identifier
+      \item delimited in the source code
+      \item built-in (mutexes, condition variables, thread joining, …)
+      \item user-provided (in source code; block of code, function end, …)
+    \end{itemize}
+    \pause
+
+    \bigskip
+    Local Nontermination
+    \begin{itemize}
+      \item a resource section does not terminate if the program can reach apoint \emph{in the
+        resource section} from which it cannot reach \emph{the corresponding resource section end}
+    \end{itemize}
+    \pause
+
+    \bigskip
+    Detection
+    \begin{itemize}
+      \item nondeterministically \emph{activate} resource sections at their beginning
+      \item active resource sections are checked for nontermination, cannot be nested
+      \item detect terminal strongly connected components in active resource sections
+    \end{itemize}
+%  \end{minipage}
+%  \hfill
+%  \begin{minipage}{0.33\textwidth}
+%    \begin{tikzpicture}[>=latex,>=stealth',auto,node distance=1.5cm,semithick,initial
+%                        text=, ->, shorten >=1pt, initial distance = 1cm]
+%      \tikzstyle{state}=[circle, draw, minimum size=0.75cm]
+%      \tikzstyle{scc}=[draw, dashed, inner sep = 0.3cm, rounded corners=0.4em]
+%      \node[state,initial] (c1a) {};
+%      \node[state] (c1b) [right of = c1a] {};
+%      \node[state] (c1c) [below of = c1a] {};
+%
+%      \path
+%        (c1a) edge[bend left] (c1b)
+%        (c1b) edge[bend left] (c1c)
+%        (c1c) edge[bend left] (c1a)
+%        (c1b) edge[bend left] (c1a)
+%      ;
+%
+%      \node[scc, fit = (c1a) (c1b) (c1c)] (c1) {};
+%
+%      \node[state] (c2a) [below of = c1c] {};
+%      \path (c1c) edge (c2a);
+%      \node[scc, fit=(c2a)] (c2) {};
+%
+%      \node[state] (c4a) [below of = c2a] {};
+%      \node[state] (c4b) [below of = c4a] {};
+%      \path
+%        (c2a) edge (c4a)
+%        (c4a) edge[bend left] (c4b)
+%        (c4b) edge[bend left] (c4a)
+%      ;
+%      \node[scc, fit=(c4a) (c4b)] (c4) {};
+%      % \node[anchor=south, rotate = -90, yshift = -0.5cm] at (c4.west) {nontriv. terminal SCC};
+%
+%      \node[state] (c5a) [right of = c4a, node distance=2cm] {};
+%      \node[state] (c5b) [below of = c5a] {};
+%      \path
+%        (c2a) edge[bend left] (c5a)
+%        (c5a) edge[bend left, line width=3pt, draw=blue] (c5b)
+%        (c5b) edge[bend left, line width=3pt, draw=blue] (c5a)
+%      ;
+%      \node[scc, fit=(c5a) (c5b), line width=3pt, draw=blue] (c5) {};
+%      \node[anchor=south, rotate = -90] at (c5.east) {FATSCC};
+%    \end{tikzpicture}
+%  \end{minipage}
+\end{frame}
+
 \begin{prespart}{Other Significant Publications}
   \begin{itemize}
-    \item \fcite{DIVINEToolPaper2017}
-    \item \fcite{RSCB2018}
+    \item \fcite{DIVINEToolPaper2017} \hfill 30\,\%
+    \bigskip
+    \item \fcite{RSCB2018} \hfill 20\,\%
   \end{itemize}
 \end{prespart}
 
 \begin{prespart}{Conclusion}
+  \begin{itemize}
+    \item contributions to analysis of parallel programs in C++
+      \begin{itemize}
+        \item realistic programs, compiler and standard library reuse, and exceptions
+          \\ – \emph{new approach to implementation of exceptions}
+        \item programs running under the \xtso memory model
+          \\ – \emph{new efficient way to simulate \xtso run in an explicit-state model checker}
+        \item local nontermination detection
+          \\ – \emph{new technique that can detect that a part of the program which is supposed to
+          terminate does not}
+      \end{itemize}
+    \item all implemented in DIVINE and evaluated
+  \end{itemize}
 \end{prespart}
 
-\begin{prespart}{Reactions to Reviews}
-\end{prespart}
+\def\insertframenumber{A}
+\begin{frame}[noframenumbering]{}
+    \centering
+      {\Large Reactions to Reviews}
+\end{frame}
 
 \def\rname{Tomáš Vojnar}
 \def\qtitle{Questions by \rname}
 
-\begin{frame}[fragile]{\qtitle}
+\begin{frame}[fragile, noframenumbering]{\qtitle}
 \rquote{What I am slightly missing in the chapter [4] is a better explanation of which particular features
 of exception handling were not supported by DIVINE 3.}
 
@@ -451,7 +647,7 @@ of exception handling were not supported by DIVINE 3.}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{\qtitle}
+\begin{frame}[noframenumbering]{\qtitle}
   Handling of unaligned loads in \xtso.\bigskip
 
   \begin{itemize}
@@ -466,7 +662,7 @@ of exception handling were not supported by DIVINE 3.}
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{\qtitle}
+\begin{frame}[fragile, noframenumbering]{\qtitle}
   \rquote{Why do you concentrate solely on instances of resource sections that are bound to
     non-terminate? Why do you not consider these that can but need not terminate too? I understand
     that such non-termination can happen under weak fairness when accessing shared resources, but
@@ -486,7 +682,7 @@ of exception handling were not supported by DIVINE 3.}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{\qtitle}
+\begin{frame}[noframenumbering]{\qtitle}
   \rquote{Where are the predefined resource sections applied in DIVINE? Is this within
     implementation of various synchronization primitives, or are you trying to detect even
     application-specific resource sections automatically?}
@@ -502,7 +698,7 @@ of exception handling were not supported by DIVINE 3.}
 
 \def\rname{Jaco van de Pol}
 
-\begin{frame}{\qtitle}
+\begin{frame}[noframenumbering]{\qtitle}
   \rquote{Could you summarize the main problem(s) solved by this thesis, but \emph{not} in related
     work?}
   \begin{itemize}
@@ -510,14 +706,14 @@ of exception handling were not supported by DIVINE 3.}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{\qtitle}
+\begin{frame}[noframenumbering]{\qtitle}
   \rquote{Could you summarize the main new technique(s) developed by you in this thesis?}
   \begin{itemize}
     \item 
   \end{itemize}
 \end{frame}
 
-\begin{frame}{\qtitle}
+\begin{frame}[noframenumbering]{\qtitle}
   \rquote{You state that the verification of nearly all features of C++ and its standard library are
     supported. Which features are not supported, why not, and how fundamental are they?}
 
@@ -535,7 +731,7 @@ of exception handling were not supported by DIVINE 3.}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{\qtitle}
+\begin{frame}[noframenumbering]{\qtitle}
   \rquote{You transform an ``LLVM program under TSO'' to an ``LLVM program under SC''. What
   scientific support do you have that the transformation preserves semnatics? What properties of the
   program are actually preserved by the transformation? (e.g. all linerar-time properties? only
@@ -556,7 +752,7 @@ of exception handling were not supported by DIVINE 3.}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{\qtitle}
+\begin{frame}[noframenumbering]{\qtitle}
   \rquote{You compare your solution to weak-fairness, but how does your solution compare to strong
     fairness? Why are the fairness assumptions you postulate justified in reality?}
   \begin{itemize}
@@ -566,7 +762,7 @@ of exception handling were not supported by DIVINE 3.}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{\qtitle}
+\begin{frame}[noframenumbering]{\qtitle}
   \rquote{Can it happen that the tool concludes termination, just because a malloc-function returns
     NULL (out-of-memory) non-deterministically?}
   \begin{itemize}
@@ -574,7 +770,7 @@ of exception handling were not supported by DIVINE 3.}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{\qtitle}
+\begin{frame}[noframenumbering]{\qtitle}
   \rquote{Do you have concrete ideas on how to integrate your advances with more symbolic or more
     modular apporaches?}
 
@@ -595,7 +791,7 @@ of exception handling were not supported by DIVINE 3.}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{\qtitle}
+\begin{frame}[noframenumbering]{\qtitle}
   \rquote{Do you have concrete ideas on how to integrate your advances with more symbolic or more
     modular apporaches?}
 
@@ -616,7 +812,7 @@ of exception handling were not supported by DIVINE 3.}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{\qtitle}
+\begin{frame}[noframenumbering]{\qtitle}
   From text comments:
   \rquote{[Chapter 4] Is the solution sound with respect to the (intended) semantics of exceptions? In
     particular, what about corner cases, like an exception is raised during handling another
