@@ -173,8 +173,7 @@
   \begin{minipage}{0.47\textwidth}
     \setlength{\leftmargini}{1em}
     \begin{itemize}
-      \item ubiquitous in C++, including standard library
-      \item disabling them can change behaviour (e.g. allocation)
+      \item ubiquitous in C++, its standard library
       \item need complex runtime support
         \begin{itemize}
           \item exception matching
@@ -185,28 +184,28 @@
 
     \bigskip
     \visible<2->{Stack:}\medskip\\
-    \visible<5,7>{\framebox[0.8\textwidth]{\vphantom{gf}\only<5>{\cpp{g}}\only<7>{\cpp{X::~X}}}}
-    \visible<3-7>{\framebox[0.8\textwidth]{\vphantom{gf}\cpp{f}}}
+    \visible<2,4>{\framebox[0.8\textwidth]{\vphantom{gf}\only<2>{\cpp{g}}\only<4>{\cpp{X::~X}}}}
+    \visible<2-4>{\framebox[0.8\textwidth]{\vphantom{gf}\cpp{f}}}
     \visible<2->{\framebox[0.8\textwidth]{\vphantom{gf}\cpp{main}}}
   \end{minipage}
   \hfill
   \pause
   \begin{minipage}{0.47\textwidth}
     \begin{cppcodeln}
-      X::~X() { /* ... */ } ⟦\arr{7}⟧
+      X::~X() { /* ... */ } ⟦\arr{4}⟧
 
       void g() {
-        throw std::out_of_range(); ⟦\arr{5}⟧
+        throw std::out_of_range(); ⟦\arr{2}⟧
       }
       void f() {
-        X x; ⟦\arr{3}⟧
-        g(); ⟦\arr{4}⟧
-      } ⟦\arr{6}⟧
+        X x;
+        g();
+      } ⟦\arr{3}⟧
       int main() {
         try {
-          f(); ⟦\arr{2}⟧
+          f();
         } catch (std::logic_error&) {
-          /* ... */ ⟦\arr{8}⟧
+          /* ... */ ⟦\arr{5}⟧
         }
       }
     \end{cppcodeln}
@@ -225,9 +224,8 @@
   \bigskip
   \textbf{Our Approach}
   \begin{itemize}
-    \item calculate exception handling metadata for the LLVM code in DIVINE\\
-      (for libc++abi and the unwinder)
-    \item implement unwinding library using this metadata
+    \item calculate exception handling metadata (for libc++abi and the unwinder)
+    \item new unwinder using this metadata
     \item lower some exception handling primitives in LLVM to our functions
   \end{itemize}
   \pause
@@ -250,15 +248,13 @@
 
 \begin{frame}[fragile]{Relaxed Memory}
   \begin{minipage}{0.47\textwidth}
-    modern processors use various techniques to speed up processing
     \begin{itemize}
       \item cache hierarchies
       \item instruction reordering
       \item speculative execution
     \end{itemize}
-    \pause
 
-    this gives rise to observable relaxed behaviour
+    … give rise to observable relaxed behaviour
   \end{minipage}
   \hfill\pause
   \begin{minipage}{0.48\textwidth}
@@ -269,9 +265,9 @@
     \begin{minipage}{0.49\textwidth}
       \begin{cppcode}
         void thread0()
-        { ⟦\arr{6}⟧
-          y = 1; ⟦\arr{7}⟧
-          int a = x; ⟦\arr{8-}⟧
+        { ⟦\arr{4}⟧
+          y = 1; ⟦\arr{5}⟧
+          int a = x; ⟦\arr{6-}⟧
         }
       \end{cppcode}
     \end{minipage}
@@ -279,9 +275,9 @@
     \begin{minipage}{0.49\textwidth}
       \begin{cppcode}
         void thread1()
-        { ⟦\arr{6-8}⟧
-          x = 1; ⟦\arr{9}⟧
-          int b = y; ⟦\arr{10}⟧
+        { ⟦\arr{4-6}⟧
+          x = 1; ⟦\arr{7}⟧
+          int b = y; ⟦\arr{8-}⟧
         }
       \end{cppcode}
     \end{minipage}
@@ -294,60 +290,40 @@
   \begin{minipage}[t]{0.48\textwidth}
     Not under \emph{Sequential Consistency}
 
-    \visible<6->{
+    \visible<4->{
       \medskip
-      Globals: \texttt{x = \only<-8>{0}\only<9->{1}}, \texttt{y = \only<-6>{0}\only<7->{1}}\\
-      Locals: \texttt{a = \only<-7>{$\bot$}\only<8->{0}}, \texttt{b = \only<-9>{$\bot$}\only<10->{1}}\\
+      Globals: \texttt{x = \only<-6>{0}\only<7->{1}}, \texttt{y = \only<-4>{0}\only<5->{1}}\\
+      Locals: \texttt{a = \only<-5>{$\bot$}\only<6->{0}}, \texttt{b = \only<-7>{$\bot$}\only<8->{1}}\\
     }
   \end{minipage}
-  \hfill\pause
+  \hfill
   \begin{minipage}[t]{0.48\textwidth}
     Reachable on \textbf{x86}, ARM, POWER, …
 
-    \visible<6->{
+    \visible<4->{
       \medskip
-      Globals: \texttt{x = \only<-10>{0}\only<11->{1}}, \texttt{y = 0}\\
-      Locals: \texttt{a = \only<-7>{$\bot$}\only<8->{0}}, \texttt{b =
-        \only<-9>{$\bot$}\only<10->{\textcolor{red}{0}}}\\
-      Store buffer t0: \textcolor{red}{\only<7->{y = 1}} \\
-      Store buffer t1: \textcolor{red}{\only<9-10>{x = 1}}  \\
+      Globals: \texttt{x = 0}, \texttt{y = 0}\\
+      Locals: \texttt{a = \only<-5>{$\bot$}\only<6->{0}}, \texttt{b =
+        \only<-7>{$\bot$}\only<8->{\textcolor{red}{0}}}\\
+      Store buffer t0: \textcolor{red}{\only<5->{y = 1}} \\
+      Store buffer t1: \textcolor{red}{\only<7-8>{x = 1}}  \\
     }
   \end{minipage}
-\end{frame}
-
-\begin{frame}{Analysis of Programs Under the x86-TSO Relaxed Memory Model}
-  Preexisting approaches
-  \begin{itemize}
-    \item stateless model checking (Nidhugg, RCMC, …)
-    \item bounded model checking (CBMC, …)
-    \item explicit-state model checking (not very competitive)
-    \item also techniques which consider any relaxed behaviour as error
-    \item unbounded techniques…
-  \end{itemize}
-  \pause
-
-  \bigskip
-  Our approach
-  \begin{itemize}
-    \item \xtso – memory model of Intel and AMD x86(-64) CPUs
-    \item using transformation of LLVM programs
-    \item based on explicit-state model checking
-  \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Efficient explicit simulation of \xtso}
   \begin{itemize}
-    \item \xtso allows arbitrary delaying of stores
-    \item only some possibilites observable
-    \item flushing store buffers only if someone reads buffered values
-    \item delayed flushing – some values can behave as flushed, but their order respective to other
-      buffered values can be undetermined
+    \item \xtso – memory model of Intel and AMD x86(-64) CPUs
+    \item transformation of LLVM programs
+    \bigskip
+    \item resolving order of buffered entries is expensive
+    \item → \textbf{on-demand + delayed flushing}
   \end{itemize}
 
   \pause\bigskip
   \colorlet{frombuf}{green!60!black}
   \colorlet{flushed}{yellow!60!red!85!black}
-  \begin{minipage}[t]{0.4\textwidth}
+  \begin{minipage}[t]{0.35\textwidth}
 
   \begin{tikzpicture}[ ->, >=stealth', shorten >=1pt, auto, node distance=3cm
                      , semithick
@@ -384,18 +360,18 @@
   }
   \end{cppcode}
   \end{minipage}
-  \begin{minipage}[t]{0.55\textwidth}
+  \begin{minipage}[t]{0.60\textwidth}
       \begin{itemize}
           \only<1>{\item}
           \only<2>{\item three threads, thread 0 executing}
-          \only<3>{\item nondeterministically choose which value to load from the
+          \only<3>{\item nondeterministically choose which value to \emph{load} from the
           store buffers}
-          \only<4>{\item older values for \texttt{y} in s.b. 1 removed}
+          \only<4>{\item older \texttt{y} values in s.b. 1 removed}
           \only<4>{\item other older values in s.b. 1 marked as flushed}
-          \only<5>{\item nondeterministically choose to load value from s.b.~2}
+          \only<5>{\item nondeterministically choose to load from s.b.~2}
           \only<6>{\item flushed values for \texttt{x} has to be removed (overwritten)}
           \only<7>{\item \texttt{x} is propagated to the memory}
-          \only<8>{\item \texttt{y $\leftarrow$ 3} stays in buffer unless \texttt{y} is read again}
+          \only<8>{\item \texttt{y $\leftarrow$ 3} stays in buffer}
       \end{itemize}
   \end{minipage}
 \end{frame}
@@ -404,7 +380,7 @@
 
   \begin{itemize}
     \item evaluation on nonsymbolic SV-COMP concurrency benchmarks
-    \item compared with CBMC and Nidhugg
+    \item compared with CBMC (bounded) and Nidhugg (stateless)
 
     \vspace{2ex}
     \setlength\tabcolsep{0.5em} %
@@ -430,16 +406,12 @@
     \item if the program does not terminate…
     \begin{itemize}
       \item the tool might not terminate
-      \item or it might report there are no safety violations (correctly)
+      \item or it might correctly report there are no safety violations
     \end{itemize}
   \end{itemize}
 
-  \pause\bigskip
-  → often we need to go beyond safety checking
-  \begin{itemize}
-    \item \textbf{termination}
-    \item temporal properties (liner, branching time, …)
-  \end{itemize}
+  \bigskip
+  → termination checking
 \end{frame}
 
 \begin{frame}[fragile]{What is Nontermination?}
@@ -476,7 +448,7 @@
     \item detection of nonterminating parts of programs
     \item no spurious nontermination reports
     \item simple specification
-    \item nontermination caused by unintended parallel interactions, not at complex control flow \& loops
+    \item bugs caused by unintended parallel interactions, not at complex control flow \& loops
   \pause
   \bigskip
     \item builds on explicit-state model checking\\
@@ -506,18 +478,16 @@
 \end{frame}
 
 \begin{frame}[fragile]{Local Nontermination analysis for Parallel Programs}
-%  \begin{minipage}{0.66\textwidth}
-    Resource Section
+    \textbf{Resource Section}
     \begin{itemize}
       \item a block of code with an identifier
       \item delimited in the source code
-      \item built-in (mutexes – waiting and critical sections, condition variables, …)
-      \item user-provided (in source code; block of code, function end, …)
+      \item built-in or user-provided
     \end{itemize}
     \pause
 
     \bigskip
-    Local Nontermination
+    \textbf{Local Nontermination}
     \begin{itemize}
       \item a resource section does not terminate if the program can reach apoint \emph{in the
         resource section} from which it cannot reach \emph{the corresponding resource section end}
@@ -525,57 +495,12 @@
     \pause
 
     \bigskip
-    Detection
+    \textbf{Detection}
     \begin{itemize}
       \item nondeterministically \emph{activate} resource sections at their beginning
       \item active resource sections are checked for nontermination, activation cannot be nested
       \item detect terminal strongly connected components in active resource sections
     \end{itemize}
-%  \end{minipage}
-%  \hfill
-%  \begin{minipage}{0.33\textwidth}
-%    \begin{tikzpicture}[>=latex,>=stealth',auto,node distance=1.5cm,semithick,initial
-%                        text=, ->, shorten >=1pt, initial distance = 1cm]
-%      \tikzstyle{state}=[circle, draw, minimum size=0.75cm]
-%      \tikzstyle{scc}=[draw, dashed, inner sep = 0.3cm, rounded corners=0.4em]
-%      \node[state,initial] (c1a) {};
-%      \node[state] (c1b) [right of = c1a] {};
-%      \node[state] (c1c) [below of = c1a] {};
-%
-%      \path
-%        (c1a) edge[bend left] (c1b)
-%        (c1b) edge[bend left] (c1c)
-%        (c1c) edge[bend left] (c1a)
-%        (c1b) edge[bend left] (c1a)
-%      ;
-%
-%      \node[scc, fit = (c1a) (c1b) (c1c)] (c1) {};
-%
-%      \node[state] (c2a) [below of = c1c] {};
-%      \path (c1c) edge (c2a);
-%      \node[scc, fit=(c2a)] (c2) {};
-%
-%      \node[state] (c4a) [below of = c2a] {};
-%      \node[state] (c4b) [below of = c4a] {};
-%      \path
-%        (c2a) edge (c4a)
-%        (c4a) edge[bend left] (c4b)
-%        (c4b) edge[bend left] (c4a)
-%      ;
-%      \node[scc, fit=(c4a) (c4b)] (c4) {};
-%      % \node[anchor=south, rotate = -90, yshift = -0.5cm] at (c4.west) {nontriv. terminal SCC};
-%
-%      \node[state] (c5a) [right of = c4a, node distance=2cm] {};
-%      \node[state] (c5b) [below of = c5a] {};
-%      \path
-%        (c2a) edge[bend left] (c5a)
-%        (c5a) edge[bend left, line width=3pt, draw=blue] (c5b)
-%        (c5b) edge[bend left, line width=3pt, draw=blue] (c5a)
-%      ;
-%      \node[scc, fit=(c5a) (c5b), line width=3pt, draw=blue] (c5) {};
-%      \node[anchor=south, rotate = -90] at (c5.east) {FATSCC};
-%    \end{tikzpicture}
-%  \end{minipage}
 \end{frame}
 
 \begin{prespart}{Other Significant Publications}
@@ -691,7 +616,8 @@ of exception handling were not supported by DIVINE 3.}
     work?}
   \begin{itemize}
     \item full support for C++ exception in a model checker
-    \item TODO
+    \item most other contributions are improvements or manifest different strengths and weaknesses
+      than related work
   \end{itemize}
 \end{frame}
 
