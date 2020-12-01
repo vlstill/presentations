@@ -99,7 +99,7 @@
 \textbf{Automatic Analysis of Parallel Programs}
 \begin{itemize}
     \item parallel processing to make use of modern hardware
-    \item easy to make mistakes in parallel software
+    \item easy to make mistakes
     \item bugs hard to find by conventional testing
 \end{itemize}
 \pause
@@ -107,10 +107,9 @@
 \bigskip
 \textbf{C++}
 \begin{itemize}
-  \item often used in performance-critical applications
+  \item performance-critical applications
   \item high-level language
   \item has many features present in other languages (and not present in C)
-    \pause
     \begin{itemize}
       \item complex objects, inheritance, threading, atomic variables, exceptions, …
     \end{itemize}
@@ -127,11 +126,12 @@
         \item LLVM is instrumented
         \item and executed by DIVINE in search for errors
       \end{enumerate}\pause
-    \item primarily targets safety, also supports Büchy and termination conditions
+    \item primarily targets safety
       \begin{itemize}
         \item assertion safety, memory safety, arithmetic errors, …
+        \item also supports Büchy and termination conditions
       \end{itemize} \pause
-    \item symbolic extensions \pause
+    \item symbolic extensions
     \item multiple other contributors, parts presented here authored mostly by me
     \item open source
   \end{itemize}
@@ -143,15 +143,14 @@
   \end{itemize}
 \end{prespart}
 
-\begin{frame}{Component Reuse}
+\begin{frame}{Improvements in Analysis of Realistic Programs}
   analysis of high-level programming languages is complex \pause
   \begin{itemize}
-    \item syntax (\cpp{for ( auto [ k, v ] : map ) { ...  }}) \pause
-    \item code-generation (\cpp{template< typename T > class vector { ... }}) \pause
-    \item object-based polymorphism, run-time type support, virtual methods \pause
-    \item exceptions \pause
-    \item libraries
-    \item … \pause
+    \item syntax, code generation,
+    \item objects, run-time types, virtual methods
+    \item exceptions
+    \item extensive libraries
+    \item …
     \item → expensive to implement from scratch
   \end{itemize}
 
@@ -162,7 +161,7 @@
     \item some libraries (pdclib, libc++)
   \end{itemize}
 
-  and implement other
+  and implement only what is necessary
   \begin{itemize}
     \item threads (pthread)
     \item parts of exception handling (libunwind)
@@ -206,7 +205,7 @@
       int main() {
         try {
           f(); ⟦\arr{2}⟧
-        } catch ( std::logic_error ) {
+        } catch (std::logic_error&) {
           /* ... */ ⟦\arr{8}⟧
         }
       }
@@ -237,7 +236,7 @@
   \textbf{Results}
   \begin{itemize}
     \item no modifications to libc++abi required
-    \item comparable performance to (partial) implementation that requires substantial changes to
+    \item performance comparable to a previous implementation that required substantial changes to
       the C++ library implementation and DIVINE
     \item makes use of the new state representation in DIVINE 4
   \end{itemize}
@@ -331,7 +330,6 @@
   Our approach
   \begin{itemize}
     \item \xtso – memory model of Intel and AMD x86(-64) CPUs
-    \item C and C++
     \item using transformation of LLVM programs
     \item based on explicit-state model checking
   \end{itemize}
@@ -427,10 +425,8 @@
 \end{prespart}
 
 \begin{frame}{Beyond Safety Checking}
-  safety checking is common for realistic parallel programs
   \begin{itemize}
-    \item errors caused by thread interleaving, possibly with relaxed memory
-    \pause
+    \item safety checking is common for realistic parallel programs
     \item if the program does not terminate…
     \begin{itemize}
       \item the tool might not terminate
@@ -480,7 +476,7 @@
     \item detection of nonterminating parts of programs
     \item no spurious nontermination reports
     \item simple specification
-    \item nontermination caused by unintended parallel interactions, not at complex control flow \& loops \pause
+    \item nontermination caused by unintended parallel interactions, not at complex control flow \& loops
   \pause
   \bigskip
     \item builds on explicit-state model checking\\
@@ -592,20 +588,20 @@
 
 \begin{prespart}{Conclusion}
   \begin{itemize}
-    \item contributions to analysis of parallel programs in C++
+    \item contributions to analysis of programs in C++
       \begin{itemize}
-        \item realistic programs, compiler and standard library reuse, and exceptions
+        \item realistic programs, exceptions in C++
           \\ – \emph{new approach to implementation of exceptions that reuses existing libraries}
           \medskip\pause
         \item programs running under the \xtso memory model
-          \\ – \emph{new efficient way to simulate \xtso run in an explicit-state model checker}
+          \\ – \emph{new efficient way to simulate \xtso using an explicit-state model checker}
           \medskip\pause
         \item local nontermination detection
           \\ – \emph{new technique that can detect that a part of the program which is supposed to
           terminate does not}
           \medskip\pause
       \end{itemize}
-    \item all implemented in DIVINE and evaluated
+    \item all published, implemented in DIVINE and evaluated
   \end{itemize}
 \end{prespart}
 
@@ -615,7 +611,7 @@
       {\Large Reactions to Reviews}
 \end{frame}
 
-\def\rname{Tomáš Vojnar}
+\def\rname{prof. Tomáš Vojnar}
 \def\qtitle{Questions by \rname}
 
 \begin{frame}[fragile, noframenumbering]{\qtitle}
@@ -688,20 +684,24 @@ of exception handling were not supported by DIVINE 3.}
   \end{itemize}
 \end{frame}
 
-\def\rname{Jaco van de Pol}
+\def\rname{prof. Jaco van de Pol}
 
 \begin{frame}[noframenumbering]{\qtitle}
   \rquote{Could you summarize the main problem(s) solved by this thesis, but \emph{not} in related
     work?}
   \begin{itemize}
-    \item 
+    \item full support for C++ exception in a model checker
+    \item TODO
   \end{itemize}
 \end{frame}
 
 \begin{frame}[noframenumbering]{\qtitle}
   \rquote{Could you summarize the main new technique(s) developed by you in this thesis?}
   \begin{itemize}
-    \item 
+    \item more efficient simulation of \xtso in the context of explicit-state model checking
+    \medskip
+    \item use of resource sections to denote interesting parts of parallel program and check that
+      they terminate, togherther with the detection algorithm
   \end{itemize}
 \end{frame}
 
@@ -711,14 +711,24 @@ of exception handling were not supported by DIVINE 3.}
 
   most of C++17 is supported, missing features include:
   \begin{itemize}
-    \item some functionality related to locale support (due to missing support in our libc
-      implementation)
-      \begin{itemize}
-        \item unlikely to be used in parallel algorithms and data structures
-      \end{itemize}
+    \item some functionality related to locale support
+%      \begin{itemize}
+%        \item due to missing support in our libc implementation
+%        \item unlikely to be used in parallel algorithms and data structures
+%      \end{itemize}
+      \pause
+
     \item filesystem support is limited by abilities of virtual file system in DIVINE
-    \item parts of \texttt{math.h} (mostly related to loating-point environment)
+      \pause
+
+    \item parts of \texttt{math.h/fenv.h} (mostly related to loating-point environment)
+%      \begin{itemize}
+%        \item missing support in the LLVM interpreter used in DIVINE
+%        \item probably not much used
+%      \end{itemize}
+      \pause
     \item handling of real time
+      \pause
     \item networking (defined in platform APIs, not C++)
   \end{itemize}
 \end{frame}
@@ -730,15 +740,15 @@ of exception handling were not supported by DIVINE 3.}
   stutter-free properties? fair traces? termination? branching properties?)}
   \begin{itemize}
     \item the argumentation stated in the paper and a suite of test which test reachable results of
-      thread interactions
+      thread interactions \pause
     \item we considered mostly reachability
       \begin{itemize}
         \item automata-based approach to LTL would likely lead to infinite state space with store
           buffer limits, or unsound analysis without them
-        \item as long as values used to evaluate the formula (or syncrhonize Büchy automaton, etc)
+        \item as long as values used to evaluate the formula (or synchronize Büchy automaton, etc.)
           are read using the proposed transformation, unbounded state space should preserve
           stutter-free linear properties
-      \end{itemize}
+      \end{itemize} \pause
     \item DIVINE can reliably analyse only stutter-free linerar-time properties and has no support
       for branching properties
   \end{itemize}
@@ -750,7 +760,13 @@ of exception handling were not supported by DIVINE 3.}
   \begin{itemize}
     \item strong fairness is not strong enough to eliminate spurious conterexamples in common
       synchronization patterns used with atomic variable
-    \item 
+    \item preemptive schedulers use either priority-based fixed or varible (Linux) time-slices for
+      scheduling, in either case the scheduler does not re-schedule after fixed number of
+      \emph{instructions}
+    \item therefore, if it is possible to leave a resource section \emph{by a choice of scheduler},
+      it should eventually happen
+    \item in part this is a compromise between reporting programs that can get stuck for long time,
+      and reporting spurious errors
   \end{itemize}
 \end{frame}
 
@@ -766,18 +782,22 @@ of exception handling were not supported by DIVINE 3.}
   \rquote{Do you have concrete ideas on how to integrate your advances with more symbolic or more
     modular apporaches?}
 
-  Symbolic approaches
+  \textrm{I.} Symbolic approaches
   \begin{itemize}
     \item DIVINE has support for compiled data abstractions, both precise (bitvectors) and lossy
+      \pause
     \item exception support does not interfere with symbolic approaches (as long as control-flow is
       explicit)
-    \item conceptually, \xtso simulation does not intefere with symbolic approaches
+      \pause
+    \item conceptually, \xtso simulation does not intefere with symbolic approaches, the program
+      transformation does
       \begin{itemize}
         \item implementation would be tricky in DIVINE
-        \item the symbolic extension relies on over-approximation of set of possibly symbolic
-          locations this would likely encompass the whole program if any symbolic value was stored
+          – the symbolic extension relies on over-approximation of set of possibly symbolic
+          locations – this would likely encompass the whole program if any symbolic value was stored
           using store buffers
       \end{itemize}
+      \pause
     \item local nontermination would need a modified fairness condition to handle nondeterminism
       without under-approximation
   \end{itemize}
@@ -787,9 +807,10 @@ of exception handling were not supported by DIVINE 3.}
   \rquote{Do you have concrete ideas on how to integrate your advances with more symbolic or more
     modular apporaches?}
 
-  Modular approaches
+  \textrm{II.} Modular approaches
   \begin{itemize}
     \item I have rather limited knowledge of modular approaches to software verification
+      \pause
     \item exceptions
       \begin{itemize}
         \item symbolic analysis could be used to find conditions under which exception can
@@ -797,7 +818,9 @@ of exception handling were not supported by DIVINE 3.}
         \item however, our apporoach to exceptions is badly suited for axiomatic analysis usual for
           modular methods
       \end{itemize}
-    \item \xtso – TODO
+      \pause
+    \item \xtso – I do not know about any modular approaches to relaxed memory anaylysis
+      \pause
     \item local nontermination – thread-modular apporoaches seem to be orthogonal to our approach,
       it might be possible to use them to limit the number of resource sections that need to be
       checked
@@ -819,7 +842,7 @@ of exception handling were not supported by DIVINE 3.}
       \begin{itemize}
         \item the exception object is thread-local
         \item while it contains user payload which might be globally visible, it does not access it
-          (it does not have any knowledge of its structure)
+          (it~does not have any knowledge of its structure)
       \end{itemize}
   \end{itemize}
 \end{frame}
