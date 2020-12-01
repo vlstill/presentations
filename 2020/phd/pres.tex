@@ -100,7 +100,7 @@
 \begin{itemize}
     \item parallel processing to make use of modern hardware
     \item easy to make mistakes in parallel software
-    \item problems hard to find by conventional testing
+    \item bugs hard to find by conventional testing
 \end{itemize}
 \pause
 
@@ -118,7 +118,7 @@
 \end{frame}
 
 \begin{frame}{DIVINE}
-  All work presented in the thesis is implemented and evaluated in DIVINE
+  All contributions presented in the thesis are implemented and evaluated in DIVINE
 
   \begin{itemize}
     \item explicit-state analyser for C and C++, using LLVM intermediate representation
@@ -127,7 +127,10 @@
         \item LLVM is instrumented
         \item and executed by DIVINE in search for errors
       \end{enumerate}\pause
-    \item primarily targets reachability, also supports Büchy and termination conditions
+    \item primarily targets safety, also supports Büchy and termination conditions
+      \begin{itemize}
+        \item assertion safety, memory safety, arithmetic errors, …
+      \end{itemize} \pause
     \item symbolic extensions \pause
     \item multiple other contributors, parts presented here authored mostly by me
     \item open source
@@ -171,13 +174,13 @@
   \begin{minipage}{0.47\textwidth}
     \setlength{\leftmargini}{1em}
     \begin{itemize}
-      \item ubiquitous in C++
+      \item ubiquitous in C++, including standard library
       \item disabling them can change behaviour (e.g. allocation)
       \item need complex runtime support
         \begin{itemize}
           \item exception matching
           \item cleanup
-          \item {\only<2->\bf stack unwinding}
+          \item stack unwinding
         \end{itemize}
     \end{itemize}
 
@@ -191,7 +194,7 @@
   \pause
   \begin{minipage}{0.47\textwidth}
     \begin{cppcodeln}
-      X::~X() { } ⟦\arr{7}⟧
+      X::~X() { /* ... */ } ⟦\arr{7}⟧
 
       void g() {
         throw std::out_of_range(); ⟦\arr{5}⟧
@@ -223,7 +226,8 @@
   \bigskip
   \textbf{Our Approach}
   \begin{itemize}
-    \item calculate exception handling metadata for the LLVM code in DIVINE
+    \item calculate exception handling metadata for the LLVM code in DIVINE\\
+      (for libc++abi and the unwinder)
     \item implement unwinding library using this metadata
     \item lower some exception handling primitives in LLVM to our functions
   \end{itemize}
@@ -299,7 +303,7 @@
   \end{minipage}
   \hfill\pause
   \begin{minipage}[t]{0.48\textwidth}
-    Reachable on x86, ARM, POWER, …
+    Reachable on \textbf{x86}, ARM, POWER, …
 
     \visible<6->{
       \medskip
@@ -319,13 +323,16 @@
     \item bounded model checking (CBMC, …)
     \item explicit-state model checking (not very competitive)
     \item also techniques which consider any relaxed behaviour as error
+    \item unbounded techniques…
   \end{itemize}
+  \pause
 
   \bigskip
   Our approach
   \begin{itemize}
     \item \xtso – memory model of Intel and AMD x86(-64) CPUs
     \item C and C++
+    \item using transformation of LLVM programs
     \item based on explicit-state model checking
   \end{itemize}
 \end{frame}
@@ -370,8 +377,8 @@
 
   \end{tikzpicture}
 
-  \newcommand{\ly}{\only<3->{\only<3>{\textcolor{frombuf}}{// \textrightarrow 3}}}
-  \newcommand{\lx}{\only<5->{\only<5-6>{\textcolor{frombuf}}{// \textrightarrow 4}}}
+  \newcommand{\ly}{\only<3->{\only<3>{\textcolor{frombuf}}{// \textrightarrow 2}}}
+  \newcommand{\lx}{\only<5->{\only<5-6>{\textcolor{frombuf}}{// \textrightarrow 3}}}
   \begin{cppcode}
   void thread0() {
     int a = y; ⟦\ly⟧
@@ -422,8 +429,7 @@
 \begin{frame}{Beyond Safety Checking}
   safety checking is common for realistic parallel programs
   \begin{itemize}
-    \item assertion violations, memory corruption, data races…
-    \item caused by thread interleaving, possibly with relaxed memory
+    \item errors caused by thread interleaving, possibly with relaxed memory
     \pause
     \item if the program does not terminate…
     \begin{itemize}
@@ -435,67 +441,9 @@
   \pause\bigskip
   → often we need to go beyond safety checking
   \begin{itemize}
-    \item termination
+    \item \textbf{termination}
     \item temporal properties (liner, branching time, …)
   \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Local Nontermination analysis for Parallel Programs}
-  \begin{minipage}{0.49\textwidth}
-    checking that some patrs of the program terminate
-    \begin{itemize}
-      \item critical sections
-      \item waiting for entry to critical sections
-      \item waiting for condition variables, thread termination
-      \item user-defined parts
-    \end{itemize}
-  \end{minipage}
-  \hfill
-  \begin{minipage}{0.47\textwidth}
-    \begin{cppcode}
-      void foo() {
-        // lock
-        std::unique_lock guard( mtx );
-        do_work()
-        cond.notify_all();
-      } // unlock
-    \end{cppcode}
-  \end{minipage}
-\end{frame}
-
-\begin{frame}[fragile]{Local Nontermination analysis for Parallel Programs}
-  \setlength{\leftmargini}{1em}
-  \begin{itemize}
-    \item we aim at nontermination caused by unintended parallel interactions \pause
-    \item not at complex control flow \& loops \pause
-    \item should be easy to specify
-    \item should not report nontermination spuriously
-    \item should be useful for analysis of services/servers – programs that should not terminate
-  \pause
-  \bigskip
-    \item builds on explicit-state model checking → finite-state programs (with possibly infinite behaviour)
-    \item user can specify what to check
-  \end{itemize}
-
-  \bigskip
-  \begin{minipage}{0.49\textwidth}
-    \begin{cppcode}
-      bool x = true;
-      while (true) { x = !x; }
-    \end{cppcode}
-  \end{minipage}
-  \hfill
-  \begin{minipage}{0.49\textwidth}
-    \begin{tikzpicture}[>=latex,>=stealth',auto,node distance=2cm,semithick,initial text=]
-      \node[state,initial] (t) {$x$};
-      \node[state] (f) [right of = t] {$\lnot x$};
-
-      \path[->, shorten >=1pt]
-        (t) edge[bend left] (f)
-        (f) edge[bend left] (t)
-      ;
-    \end{tikzpicture}
-  \end{minipage}
 \end{frame}
 
 \begin{frame}[fragile]{What is Nontermination?}
@@ -526,12 +474,48 @@
 \end{frame}
 
 \begin{frame}[fragile]{Local Nontermination analysis for Parallel Programs}
+  \setlength{\leftmargini}{1em}
+  \begin{itemize}
+    \item usable for (small) practical programs with arbitrary synchronization
+    \item detection of nonterminating parts of programs
+    \item no spurious nontermination reports
+    \item simple specification
+    \item nontermination caused by unintended parallel interactions, not at complex control flow \& loops \pause
+  \pause
+  \bigskip
+    \item builds on explicit-state model checking\\
+      → finite-state programs (with possibly infinite behaviour)
+    \item user can specify what to check → resource sections
+  \end{itemize}
+
+%  \bigskip
+%  \begin{minipage}{0.49\textwidth}
+%    \begin{cppcode}
+%      bool x = true;
+%      while (true) { x = !x; }
+%    \end{cppcode}
+%  \end{minipage}
+%  \hfill
+%  \begin{minipage}{0.49\textwidth}
+%    \begin{tikzpicture}[>=latex,>=stealth',auto,node distance=2cm,semithick,initial text=]
+%      \node[state,initial] (t) {$x$};
+%      \node[state] (f) [right of = t] {$\lnot x$};
+%
+%      \path[->, shorten >=1pt]
+%        (t) edge[bend left] (f)
+%        (f) edge[bend left] (t)
+%      ;
+%    \end{tikzpicture}
+%  \end{minipage}
+\end{frame}
+
+\begin{frame}[fragile]{Local Nontermination analysis for Parallel Programs}
 %  \begin{minipage}{0.66\textwidth}
     Resource Section
     \begin{itemize}
       \item a block of code with an identifier
       \item delimited in the source code
-      \item built-in (mutexes, condition variables, thread joining, …)
+      \item built-in (mutexes – waiting and critical sections, condition variables, …)
       \item user-provided (in source code; block of code, function end, …)
     \end{itemize}
     \pause
@@ -548,7 +532,7 @@
     Detection
     \begin{itemize}
       \item nondeterministically \emph{activate} resource sections at their beginning
-      \item active resource sections are checked for nontermination, cannot be nested
+      \item active resource sections are checked for nontermination, activation cannot be nested
       \item detect terminal strongly connected components in active resource sections
     \end{itemize}
 %  \end{minipage}
@@ -611,12 +595,15 @@
     \item contributions to analysis of parallel programs in C++
       \begin{itemize}
         \item realistic programs, compiler and standard library reuse, and exceptions
-          \\ – \emph{new approach to implementation of exceptions}
+          \\ – \emph{new approach to implementation of exceptions that reuses existing libraries}
+          \medskip\pause
         \item programs running under the \xtso memory model
           \\ – \emph{new efficient way to simulate \xtso run in an explicit-state model checker}
+          \medskip\pause
         \item local nontermination detection
           \\ – \emph{new technique that can detect that a part of the program which is supposed to
           terminate does not}
+          \medskip\pause
       \end{itemize}
     \item all implemented in DIVINE and evaluated
   \end{itemize}
@@ -658,13 +645,17 @@ of exception handling were not supported by DIVINE 3.}
           theoretical memory model
       \end{itemize}
     \item partial overlaps should not happen for atomic variables in C++ (undefined behaviour)
-    \item but can happen for non-atomics (e.g. \cpp{memcpy}) TODO
+    \item but can happen for non-atomics in some cases
+    \bigskip
+    \item partial overlaps not implemented completely
+    \item the description should be extended to allow for loads from multiple store buffer entries
+      if they partially overlap with loaded value
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile, noframenumbering]{\qtitle}
   \rquote{Why do you concentrate solely on instances of resource sections that are bound to
-    non-terminate? Why do you not consider these that can but need not terminate too? I understand
+    non-terminate? Why do you not consider those that can but need not terminate too? I understand
     that such non-termination can happen under weak fairness when accessing shared resources, but
     why not considering strong fairness (at least wrt access to some resources) and non-termation
     that is possible (though not necessary) under such fairness too?}
@@ -676,8 +667,9 @@ of exception handling were not supported by DIVINE 3.}
         // ...
   \end{cppcode}
   \begin{itemize}
-    \item empty is a non-blocking operation, therefore the thread is always enabled at this line
-    \item we tried to avoid false nontermination errors in common synchronization patterns
+    \item \texttt{empty} is a non-blocking operation, therefore the thread is always enabled at this line
+    \item we aimed to avoid false nontermination errors in common synchronization patterns
+    \item resource asquisition cannot be easily discerned from the source code
     \item it would be possible to have also sections that check for other fairness criteria
   \end{itemize}
 \end{frame}
