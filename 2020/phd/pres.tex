@@ -117,7 +117,7 @@
 \end{frame}
 
 \begin{frame}{DIVINE}
-  all contributions presented in the thesis are implemented and evaluated in DIVINE
+  \textbf{all contributions presented in the thesis are implemented and evaluated in DIVINE}
 
   \begin{itemize}
     \item explicit-state analyser for C and C++, using LLVM intermediate representation
@@ -129,7 +129,7 @@
     \item primarily targets safety
       \begin{itemize}
         \item assertion safety, memory safety, arithmetic errors, …
-        \item also supports Büchy and termination conditions
+        \item also supports Büchi and termination conditions
       \end{itemize} \pause
     \item symbolic extensions
     \item multiple other contributors, parts presented here authored mostly by me
@@ -144,24 +144,24 @@
 \end{prespart}
 
 \begin{frame}{Improvements in Analysis of Realistic Programs}
-  analysis of high-level programming languages is complex \pause
+  \textbf{analysis of high-level programming languages is complex} \pause
   \begin{itemize}
     \item syntax, code generation,
     \item objects, run-time types, virtual methods
     \item exceptions
     \item extensive libraries
     \item …
-    \item → expensive to implement from scratch
+    \item → expensive, error prone to implement from scratch
   \end{itemize}
 
   \pause\bigskip
-  we reuse existing components
+  \textbf{→ we reuse existing components}
   \begin{itemize}
     \item compiler (clang)
     \item some libraries (pdclib, libc++)
   \end{itemize}
 
-  and implement only what is necessary
+  \textbf{and implement only what is necessary}
   \begin{itemize}
     \item threads (pthread)
     \item parts of exception handling (libunwind)
@@ -213,15 +213,25 @@
 \end{frame}
 
 \begin{frame}{Exceptions in DIVINE}
-  \textbf{Goals}
+  \textbf{Design Options}
+  \begin{itemize}
+    \item make the analyser core aware of exceptions?
+    \item adapt library to read information from analyser?
+    \item re-use big parts of existing library support?
+    \item the last option not considered, or deemed impractical by related work
+  \end{itemize}
+  \pause
+
+  \bigskip
+  \textbf{Our Goals}
   \begin{itemize}
     \item reuse as much of the C++ library implementation as possible (libc++abi)
     \item limit changes to the core of DIVINE
     \item full support for C++ exceptions
   \end{itemize}
-  \pause
+\end{frame}
 
-  \bigskip
+\begin{frame}{Exceptions in DIVINE}
   \textbf{Our Approach}
   \begin{itemize}
     \item calculate exception handling metadata (for libc++abi and the unwinder)
@@ -288,12 +298,14 @@
 
   \bigskip\bigskip\pause
   \begin{minipage}[t]{0.48\textwidth}
+    \only<4-8>{
     Not under \emph{Sequential Consistency}
 
     \visible<4->{
       \medskip
       Globals: \texttt{x = \only<-6>{0}\only<7->{1}}, \texttt{y = \only<-4>{0}\only<5->{1}}\\
       Locals: \texttt{a = \only<-5>{$\bot$}\only<6->{0}}, \texttt{b = \only<-7>{$\bot$}\only<8->{1}}\\
+    }
     }
   \end{minipage}
   \hfill
@@ -306,21 +318,34 @@
       Locals: \texttt{a = \only<-5>{$\bot$}\only<6->{0}}, \texttt{b =
         \only<-7>{$\bot$}\only<8->{\textcolor{red}{0}}}\\
       Store buffer t0: \textcolor{red}{\only<5->{y = 1}} \\
-      Store buffer t1: \textcolor{red}{\only<7-8>{x = 1}}  \\
+      Store buffer t1: \textcolor{red}{\only<7->{x = 1}}  \\
     }
   \end{minipage}
 \end{frame}
 
 \begin{frame}[fragile]{Efficient explicit simulation of \xtso}
-  \begin{itemize}
-    \item \xtso – memory model of Intel and AMD x86(-64) CPUs
-    \item transformation of LLVM programs
-    \bigskip
-    \item resolving order of buffered entries is expensive
-    \item → \textbf{on-demand + delayed flushing}
-  \end{itemize}
+  \xtso – memory model of Intel and AMD x86(-64) CPUs
+  \bigskip
 
-  \pause\bigskip
+  \textbf{Existing Approaches to \xtso}
+  \begin{itemize}
+    \item simulate store buffers with nondeterministic flushing
+    \item use axiomatic descrition of possible reorderings
+  \end{itemize}
+  \pause
+
+  \bigskip
+  \textbf{Our Approach}
+  \begin{itemize}
+    \item nondeterministic flushing is expensive
+    \item → \textbf{on-demand + delayed flushing}
+    \bigskip
+    \item transformation of LLVM programs
+    \item primarily bounded size of store buffers
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Efficient explicit simulation of \xtso}
   \colorlet{frombuf}{green!60!black}
   \colorlet{flushed}{yellow!60!red!85!black}
   \begin{minipage}[t]{0.35\textwidth}
@@ -360,6 +385,7 @@
   }
   \end{cppcode}
   \end{minipage}
+  \pause
   \begin{minipage}[t]{0.60\textwidth}
       \begin{itemize}
           \only<1>{\item}
@@ -411,7 +437,10 @@
   \end{itemize}
 
   \bigskip
-  → termination checking
+  → termination checking is necessary
+  \begin{itemize}
+    \item most existing approaches not applicable to practical parallel programs
+  \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{What is Nontermination?}
@@ -442,7 +471,7 @@
 \end{frame}
 
 \begin{frame}[fragile]{Local Nontermination analysis for Parallel Programs}
-  \setlength{\leftmargini}{1em}
+  \textbf{Our Goals \& Constraints}
   \begin{itemize}
     \item usable for (small) practical programs with arbitrary synchronization
     \item detection of nonterminating parts of programs
@@ -495,7 +524,7 @@
     \pause
 
     \bigskip
-    \textbf{Detection}
+    \textbf{Our Approach}
     \begin{itemize}
       \item nondeterministically \emph{activate} resource sections at their beginning
       \item active resource sections are checked for nontermination, activation cannot be nested
@@ -671,7 +700,7 @@ of exception handling were not supported by DIVINE 3.}
       \begin{itemize}
         \item automata-based approach to LTL would likely lead to infinite state space with store
           buffer limits, or unsound analysis without them
-        \item as long as values used to evaluate the formula (or synchronize Büchy automaton, etc.)
+        \item as long as values used to evaluate the formula (or synchronize Büchi automaton, etc.)
           are read using the proposed transformation, unbounded state space should preserve
           stutter-free linear properties
       \end{itemize} \pause
