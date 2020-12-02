@@ -117,7 +117,7 @@
 \end{frame}
 
 \begin{frame}{DIVINE}
-  All contributions presented in the thesis are implemented and evaluated in DIVINE
+  all contributions presented in the thesis are implemented and evaluated in DIVINE
 
   \begin{itemize}
     \item explicit-state analyser for C and C++, using LLVM intermediate representation
@@ -578,7 +578,7 @@ of exception handling were not supported by DIVINE 3.}
   \rquote{Why do you concentrate solely on instances of resource sections that are bound to
     non-terminate? Why do you not consider those that can but need not terminate too? I understand
     that such non-termination can happen under weak fairness when accessing shared resources, but
-    why not considering strong fairness (at least wrt access to some resources) and non-termation
+    why not considering strong fairness (at least wrt access to some resources) and non-termination
     that is possible (though not necessary) under such fairness too?}
 
   Consider this example from a single-prodcer single-consumer queue using atomics:
@@ -644,7 +644,7 @@ of exception handling were not supported by DIVINE 3.}
 %      \end{itemize}
       \pause
 
-    \item filesystem support is limited by abilities of virtual file system in DIVINE
+    \item filesystem support is limited by abilities of the virtual file system in DIVINE
       \pause
 
     \item parts of \texttt{math.h/fenv.h} (mostly related to loating-point environment)
@@ -661,11 +661,11 @@ of exception handling were not supported by DIVINE 3.}
 
 \begin{frame}[noframenumbering]{\qtitle}
   \rquote{You transform an ``LLVM program under TSO'' to an ``LLVM program under SC''. What
-  scientific support do you have that the transformation preserves semnatics? What properties of the
-  program are actually preserved by the transformation? (e.g. all linerar-time properties? only
+  scientific support do you have that the transformation preserves semantics? What properties of the
+  program are actually preserved by the transformation? (e.g. all linear-time properties? only
   stutter-free properties? fair traces? termination? branching properties?)}
   \begin{itemize}
-    \item the argumentation stated in the paper and a suite of test which test reachable results of
+    \item the argumentation stated in the paper and a suite of tests which test reachable results of
       thread interactions \pause
     \item we considered mostly reachability
       \begin{itemize}
@@ -675,7 +675,7 @@ of exception handling were not supported by DIVINE 3.}
           are read using the proposed transformation, unbounded state space should preserve
           stutter-free linear properties
       \end{itemize} \pause
-    \item DIVINE can reliably analyse only stutter-free linerar-time properties and has no support
+    \item DIVINE can reliably analyse only stutter-free linear-time properties and has no support
       for branching properties
   \end{itemize}
 \end{frame}
@@ -684,14 +684,14 @@ of exception handling were not supported by DIVINE 3.}
   \rquote{You compare your solution to weak-fairness, but how does your solution compare to strong
     fairness? Why are the fairness assumptions you postulate justified in reality?}
   \begin{itemize}
-    \item strong fairness is not strong enough to eliminate spurious conterexamples in common
+    \item strong fairness is not strong enough to eliminate spurious counterexamples in common
       synchronization patterns used with atomic variable
-    \item preemptive schedulers use either priority-based fixed or varible (Linux) time-slices for
-      scheduling, in either case the scheduler does not re-schedule after fixed number of
+    \item preemptive schedulers use either priority-based fixed or variable (Linux) time-slices for
+      scheduling, in either case, the scheduler does not re-schedule after a fixed number of
       \emph{instructions}
-    \item therefore, if it is possible to leave a resource section \emph{by a choice of scheduler},
+    \item therefore, if it is possible to leave a resource section \emph{by choice of scheduler},
       it should eventually happen
-    \item in part this is a compromise between reporting programs that can get stuck for long time,
+    \item in part this is a compromise between reporting programs that can get stuck for a long time,
       and reporting spurious errors
   \end{itemize}
 \end{frame}
@@ -706,7 +706,7 @@ of exception handling were not supported by DIVINE 3.}
 
 \begin{frame}[noframenumbering]{\qtitle}
   \rquote{Do you have concrete ideas on how to integrate your advances with more symbolic or more
-    modular apporaches?}
+    modular approaches?}
 
   \textrm{I.} Symbolic approaches
   \begin{itemize}
@@ -715,11 +715,11 @@ of exception handling were not supported by DIVINE 3.}
     \item exception support does not interfere with symbolic approaches (as long as control-flow is
       explicit)
       \pause
-    \item conceptually, \xtso simulation does not intefere with symbolic approaches, the program
+    \item conceptually, \xtso simulation does not interfere with symbolic approaches, the program
       transformation does
       \begin{itemize}
         \item implementation would be tricky in DIVINE
-          – the symbolic extension relies on over-approximation of set of possibly symbolic
+          – the symbolic extension relies on over-approximation of a set of possibly symbolic
           locations – this would likely encompass the whole program if any symbolic value was stored
           using store buffers
       \end{itemize}
@@ -731,7 +731,7 @@ of exception handling were not supported by DIVINE 3.}
 
 \begin{frame}[noframenumbering]{\qtitle}
   \rquote{Do you have concrete ideas on how to integrate your advances with more symbolic or more
-    modular apporaches?}
+    modular approaches?}
 
   \textrm{II.} Modular approaches
   \begin{itemize}
@@ -741,13 +741,13 @@ of exception handling were not supported by DIVINE 3.}
       \begin{itemize}
         \item symbolic analysis could be used to find conditions under which exception can
           or must be raised by a function
-        \item however, our apporoach to exceptions is badly suited for axiomatic analysis usual for
+        \item however, our approoach to exceptions is badly suited for axiomatic analysis usual for
           modular methods
       \end{itemize}
       \pause
-    \item \xtso – I do not know about any modular approaches to relaxed memory anaylysis
+    \item \xtso – I do not know about any modular approaches to relaxed memory analysis
       \pause
-    \item local nontermination – thread-modular apporoaches seem to be orthogonal to our approach,
+    \item local nontermination – thread-modular approaches seem to be orthogonal to our approach,
       it might be possible to use them to limit the number of resource sections that need to be
       checked
   \end{itemize}
@@ -762,8 +762,8 @@ of exception handling were not supported by DIVINE 3.}
   yes
   \begin{itemize}
     \item these cases are handled by the part of C++ library that is re-used, so the behaviour
-      shoudl be equivalent to the behaviour presented in normal execution
-    \item only difference could be in parallel access to exception by the undwinder and some other
+      should be equivalent to the behaviour presented in normal execution
+    \item only difference could be in parallel access to the exception by the unwinder and some other
       thread, however:
       \begin{itemize}
         \item the exception object is thread-local
