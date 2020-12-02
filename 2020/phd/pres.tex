@@ -96,7 +96,7 @@
 
 \begin{frame}{Analysis of Parallel C++ Programs}
 
-\textbf{Automatic Analysis of Parallel Programs}
+\textbf{correctness analysis of parallel programs}
 \begin{itemize}
     \item parallel processing to make use of modern hardware
     \item easy to make mistakes
@@ -117,20 +117,22 @@
 \end{frame}
 
 \begin{frame}{DIVINE}
-  \textbf{all contributions presented in the thesis are implemented and evaluated in DIVINE}
+  \textbf{all contributions presented are implemented and evaluated in DIVINE}
 
   \begin{itemize}
-    \item explicit-state analyser for C and C++, using LLVM intermediate representation
+    \item explicit-state analyser for C and C++
+    \item using LLVM intermediate representation
       \begin{enumerate}
         \item C/C++ translated to LLVM using clang compiler
         \item LLVM is instrumented
         \item and executed by DIVINE in search for errors
       \end{enumerate}\pause
+
     \item primarily targets safety
-      \begin{itemize}
-        \item assertion safety, memory safety, arithmetic errors, …
-        \item also supports Büchi and termination conditions
-      \end{itemize} \pause
+%      \begin{itemize}
+%        \item assertion safety, memory safety, arithmetic errors, …
+%        \item termination conditions
+%      \end{itemize} \pause
     \item symbolic extensions
     \item multiple other contributors, parts presented here authored mostly by me
     \item open source
@@ -161,6 +163,7 @@
     \item some libraries (pdclib, libc++)
   \end{itemize}
 
+  \bigskip
   \textbf{and implement only what is necessary}
   \begin{itemize}
     \item threads (pthread)
@@ -174,7 +177,7 @@
     \setlength{\leftmargini}{1em}
     \begin{itemize}
       \item ubiquitous in C++, its standard library
-      \item need complex runtime support
+      \item complex runtime support
         \begin{itemize}
           \item exception matching
           \item cleanup
@@ -213,26 +216,19 @@
 \end{frame}
 
 \begin{frame}{Exceptions in DIVINE}
-  \textbf{Design Options}
+
+  \textbf{research challenge}
   \begin{itemize}
-    \item make the analyser core aware of exceptions?
-    \item adapt library to read information from analyser?
-    \item re-use big parts of existing library support?
-    \item the last option not considered, or deemed impractical by related work
+    \item is it possible to build a model checker supporting the complex mechanism of exceptions
+      without hard-coding the exception mechanism into the state-space generator?
+    \pause
+    \item limit changes to the core of DIVINE
+    \item full support for C++ exceptions
   \end{itemize}
   \pause
 
   \bigskip
-  \textbf{Our Goals}
-  \begin{itemize}
-    \item reuse as much of the C++ library implementation as possible (libc++abi)
-    \item limit changes to the core of DIVINE
-    \item full support for C++ exceptions
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Exceptions in DIVINE}
-  \textbf{Our Approach}
+  \textbf{our approach}
   \begin{itemize}
     \item calculate exception handling metadata (for libc++abi and the unwinder)
     \item new unwinder using this metadata
@@ -241,7 +237,7 @@
   \pause
 
   \bigskip
-  \textbf{Results}
+  \textbf{results}
   \begin{itemize}
     \item no modifications to libc++abi required
     \item performance comparable to a previous implementation that required substantial changes to
@@ -258,13 +254,16 @@
 
 \begin{frame}[fragile]{Relaxed Memory}
   \begin{minipage}{0.47\textwidth}
+    \textbf{sources of relaxed memory behaviour}
+    \vspace{-1.3em}
     \begin{itemize}
       \item cache hierarchies
       \item instruction reordering
       \item speculative execution
+      \item delayed writes to memory
     \end{itemize}
-
-    … give rise to observable relaxed behaviour
+    \medskip
+    \visible<2->{\textbf{is $\texttt{a} = 0 \land \texttt{b} = 0$ reachable?}}
   \end{minipage}
   \hfill\pause
   \begin{minipage}{0.48\textwidth}
@@ -292,14 +291,12 @@
       \end{cppcode}
     \end{minipage}
 
-    \centering\medskip
-    Is $\texttt{a} = 0 \land \texttt{b} = 0$ reachable?
   \end{minipage}
 
   \bigskip\bigskip\pause
   \begin{minipage}[t]{0.48\textwidth}
-    \only<4-8>{
-    Not under \emph{Sequential Consistency}
+    \only<3-8>{
+    not under \emph{Sequential Consistency}
 
     \visible<4->{
       \medskip
@@ -310,7 +307,7 @@
   \end{minipage}
   \hfill
   \begin{minipage}[t]{0.48\textwidth}
-    Reachable on \textbf{x86}, ARM, POWER, …
+    yes on \textbf{x86}, ARM, POWER, …
 
     \visible<4->{
       \medskip
@@ -327,7 +324,7 @@
   \xtso – memory model of Intel and AMD x86(-64) CPUs
   \bigskip
 
-  \textbf{Existing Approaches to \xtso}
+  \textbf{existing approaches to \xtso}
   \begin{itemize}
     \item simulate store buffers with nondeterministic flushing
     \item use axiomatic descrition of possible reorderings
@@ -335,7 +332,7 @@
   \pause
 
   \bigskip
-  \textbf{Our Approach}
+  \textbf{our approach}
   \begin{itemize}
     \item nondeterministic flushing is expensive
     \item → \textbf{on-demand + delayed flushing}
@@ -407,6 +404,8 @@
   \begin{itemize}
     \item evaluation on nonsymbolic SV-COMP concurrency benchmarks
     \item compared with CBMC (bounded) and Nidhugg (stateless)
+    \item found more errors then other tools
+    \item finished on similar number of benchmarks
 
     \vspace{2ex}
     \setlength\tabcolsep{0.5em} %
@@ -427,17 +426,17 @@
 \end{prespart}
 
 \begin{frame}{Beyond Safety Checking}
+  \textbf{safety is insufficient}
   \begin{itemize}
     \item safety checking is common for realistic parallel programs
-    \item if the program does not terminate…
-    \begin{itemize}
-      \item the tool might not terminate
-      \item or it might correctly report there are no safety violations
-    \end{itemize}
+    \item safe does not mean correct
+      \begin{itemize}
+        \item e.g. a queue that always blocks in \emph{pop} can be safe
+      \end{itemize}
   \end{itemize}
 
   \bigskip
-  → termination checking is necessary
+  \textbf{→ termination checking is necessary}
   \begin{itemize}
     \item most existing approaches not applicable to practical parallel programs
   \end{itemize}
@@ -448,14 +447,17 @@
   std::atomic< bool > spin_lock;
   void worker() { // two of these running in parallel
       while (true) {
-          while (spin_lock.exchange(true)) { /* wait */ }
+          while (spin_lock.exchange(true)) { /* ⟦\textcolor{red}{wait}⟧ */ }
           x++;
           spin_lock = false;
       }
   }
   \end{cppcode}
 
-  Does every \emph{wait} end? \pause
+  \begin{itemize}
+    \item does every \emph{wait} (inner \cpp{while}) end?
+    \item what is the right fairness condition?
+  \end{itemize}
 
   \bigskip
   \newcommand{\ta}[1]{\text{\textcolor{blue}{\texttt{[t0: #1]}}}}
@@ -465,24 +467,21 @@
   $\phantom{\big(}\ta{x++}$\\
   $\phantom{\big(}\ta{spin\_lock = false}$\\
   $\phantom{\big(}\ta{spin\_lock.exchange(true) \textrightarrow{} false}\big)^\omega$
-
-  \medskip
-  \textbf{both threads can run}
 \end{frame}
 
 \begin{frame}[fragile]{Local Nontermination analysis for Parallel Programs}
-  \textbf{Our Goals \& Constraints}
+  \textbf{our goals \& constraints}
   \begin{itemize}
-    \item usable for (small) practical programs with arbitrary synchronization
     \item detection of nonterminating parts of programs
     \item no spurious nontermination reports
     \item simple specification
-    \item bugs caused by unintended parallel interactions, not at complex control flow \& loops
+    \item usable for (small) practical programs with arbitrary synchronization
+    \item bugs caused primarily by unintended parallel interactions
   \pause
   \bigskip
     \item builds on explicit-state model checking\\
       → finite-state programs (with possibly infinite behaviour)
-    \item user can specify what to check → resource sections
+    \item user may specify what to check → resource sections
   \end{itemize}
 
 %  \bigskip
@@ -507,7 +506,7 @@
 \end{frame}
 
 \begin{frame}[fragile]{Local Nontermination analysis for Parallel Programs}
-    \textbf{Resource Section}
+    \textbf{resource section}
     \begin{itemize}
       \item a block of code with an identifier
       \item delimited in the source code
@@ -516,29 +515,21 @@
     \pause
 
     \bigskip
-    \textbf{Local Nontermination}
+    \textbf{local nontermination}
     \begin{itemize}
-      \item a resource section does not terminate if the program can reach apoint \emph{in the
+      \item a resource section does not terminate if the program can reach a point \emph{in the
         resource section} from which it cannot reach \emph{the corresponding resource section end}
     \end{itemize}
     \pause
 
     \bigskip
-    \textbf{Our Approach}
+    \textbf{algorithmic solution}
     \begin{itemize}
       \item nondeterministically \emph{activate} resource sections at their beginning
       \item active resource sections are checked for nontermination, activation cannot be nested
       \item detect terminal strongly connected components in active resource sections
     \end{itemize}
 \end{frame}
-
-\begin{prespart}{Other Significant Publications}
-  \begin{itemize}
-    \item \fcite{DIVINEToolPaper2017} \hfill 30\,\%
-    \bigskip
-    \item \fcite{RSCB2018} \hfill 20\,\%
-  \end{itemize}
-\end{prespart}
 
 \begin{prespart}{Conclusion}
   \begin{itemize}
@@ -557,6 +548,21 @@
       \end{itemize}
     \item all published, implemented in DIVINE and evaluated
   \end{itemize}
+\end{prespart}
+
+\begin{prespart}{Other Significant Publications}
+  \begin{itemize}
+    \item \fcite{DIVINEToolPaper2017} \hfill 30\,\%
+    \bigskip
+    \item \fcite{RSCB2018} \hfill 20\,\%
+  \end{itemize}
+\end{prespart}
+
+\begin{prespart}{Conclusion}
+  TODO - repeat
+
+  \bigskip\centering
+  Thank you for your attention
 \end{prespart}
 
 \def\insertframenumber{A}
