@@ -531,6 +531,7 @@
     \end{itemize}
 \end{frame}
 
+\newenvironment{Conclusion}{
 \begin{prespart}{Conclusion}
   \begin{itemize}
     \item contributions to analysis of programs in C++
@@ -548,7 +549,10 @@
       \end{itemize}
     \item all published, implemented in DIVINE and evaluated
   \end{itemize}
-\end{prespart}
+}{\end{prespart}}
+
+\begin{Conclusion}
+\end{Conclusion}
 
 \begin{prespart}{Other Significant Publications}
   \begin{itemize}
@@ -558,12 +562,13 @@
   \end{itemize}
 \end{prespart}
 
-\begin{prespart}{Conclusion}
-  TODO - repeat
-
+\let\oldpause=\pause
+\let\pause=\relax
+\begin{Conclusion}
   \bigskip\centering
-  Thank you for your attention
-\end{prespart}
+  \textbf{thank you for your attention}
+\end{Conclusion}
+\let\pause=\oldpause
 
 \def\insertframenumber{A}
 \begin{frame}[noframenumbering]{}
