@@ -117,13 +117,13 @@
 \end{frame}
 
 \begin{frame}{DIVINE}
-  \textbf{all contributions presented are implemented and evaluated in DIVINE}
+  \textbf{all presented contributions are implemented and evaluated in DIVINE}
 
   \begin{itemize}
     \item explicit-state analyser for C and C++
     \item using LLVM intermediate representation
       \begin{enumerate}
-        \item C/C++ translated to LLVM using clang compiler
+        \item C/C++ translated to LLVM using the clang compiler
         \item LLVM is instrumented
         \item and executed by DIVINE in search for errors
       \end{enumerate}\pause
@@ -149,11 +149,11 @@
   \textbf{analysis of high-level programming languages is complex} \pause
   \begin{itemize}
     \item syntax, code generation,
-    \item objects, run-time types, virtual methods
+    \item objects, runtime types, virtual methods
     \item exceptions
     \item extensive libraries
     \item …
-    \item → expensive, error prone to implement from scratch
+    \item → expensive, error-prone to implement from scratch
   \end{itemize}
 
   \pause\bigskip
@@ -219,7 +219,7 @@
 
   \textbf{research challenge}
   \begin{itemize}
-    \item is it possible to build a model checker supporting the complex mechanism of exceptions
+    \item Is it possible to build a model checker supporting the complex mechanism of exceptions
       without hard-coding the exception mechanism into the state-space generator?
     \pause
     \item limit changes to the core of DIVINE
@@ -327,7 +327,7 @@
   \textbf{existing approaches to \xtso}
   \begin{itemize}
     \item simulate store buffers with nondeterministic flushing
-    \item use axiomatic descrition of possible reorderings
+    \item use axiomatic description of possible reorderings
   \end{itemize}
   \pause
 
@@ -343,7 +343,7 @@
 \end{frame}
 
 \begin{frame}[fragile]{Efficient explicit simulation of \xtso}
-  \colorlet{frombuf}{green!60!black}
+  \colorlet{frombuf}{green!70!black}
   \colorlet{flushed}{yellow!60!red!85!black}
   \begin{minipage}[t]{0.35\textwidth}
 
@@ -358,43 +358,40 @@
               (-10,-2) -- (-7,-2)
               (-10,-3) -- (-7,-3);
     \node () [anchor=center] at (-8.5, 0.5) {s.b. 1};
-    \node () [anchor=center] at (-8.5,-0.5) {\only<-5>{\only<4->{\color{flushed}}\texttt{x $\leftarrow$ 1}}};
-    \node () [anchor=center] at (-8.5,-1.5) {\only<-3>{\texttt{y $\leftarrow$ 1}}\only<4-5>{\color{flushed}\texttt{x $\leftarrow$ 2}}};
-    \node () [anchor=center] at (-8.5,-2.5) {\only<-3>{\texttt{x $\leftarrow$ 2}}};
-    \node () [anchor=center] at (-8.5,-3.5) {\only<-3>{\only<3>{\color{frombuf}}\texttt{y $\leftarrow$ 2}}};
+    \node () [anchor=center] at (-8.5,-0.5) {\only<-4>{\only<3->{\color{flushed}}\texttt{x $\leftarrow$ 1}}};
+    \node () [anchor=center] at (-8.5,-1.5) {\only<-2>{\texttt{y $\leftarrow$ 1}}\only<3-4>{\color{flushed}\texttt{x $\leftarrow$ 2}}};
+    \node () [anchor=center] at (-8.5,-2.5) {\only<-2>{\texttt{x $\leftarrow$ 2}}};
+    \node () [anchor=center] at (-8.5,-3.5) {\only<-2>{\only<2>{\color{frombuf}}\texttt{y $\leftarrow$ 2}}};
 
     \draw [-] (-6,0) rectangle (-3,-4);
     \draw [-] (-6,-1) -- (-3,-1)
               (-6,-2) -- (-3,-2)
               (-6,-3) -- (-3,-3);
     \node () [anchor=center] at (-4.5, 0.5) {s.b. 2};
-    \node () [anchor=center] at (-4.5,-0.5) {\only<-6>{\only<5-6>{\color{frombuf}}\texttt{x $\leftarrow$ 3}}\only<7->{\texttt{y $\leftarrow$ 3}}};
-    \node () [anchor=center] at (-4.5,-1.5) {\only<-6>{\texttt{y $\leftarrow$ 3}}};
+    \node () [anchor=center] at (-4.5,-0.5) {\only<-5>{\only<4-5>{\color{frombuf}}\texttt{x $\leftarrow$ 3}}\only<6->{\texttt{y $\leftarrow$ 3}}};
+    \node () [anchor=center] at (-4.5,-1.5) {\only<-5>{\texttt{y $\leftarrow$ 3}}};
 
   \end{tikzpicture}
 
-  \newcommand{\ly}{\only<3->{\only<3>{\textcolor{frombuf}}{// \textrightarrow 2}}}
-  \newcommand{\lx}{\only<5->{\only<5-6>{\textcolor{frombuf}}{// \textrightarrow 3}}}
+  \newcommand{\ly}{\only<2->{\only<2>{\textcolor{frombuf}}{\textrightarrow 2}}}
+  \newcommand{\lx}{\only<4->{\only<4-5>{\textcolor{frombuf}}{\textrightarrow 3}}}
   \begin{cppcode}
   void thread0() {
-    int a = y; ⟦\ly⟧
-    int b = x; ⟦\lx⟧
+    int a = y; // ⟦\ly⟧
+    int b = x; // ⟦\lx⟧
   }
   \end{cppcode}
   \end{minipage}
-  \pause
   \begin{minipage}[t]{0.60\textwidth}
       \begin{itemize}
-          \only<1>{\item}
-          \only<2>{\item three threads, thread 0 executing}
-          \only<3>{\item nondeterministically choose which value to \emph{load} from the
-          store buffers}
-          \only<4>{\item older \texttt{y} values in s.b. 1 removed}
-          \only<4>{\item other older values in s.b. 1 marked as flushed}
-          \only<5>{\item nondeterministically choose to load from s.b.~2}
-          \only<6>{\item flushed values for \texttt{x} has to be removed (overwritten)}
-          \only<7>{\item \texttt{x} is propagated to the memory}
-          \only<8>{\item \texttt{y $\leftarrow$ 3} stays in buffer}
+          \only<1>{\item three threads, thread 0 executing}
+          \only<2>{\item nondeterministically choose which value to \emph{load} from store buffers}
+          \only<3>{\item older \texttt{y} values in s.b. 1 removed}
+          \only<3>{\item other older values in s.b. 1 marked as flushed}
+          \only<4>{\item nondeterministically choose to load from s.b.~2}
+          \only<5>{\item flushed values for \texttt{x} have to be removed (overwritten)}
+          \only<6>{\item \texttt{x} is propagated to memory}
+          \only<7>{\item \texttt{y $\leftarrow$ 3} stays in buffer}
       \end{itemize}
   \end{minipage}
 \end{frame}
@@ -404,10 +401,10 @@
   \begin{itemize}
     \item evaluation on nonsymbolic SV-COMP concurrency benchmarks
     \item compared with CBMC (bounded) and Nidhugg (stateless)
-    \item found more errors then other tools
+    \item found more errors than other tools
     \item finished on similar number of benchmarks
 
-    \vspace{2ex}
+    \bigskip\bigskip
     \setlength\tabcolsep{0.5em} %
     \begin{tabular}{lrrr} \toprule
         \textcolor{gray}{(total = 54)} & CBMC & \textbf{DIVINE} & Nidhugg \\ \midrule
@@ -419,7 +416,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{prespart}{Local Nontermination analysis for Parallel Programs}
+\begin{prespart}{Local Nontermination Analysis for Parallel Programs}
   \begin{itemize}
     \item \fcite{SB2019} \hfill 90\,\%
   \end{itemize}
@@ -454,6 +451,7 @@
   }
   \end{cppcode}
 
+  \setlength{\leftmargini}{1em}
   \begin{itemize}
     \item does every \emph{wait} (inner \cpp{while}) end?
     \item what is the right fairness condition?
@@ -599,7 +597,7 @@ of exception handling were not supported by DIVINE 3.}
   Handling of unaligned loads in \xtso.\bigskip
 
   \begin{itemize}
-    \item alignment is not significant for our \xtso simulation, as long as the there are no
+    \item alignment is not significant for our \xtso simulation, as long as othere are no
       \emph{partially overlapping} loads/stores
       \begin{itemize}
         \item this matches with the observed behaviour of x86-64 processors and the \xtso
@@ -621,7 +619,7 @@ of exception handling were not supported by DIVINE 3.}
     why not considering strong fairness (at least wrt access to some resources) and non-termination
     that is possible (though not necessary) under such fairness too?}
 
-  Consider this example from a single-prodcer single-consumer queue using atomics:
+  Consider this example from a single-producer single-consumer queue using atomics:
   \begin{cppcode}
     T &front() {
         while ( empty() ) { /* wait */ }
@@ -630,8 +628,8 @@ of exception handling were not supported by DIVINE 3.}
   \begin{itemize}
     \item \texttt{empty} is a non-blocking operation, therefore the thread is always enabled at this line
     \item we aimed to avoid false nontermination errors in common synchronization patterns
-    \item resource asquisition cannot be easily discerned from the source code
-    \item it would be possible to have also sections that check for other fairness criteria
+    \item resource acquisition cannot be easily discerned from the source code
+    \item it would be possible to also have sections that check for other fairness criteria
   \end{itemize}
 \end{frame}
 
@@ -655,7 +653,7 @@ of exception handling were not supported by DIVINE 3.}
   \rquote{Could you summarize the main problem(s) solved by this thesis, but \emph{not} in related
     work?}
   \begin{itemize}
-    \item full support for C++ exception in a model checker
+    \item full support for C++ exceptions in a model checker
     \item most other contributions are improvements or manifest different strengths and weaknesses
       than related work
   \end{itemize}
@@ -666,8 +664,8 @@ of exception handling were not supported by DIVINE 3.}
   \begin{itemize}
     \item more efficient simulation of \xtso in the context of explicit-state model checking
     \medskip
-    \item use of resource sections to denote interesting parts of parallel program and check that
-      they terminate, togherther with the detection algorithm
+    \item use of resource sections to denote interesting parts of a parallel program and check that
+      they terminate, together with the detection algorithm
   \end{itemize}
 \end{frame}
 
@@ -687,7 +685,7 @@ of exception handling were not supported by DIVINE 3.}
     \item filesystem support is limited by abilities of the virtual file system in DIVINE
       \pause
 
-    \item parts of \texttt{math.h/fenv.h} (mostly related to loating-point environment)
+    \item parts of \texttt{math.h/fenv.h} (mostly related to floating-point environment)
 %      \begin{itemize}
 %        \item missing support in the LLVM interpreter used in DIVINE
 %        \item probably not much used
@@ -705,8 +703,8 @@ of exception handling were not supported by DIVINE 3.}
   program are actually preserved by the transformation? (e.g. all linear-time properties? only
   stutter-free properties? fair traces? termination? branching properties?)}
   \begin{itemize}
-    \item the argumentation stated in the paper and a suite of tests which test reachable results of
-      thread interactions \pause
+    \item the reasoning stated in the paper
+    \item suite of tests which test reachable results of thread interactions \pause
     \item we considered mostly reachability
       \begin{itemize}
         \item automata-based approach to LTL would likely lead to infinite state space with store
@@ -725,7 +723,7 @@ of exception handling were not supported by DIVINE 3.}
     fairness? Why are the fairness assumptions you postulate justified in reality?}
   \begin{itemize}
     \item strong fairness is not strong enough to eliminate spurious counterexamples in common
-      synchronization patterns used with atomic variable
+      synchronization patterns used with atomic variables
     \item preemptive schedulers use either priority-based fixed or variable (Linux) time-slices for
       scheduling, in either case, the scheduler does not re-schedule after a fixed number of
       \emph{instructions}
@@ -740,7 +738,7 @@ of exception handling were not supported by DIVINE 3.}
   \rquote{Can it happen that the tool concludes termination, just because a malloc-function returns
     NULL (out-of-memory) non-deterministically?}
   \begin{itemize}
-    \item yes (the problem is same as for symbolic data)
+    \item yes (the problem is the same as for symbolic data)
   \end{itemize}
 \end{frame}
 
@@ -781,7 +779,7 @@ of exception handling were not supported by DIVINE 3.}
       \begin{itemize}
         \item symbolic analysis could be used to find conditions under which exception can
           or must be raised by a function
-        \item however, our approoach to exceptions is badly suited for axiomatic analysis usual for
+        \item however, our approach to exceptions is badly suited for axiomatic analysis usual for
           modular methods
       \end{itemize}
       \pause
